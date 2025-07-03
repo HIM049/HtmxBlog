@@ -1,0 +1,5 @@
+# IDEA editor
+.idea
+
+# executables
+*.exe

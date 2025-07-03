@@ -6,11 +6,16 @@ var Cfg Config
 
 type Config struct {
 	NetWork
+	Pages
 }
 
 type NetWork struct {
 	Host string
 	Port int
+}
+
+type Pages struct {
+	CustomPages []string
 }
 
 // InitConfig initializes the configuration from file.
@@ -30,8 +35,13 @@ func InitConfig() error {
 		Port: viper.GetInt("Network.Port"),
 	}
 
+	pages := Pages{
+		CustomPages: viper.GetStringSlice("Pages.CustomPages"),
+	}
+
 	Cfg = Config{
 		NetWork: net,
+		Pages:   pages,
 	}
 
 	return nil

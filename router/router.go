@@ -15,7 +15,7 @@ func SetupRouter() *gin.Engine {
 	router.GET("/", handler.PageIndex)
 	SetupDynmicRouter(router)
 
-	responseGroup := router.Group("/response")
+	responseGroup := router.Group("/frontend")
 	{
 		responseGroup.GET("/hello", handler.ResponseHello)
 	}

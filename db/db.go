@@ -3,6 +3,7 @@ package db
 import (
 	"HtmxBlog/config"
 	"HtmxBlog/models"
+	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -12,10 +13,14 @@ var db *gorm.DB
 func InitDB() error {
 	// Check the type of database driver
 	var dialector gorm.Dialector
-	if config.Cfg.Database.Driver == "sqlite" {
-		dialector = sqlite.Open("blog.db")
-	} else {
+	switch config.Cfg.Database.Driver {
+	case "sqlite":
+		dialector = sqlite.Open(config.Cfg.Database.DSN)
+	case "mysql":
+		dialector = mysql.Open(config.Cfg.Database.DSN)
+	default:
 		return gorm.ErrUnsupportedDriver
+
 	}
 
 	// Connect to the database

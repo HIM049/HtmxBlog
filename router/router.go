@@ -18,6 +18,7 @@ func SetupRouter() *gin.Engine {
 	responseGroup := router.Group("/frontend")
 	{
 		responseGroup.GET("/hello", handler.ResponseHello)
+		responseGroup.POST("/addpost", handler.AddPost)
 	}
 
 	return router

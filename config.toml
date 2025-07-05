@@ -4,3 +4,7 @@ Port = 8080
 
 [Pages]
 CustomPages = ["about"]
+
+[Database]
+Driver = "sqlite"
+DSN = ""

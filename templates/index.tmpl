@@ -1,12 +1,32 @@
 <!DOCTYPE HTML>
 <header>
+    <meta charset="UTF-8">
     <title>My Web Page</title>
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
 </header>
 
 <body>
-<h1>Welcome to My Web Page</h1>
-<p>This is a simple page to demonstrate HTMX.</p>
+
+<h1>Add post</h1>
+<form hx-post="/frontend/addpost" hx-target="#result">
+    <input type="text" name="title" placeholder="Title">
+    <input type="text" name="content" placeholder="Content">
+    <button type="submit">Submit</button>
+</form>
+<div id="result"></div>
+
+<h1>Posts</h1>
+
+<ul>
+    {{ range .Posts }}
+    <li>
+
+        <p>ID: {{ .ID }}</p>
+        <p>Uid: {{ .Uid }}</p>
+        <p>Title: {{ .Title }}</p>
+    </li>
+    {{ end }}
+</ul>
 
 <button hx-get="/frontend/hello" hx-target="#data-container" hx-swap="innerHTML">Load Data</button>
 

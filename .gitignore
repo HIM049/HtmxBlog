@@ -3,3 +3,6 @@
 
 # executables
 *.exe
+
+# sqlite database
+*.db

@@ -2,6 +2,7 @@ package main
 
 import (
 	"HtmxBlog/config"
+	"HtmxBlog/db"
 	"HtmxBlog/router"
 	"fmt"
 	"log"
@@ -12,6 +13,12 @@ func main() {
 	err := config.InitConfig()
 	if err != nil {
 		log.Fatalln("Failed to initialize config:", err)
+	}
+
+	// initialize database
+	err = db.InitDB()
+	if err != nil {
+		log.Fatalln("Failed to initialize database:", err)
 	}
 
 	// initialize router

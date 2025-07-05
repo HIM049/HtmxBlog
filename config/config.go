@@ -7,11 +7,17 @@ var Cfg Config
 type Config struct {
 	NetWork
 	Pages
+	Database
 }
 
 type NetWork struct {
 	Host string
 	Port int
+}
+
+type Database struct {
+	Driver string
+	DSN    string
 }
 
 type Pages struct {
@@ -39,9 +45,15 @@ func InitConfig() error {
 		CustomPages: viper.GetStringSlice("Pages.CustomPages"),
 	}
 
+	database := Database{
+		Driver: viper.GetString("Database.Driver"),
+		DSN:    viper.GetString("Database.DSN"),
+	}
+
 	Cfg = Config{
-		NetWork: net,
-		Pages:   pages,
+		NetWork:  net,
+		Pages:    pages,
+		Database: database,
 	}
 
 	return nil

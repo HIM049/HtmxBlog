@@ -3,7 +3,9 @@ package main
 import (
 	"HtmxBlog/config"
 	"HtmxBlog/database"
+	"HtmxBlog/router"
 	"fmt"
+	"net/http"
 )
 
 func main() {
@@ -11,5 +13,6 @@ func main() {
 	config.Init()
 	database.Init()
 
-	fmt.Println(config.Cfg.Database)
+	fmt.Println("Server is running on", config.Cfg.Service.Addr())
+	http.ListenAndServe(config.Cfg.Service.Addr(), router.Init())
 }

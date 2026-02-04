@@ -10,6 +10,7 @@ var Cfg *Config
 
 type Config struct {
 	Database Database
+	Service  Service
 }
 
 // Init loads the config from the config.toml file.
@@ -20,5 +21,6 @@ func Init() {
 
 	Cfg = &Config{
 		Database: ReadDatabase(k),
+		Service:  ReadService(k),
 	}
 }

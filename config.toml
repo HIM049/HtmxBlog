@@ -1,3 +1,6 @@
 [database]
 driver = "sqlite"
-dsn = "test.db"
+dsn = "app.db"
+
+[service]
+port = "8080"

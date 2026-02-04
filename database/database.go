@@ -18,6 +18,11 @@ func Init() {
 	}
 
 	DB = db
+
+	err = Migrate()
+	if err != nil {
+		panic("failed to migrate database")
+	}
 }
 
 func Migrate() error {

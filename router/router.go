@@ -1,18 +1,20 @@
 package router
 
-import "net/http"
+import (
+	"net/http"
 
-func Init() *http.ServeMux {
-	r := http.NewServeMux()
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+)
 
-	r.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+func Init() *chi.Mux {
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Write([]byte("<h1>Hello World</h1>"))
-	})
-
-	r.HandleFunc("GET /posts", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Write([]byte("<h1>Posts</h1>"))
 	})
 
 	return r

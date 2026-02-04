@@ -1,6 +1,7 @@
 package router
 
 import (
+	"HtmxBlog/template"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -14,7 +15,9 @@ func Init() *chi.Mux {
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Write([]byte("<h1>Hello World</h1>"))
+		template.Tmpl.ExecuteTemplate(w, "index", struct {
+			Title string
+		}{Title: "Hello World"})
 	})
 
 	return r

@@ -15,9 +15,7 @@ func Init() *chi.Mux {
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		template.Tmpl.ExecuteTemplate(w, "index", struct {
-			Title string
-		}{Title: "Hello World"})
+		template.Tmpl.ExecuteTemplate(w, "index", template.App{PageTitle: "Hello World", Navigation: []template.NavigationItem{{Name: "Home", Url: "/"}, {Name: "About", Url: "/about"}}})
 	})
 
 	return r

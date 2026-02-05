@@ -1,21 +1,27 @@
-
 {{ define "index" }}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/style.css" rel="stylesheet">
     <title>{{ .PageTitle }}</title>
-    <nav>
-        <ul>
+</head>
+
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 p-4 shadow-md">
+        <ul class="flex space-x-6 container mx-auto">
             {{ range .Navigation }}
-                <li><a href="{{ .Url }}">{{ .Name }}</a></li>
+            <li><a href="{{ .Url }}" class="text-white hover:text-blue-200 font-semibold transition">{{ .Name }}</a>
+            </li>
             {{ end }}
         </ul>
     </nav>
-</head>
-<body>
-    <h1>content</h1>
+    <div class="container mx-auto mt-8 p-4">
+        <h1>content</h1>
+    </div>
 </body>
+
 </html>
 {{ end }}

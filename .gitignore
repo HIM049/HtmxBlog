@@ -1,3 +1,5 @@
 *.db
 *.exe
 .DS_Store
+/node_modules
+/tmp

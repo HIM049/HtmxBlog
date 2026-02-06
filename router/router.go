@@ -23,6 +23,7 @@ func Init() *chi.Mux {
 		r.Route("/admin", func(r chi.Router) {
 
 			r.Post("/post", handler.HandlePostCreate)
+			r.Delete("/post/{id}", handler.HandlePostDelete)
 			r.Post("/page", handler.HandlePageCreate)
 			r.Delete("/page/{id}", handler.HandlePageDelete)
 

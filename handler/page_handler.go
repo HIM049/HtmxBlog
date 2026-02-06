@@ -44,5 +44,5 @@ func HandlePageDelete(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("")) // Return empty to remove the LI element
+	w.Write([]byte(""))
 }

@@ -7,7 +7,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+
+	"github.com/go-chi/chi/v5"
 )
 
 const POSTS_DIR = "./app_data/posts"
@@ -74,5 +77,29 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("<div>Post created successfully!</div>"))
+	w.Write([]byte(`<div class="text-green-600 font-bold p-4 bg-green-50 rounded shadow-md border border-green-200">Post created successfully!</div>`))
+}
+
+func HandlePostDelete(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	if idStr == "" {
+		http.Error(w, "Post ID is required", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid Post ID", http.StatusBadRequest)
+		return
+	}
+
+	if err := database.DeletePostById(uint(id)); err != nil {
+		http.Error(w, "Failed to delete post", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("HX-Trigger", `{"showMessage": "Post deleted successfully!"}`)
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(""))
 }

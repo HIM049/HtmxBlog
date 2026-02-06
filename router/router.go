@@ -1,6 +1,7 @@
 package router
 
 import (
+	"HtmxBlog/handler"
 	"HtmxBlog/template"
 	"net/http"
 
@@ -18,6 +19,12 @@ func Init() *chi.Mux {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		template.Tmpl.ExecuteTemplate(w, "index", template.App{PageTitle: "Hello World", Navigation: []template.NavigationItem{{Name: "Home", Url: "/"}, {Name: "About", Url: "/about"}}})
+	})
+
+	r.Route("/api", func(r chi.Router) {
+		r.Route("/admin", func(r chi.Router) {
+			r.Post("/post", handler.HandlePostCreate)
+		})
 	})
 
 	return r

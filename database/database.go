@@ -7,17 +7,19 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var db *gorm.DB
+
+const DB_PATH = "./app_data/app.db"
 
 // Init initializes the database connection.
 // It panics when some error occurs.
 func Init() {
-	db, err := gorm.Open(sqlite.Open("app.db"), &gorm.Config{})
+	d, err := gorm.Open(sqlite.Open(DB_PATH), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
-	DB = db
+	db = d
 
 	err = Migrate()
 	if err != nil {
@@ -26,5 +28,5 @@ func Init() {
 }
 
 func Migrate() error {
-	return DB.AutoMigrate(&model.Post{})
+	return db.AutoMigrate(&model.Post{})
 }

@@ -1,0 +1,26 @@
+{{ define "navi_bar" }}
+
+<nav class="h-[100px] flex items-center justify-between container mx-auto">
+    <div class="text-xl font-bold bg-[#0099cc] text-white px-4 py-2 rounded-xl shadow-sm">
+        HIM's Blog
+    </div>
+    <ul class="flex space-x-6 items-center">
+        {{ range .Navigation }}
+        <li>
+            <a href="{{ .Url }}" class="px-4 py-2 rounded-lg font-medium text-gray-800 transition hover:bg-white/70">
+                {{ .Name }}
+            </a>
+        </li>
+        {{ end }}
+        <li>
+            <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                </path>
+            </svg>
+        </li>
+    </ul>
+</nav>
+
+{{ end }}

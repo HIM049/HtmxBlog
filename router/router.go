@@ -2,7 +2,7 @@ package router
 
 import (
 	"HtmxBlog/handler"
-	"HtmxBlog/template"
+	viewhandler "HtmxBlog/view_handler"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -16,14 +16,13 @@ func Init() *chi.Mux {
 
 	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		template.Tmpl.ExecuteTemplate(w, "index", template.App{PageTitle: "Hello World", Navigation: []template.NavigationItem{{Name: "Home", Url: "/"}, {Name: "About", Url: "/about"}}})
-	})
+	r.Get("/", viewhandler.IndexView)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/admin", func(r chi.Router) {
+
 			r.Post("/post", handler.HandlePostCreate)
+
 		})
 	})
 

@@ -19,7 +19,7 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	title := r.FormValue("title")
-	category := r.FormValue("category")
+	cName := r.FormValue("category")
 	content := r.FormValue("content")
 
 	if title == "" || content == "" {
@@ -37,6 +37,10 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create post record in database
+	category := model.Category{
+		Name:  cName,
+		Color: "#0099cc", // TODO set color
+	}
 	post := &model.Post{
 		Title:       title,
 		Category:    category,

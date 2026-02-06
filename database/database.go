@@ -2,6 +2,7 @@ package database
 
 import (
 	"HtmxBlog/model"
+	"path/filepath"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -9,12 +10,13 @@ import (
 
 var db *gorm.DB
 
-const DB_PATH = "./app_data/app.db"
+const DB_PATH = "./app_data"
 
 // Init initializes the database connection.
 // It panics when some error occurs.
 func Init() {
-	d, err := gorm.Open(sqlite.Open(DB_PATH), &gorm.Config{})
+	dbPath := filepath.Join(DB_PATH, "app.db")
+	d, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}

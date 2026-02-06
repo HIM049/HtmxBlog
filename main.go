@@ -7,9 +7,13 @@ import (
 	"HtmxBlog/template"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 func main() {
+	os.MkdirAll("./app_data", 0755)
+	os.MkdirAll("./app_data/posts", 0755)
+
 	// initialize modules
 	config.Init()
 	database.Init()

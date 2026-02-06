@@ -17,11 +17,14 @@ func Init() *chi.Mux {
 	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
 	r.Get("/", viewhandler.IndexView)
+	r.Get("/manage", viewhandler.ManageView)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/admin", func(r chi.Router) {
 
 			r.Post("/post", handler.HandlePostCreate)
+			r.Post("/page", handler.HandlePageCreate)
+			r.Delete("/page/{id}", handler.HandlePageDelete)
 
 		})
 	})

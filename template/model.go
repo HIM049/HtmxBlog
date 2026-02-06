@@ -4,11 +4,6 @@ import "HtmxBlog/model"
 
 type App struct {
 	PageTitle  string
-	Navigation []NavigationItem
+	Navigation []model.Page
 	Posts      []model.Post
-}
-
-type NavigationItem struct {
-	Name string
-	Url  string
 }

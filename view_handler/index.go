@@ -1,17 +1,24 @@
 package viewhandler
 
 import (
+	"HtmxBlog/database"
 	"HtmxBlog/model"
 	"HtmxBlog/template"
 	"net/http"
 )
 
 func IndexView(w http.ResponseWriter, r *http.Request) {
+	pages, err := database.ReadAllPages()
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	template.Tmpl.ExecuteTemplate(w, "index",
 		template.App{
 			PageTitle:  "Hello World",
-			Navigation: []template.NavigationItem{{Name: "Home", Url: "/"}, {Name: "About", Url: "/about"}},
+			Navigation: pages,
 			Posts: []model.Post{
 				{
 					Title: "Post 1", Category: model.Category{Name: "技术", Color: "#c0efff"},

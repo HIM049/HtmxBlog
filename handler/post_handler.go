@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const POSTS_DIR = "./app_data/posts"
@@ -20,11 +21,29 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 
 	title := r.FormValue("title")
 	cName := r.FormValue("category")
+	cColor := r.FormValue("cat_color")
 	content := r.FormValue("content")
+	customVarsRaw := r.FormValue("custom_vars")
 
 	if title == "" || content == "" {
 		http.Error(w, "Title and content are required", http.StatusBadRequest)
 		return
+	}
+
+	// Parse Custom Vars
+	customVars := make(map[string]interface{})
+	if customVarsRaw != "" {
+		lines := strings.Split(customVarsRaw, "\n")
+		for _, line := range lines {
+			parts := strings.SplitN(line, ":", 2)
+			if len(parts) == 2 {
+				key := strings.TrimSpace(parts[0])
+				value := strings.TrimSpace(parts[1])
+				if key != "" {
+					customVars[key] = value
+				}
+			}
+		}
 	}
 
 	// Save content to file
@@ -39,12 +58,13 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 	// Create post record in database
 	category := model.Category{
 		Name:  cName,
-		Color: "#0099cc", // TODO set color
+		Color: cColor,
 	}
 	post := &model.Post{
 		Title:       title,
 		Category:    category,
 		ContentPath: filePath,
+		CustomVars:  customVars,
 	}
 
 	if err := database.CreatePost(post); err != nil {

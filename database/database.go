@@ -30,5 +30,5 @@ func Init() {
 }
 
 func Migrate() error {
-	return db.AutoMigrate(&model.Post{})
+	return db.AutoMigrate(&model.Post{}, &model.Page{})
 }

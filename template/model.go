@@ -3,6 +3,7 @@ package template
 import (
 	"HtmxBlog/database"
 	"HtmxBlog/model"
+	"os"
 )
 
 var currentState App
@@ -18,7 +19,21 @@ type ViewPost struct {
 	Content string
 }
 
+// LoadContent loads the content of the post
+func (vp *ViewPost) LoadContent() error {
+	content, err := os.ReadFile(vp.ContentPath)
+	if err != nil {
+		return err
+	}
+	vp.Content = string(content)
+	return nil
+}
+
+// GetBaseApp returns the base application data
 func GetBaseApp() App {
+	if currentState.Navigation == nil {
+		UpdateNavigation()
+	}
 	return currentState
 }
 

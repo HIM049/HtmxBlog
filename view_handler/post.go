@@ -4,7 +4,6 @@ import (
 	"HtmxBlog/database"
 	"HtmxBlog/template"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
@@ -23,19 +22,13 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	content, err := os.ReadFile(post.ContentPath)
-	if err != nil {
-		http.Error(w, "Post not found", http.StatusNotFound)
+	vp := template.ViewPost{Post: *post}
+	if vp.LoadContent(); err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 	base := template.GetBaseApp()
-	base.Posts = []template.ViewPost{
-		{
-			Post:    *post,
-			Content: string(content),
-		},
-	}
+	base.Posts = []template.ViewPost{vp}
 
 	template.Tmpl.ExecuteTemplate(w, "post", base)
 

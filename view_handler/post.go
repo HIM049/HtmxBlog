@@ -23,7 +23,7 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vp := template.ViewPost{Post: *post}
-	if vp.LoadContent(); err != nil {
+	if err = vp.LoadContent(); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

@@ -26,8 +26,11 @@ func Init() *chi.Mux {
 
 			r.Post("/post", api_handler.HandlePostCreate)
 			r.Delete("/post/{id}", api_handler.HandlePostDelete)
+
 			r.Post("/page", api_handler.HandlePageCreate)
 			r.Delete("/page/{id}", api_handler.HandlePageDelete)
+
+			r.Post("/attach", api_handler.UploadAttachHandler)
 
 		})
 	})

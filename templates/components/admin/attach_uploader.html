@@ -1,0 +1,24 @@
+{{ define "attach_uploader"}}
+<div class="w-full max-w-lg mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">Upload Attachment</h1>
+    <form hx-post="/api/admin/attach" hx-encoding="multipart/form-data" hx-target="#attach-result" hx-swap="innerHTML"
+        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="file">
+                Select File
+            </label>
+            <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="file" type="file" name="file" required>
+        </div>
+        <div class="flex items-center justify-between">
+            <button
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit">
+                Upload
+            </button>
+        </div>
+    </form>
+    <div id="attach-result" class="text-center mt-4 mb-8"></div>
+</div>
+{{ end }}

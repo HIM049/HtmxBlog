@@ -16,7 +16,7 @@ const DB_PATH = "./app_data"
 // It panics when some error occurs.
 func Init() {
 	dbPath := filepath.Join(DB_PATH, "app.db")
-	d, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
+	d, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{TranslateError: true})
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -30,5 +30,5 @@ func Init() {
 }
 
 func Migrate() error {
-	return db.AutoMigrate(&model.Post{}, &model.Page{})
+	return db.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{})
 }

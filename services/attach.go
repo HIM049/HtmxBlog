@@ -58,10 +58,11 @@ func UploadAttach(file *multipart.File, name, mime string) (*model.Attach, error
 	}
 
 	attach = &model.Attach{
-		Hash: hash,
-		Uid:  uuid,
-		Name: name,
-		Mime: mime,
+		Hash:       hash,
+		Uid:        uuid,
+		Name:       name,
+		Mime:       mime,
+		Permission: model.PermissionPublic,
 	}
 
 	// record to db

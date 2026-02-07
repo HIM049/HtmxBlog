@@ -15,6 +15,7 @@ func Init() *chi.Mux {
 	r.Use(middleware.Recoverer)
 
 	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
+	r.Get("/attach/{id}", api_handler.LoadAttachHandler)
 
 	r.Get("/", view_handler.IndexView)
 	r.Get("/p/{id}", view_handler.PostView)

@@ -64,6 +64,7 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 		Color: cColor,
 	}
 	post := &model.Post{
+		Permission:  model.PermissionPublic,
 		Title:       title,
 		Category:    category,
 		ContentPath: filePath,

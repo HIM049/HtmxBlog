@@ -5,6 +5,8 @@ import "gorm.io/gorm"
 type Post struct {
 	gorm.Model
 	Uid         string                 `json:"uid" gorm:"unique"`
+	Permission  string                 `json:"permission" gorm:"default:'private'"`
+	State       string                 `json:"state" gorm:"default:'draft'"`
 	Title       string                 `json:"title"`
 	Category    Category               `json:"category" gorm:"embedded;embeddedPrefix:category_"`
 	Tags        []string               `json:"tags" gorm:"serializer:json"`

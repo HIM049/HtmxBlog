@@ -1,8 +1,8 @@
 package router
 
 import (
-	"HtmxBlog/handler"
-	viewhandler "HtmxBlog/view_handler"
+	"HtmxBlog/api_handler"
+	"HtmxBlog/view_handler"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -16,18 +16,18 @@ func Init() *chi.Mux {
 
 	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
-	r.Get("/", viewhandler.IndexView)
-	r.Get("/p/{id}", viewhandler.PostView)
+	r.Get("/", view_handler.IndexView)
+	r.Get("/p/{id}", view_handler.PostView)
 
-	r.Get("/admin", viewhandler.AdminView)
+	r.Get("/admin", view_handler.AdminView)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/admin", func(r chi.Router) {
 
-			r.Post("/post", handler.HandlePostCreate)
-			r.Delete("/post/{id}", handler.HandlePostDelete)
-			r.Post("/page", handler.HandlePageCreate)
-			r.Delete("/page/{id}", handler.HandlePageDelete)
+			r.Post("/post", api_handler.HandlePostCreate)
+			r.Delete("/post/{id}", api_handler.HandlePostDelete)
+			r.Post("/page", api_handler.HandlePageCreate)
+			r.Delete("/page/{id}", api_handler.HandlePageDelete)
 
 		})
 	})

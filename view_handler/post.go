@@ -1,4 +1,4 @@
-package viewhandler
+package view_handler
 
 import (
 	"HtmxBlog/database"

@@ -1,4 +1,4 @@
-package handler
+package api_handler
 
 import (
 	"HtmxBlog/database"

@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// UploadAttachHandler handles the upload of an attach file.
 func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("file")
 	if err != nil {
@@ -26,3 +27,5 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(result))
 }
+
+// TODO file reference system

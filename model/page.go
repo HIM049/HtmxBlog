@@ -1,6 +1,6 @@
 package model
 
 type Page struct {
-	Name  string `gorm:"not null;unique"`
-	Route string `gorm:"not null;unique"`
+	Name  string `json:"name" gorm:"not null;unique"`
+	Route string `json:"route" gorm:"not null;unique"`
 }

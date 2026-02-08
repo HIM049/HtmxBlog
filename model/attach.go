@@ -11,9 +11,3 @@ type Attach struct {
 	Permission string `json:"permission" gorm:"default:'private'"`
 	Refers     []Post `json:"refers" gorm:"many2many:post_attaches"`
 }
-
-const (
-	PermissionPublic  = "public"
-	PermissionLogin   = "login"
-	PermissionPrivate = "private"
-)

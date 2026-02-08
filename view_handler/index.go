@@ -18,7 +18,7 @@ func IndexView(w http.ResponseWriter, r *http.Request) {
 	for _, post := range posts {
 		base.Posts = append(base.Posts, template.ViewPost{
 			Post:    post,
-			Content: post.ContentPath,
+			Content: post.ContentPath(),
 		})
 	}
 

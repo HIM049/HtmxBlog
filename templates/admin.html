@@ -4,7 +4,14 @@
 <body class="bg-gray-100">
     <div class="container mx-auto mt-8 p-4">
         <div class="w-full max-w-lg mx-auto">
-            {{ template "create_post" . }}
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+                <button hx-post="/api/admin/post/create"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
+                    Create New Post
+                </button>
+            </div>
+            <div id="create-result"></div>
 
             {{ template "create_page" . }}
 

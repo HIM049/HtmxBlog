@@ -2,83 +2,110 @@ package api_handler
 
 import (
 	"HtmxBlog/database"
-	"HtmxBlog/model"
+	"HtmxBlog/services"
 	"fmt"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strconv"
+
+	"os"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
 )
 
-const POSTS_DIR = "./app_data/posts"
-
+// HandlePostCreate is a handler for creating a new post.
+// It creates a default post and redirects to the editor page.
 func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+	post, err := services.CreateDefaultPost()
 	if err != nil {
+		http.Error(w, "Failed to create post", http.StatusInternalServerError)
+
+		w.Header().Set("Content-Type", "text/html")
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte(fmt.Sprintf(`<div class="text-red-600 font-bold p-4 bg-red-50 rounded shadow-md border border-red-200">Failed to create post: %s</div>`, err.Error())))
+
+		return
+	}
+
+	w.Header().Set("HX-Redirect", fmt.Sprintf("/admin/post/%d/edit", post.ID))
+}
+
+func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "Invalid Post ID", http.StatusBadRequest)
+		return
+	}
+	post, err := database.ReadPost(uint(id))
+	if err != nil {
+		http.Error(w, "Failed to read post", http.StatusInternalServerError)
+		return
+	}
+
+	// Update logic
+	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Invalid form data", http.StatusBadRequest)
 		return
 	}
 
-	title := r.FormValue("title")
-	cName := r.FormValue("category")
-	cColor := r.FormValue("cat_color")
-	content := r.FormValue("content")
-	customVarsRaw := r.FormValue("custom_vars")
-
-	if title == "" || content == "" {
-		http.Error(w, "Title and content are required", http.StatusBadRequest)
-		return
+	if title := r.FormValue("title"); title != "" {
+		post.Title = title
 	}
 
-	// Parse Custom Vars
-	customVars := make(map[string]interface{})
-	if customVarsRaw != "" {
-		lines := strings.Split(customVarsRaw, "\n")
+	if category := r.FormValue("category"); category != "" {
+		post.Category.Name = category
+	}
+
+	if color := r.FormValue("cat_color"); color != "" {
+		post.Category.Color = color
+	}
+
+	if tags := r.FormValue("tags"); tags != "" {
+		tagsList := strings.Split(tags, ",")
+		var cleanTags []string
+		for _, tag := range tagsList {
+			cleanTags = append(cleanTags, strings.TrimSpace(tag))
+		}
+		post.Tags = cleanTags
+	}
+
+	if customVars := r.FormValue("custom_vars"); customVars != "" {
+		vars := make(map[string]interface{})
+		lines := strings.Split(customVars, "\n")
 		for _, line := range lines {
 			parts := strings.SplitN(line, ":", 2)
 			if len(parts) == 2 {
 				key := strings.TrimSpace(parts[0])
 				value := strings.TrimSpace(parts[1])
 				if key != "" {
-					customVars[key] = value
+					vars[key] = value
 				}
 			}
 		}
+		post.CustomVars = vars
 	}
 
-	// Save content to file
-	// TODO: uuid as file name
-	filename := fmt.Sprintf("%s.md", title)
-	filePath := filepath.Join(POSTS_DIR, filename)
-	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
-		http.Error(w, "Failed to save post content", http.StatusInternalServerError)
+	if content := r.FormValue("content"); content != "" {
+		// Content might be very large, writing to file directly
+		if err := os.WriteFile(post.ContentPath(), []byte(content), 0644); err != nil {
+			http.Error(w, "Failed to save content", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	if status := r.FormValue("status"); status == "published" {
+		post.State = "release" // model.StateRelease
+	}
+
+	err = database.UpdatePost(post)
+	if err != nil {
+		http.Error(w, "Failed to update post", http.StatusInternalServerError)
 		return
 	}
-
-	// Create post record in database
-	category := model.Category{
-		Name:  cName,
-		Color: cColor,
-	}
-	post := &model.Post{
-		Permission:  model.PermissionPublic,
-		Title:       title,
-		Category:    category,
-		ContentPath: filePath,
-		CustomVars:  customVars,
-	}
-
-	if err := database.CreatePost(post); err != nil {
-		http.Error(w, "Failed to save post to database", http.StatusInternalServerError)
-		return
-	}
-
 	w.Header().Set("Content-Type", "text/html")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(`<div class="text-green-600 font-bold p-4 bg-green-50 rounded shadow-md border border-green-200">Post created successfully!</div>`))
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("OK"))
+
 }
 
 func HandlePostDelete(w http.ResponseWriter, r *http.Request) {

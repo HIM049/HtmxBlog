@@ -17,6 +17,7 @@ import (
 
 const ATTACHES_DIR = "./app_data/attaches"
 
+// UploadAttach handle uploads an attach file to the server.
 func UploadAttach(file *multipart.File, name, mime string) (*model.Attach, error) {
 	isSuccess := false
 
@@ -57,6 +58,7 @@ func UploadAttach(file *multipart.File, name, mime string) (*model.Attach, error
 		}
 	}
 
+	// create attach record
 	attach = &model.Attach{
 		Hash:       hash,
 		Uid:        uuid,

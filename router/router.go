@@ -20,13 +20,19 @@ func Init() *chi.Mux {
 	r.Get("/", view_handler.IndexView)
 	r.Get("/p/{id}", view_handler.PostView)
 
-	r.Get("/admin", view_handler.AdminView)
+	r.Route("/admin", func(r chi.Router) {
+		r.Get("/", view_handler.AdminView)
+		r.Get("/post/{id}/edit", view_handler.EditView)
+	})
 
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/admin", func(r chi.Router) {
 
-			r.Post("/post", api_handler.HandlePostCreate)
-			r.Delete("/post/{id}", api_handler.HandlePostDelete)
+			r.Route("/post", func(r chi.Router) {
+				r.Post("/create", api_handler.HandlePostCreate)
+				r.Patch("/{id}", api_handler.HandlePostUpdate)
+				r.Delete("/{id}", api_handler.HandlePostDelete)
+			})
 
 			r.Post("/page", api_handler.HandlePageCreate)
 			r.Delete("/page/{id}", api_handler.HandlePageDelete)
@@ -35,6 +41,8 @@ func Init() *chi.Mux {
 
 		})
 	})
+
+	// TODO share link system. use static url to route share link
 
 	return r
 }

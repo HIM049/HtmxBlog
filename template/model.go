@@ -55,7 +55,7 @@ func GetBaseApp() App {
 
 // UpdateNavigation updates the navigation data
 func UpdateNavigation() error {
-	pages, err := services.ReadAllPages()
+	pages, err := services.ReadNavPages()
 	if err != nil {
 		return err
 	}

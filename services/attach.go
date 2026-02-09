@@ -76,28 +76,33 @@ func CreateAttach(file *multipart.File, name, mime string) (*model.Attach, error
 	return attach, nil
 }
 
+// ReadAttachById reads an attach by its ID.
 func ReadAttachById(id uint) (*model.Attach, error) {
 	var attach model.Attach
 	err := config.DB.First(&attach, id).Error
 	return &attach, err
 }
 
+// ReadAttachByHash reads an attach by its hash.
 func ReadAttachByHash(hash string) (*model.Attach, error) {
 	var attach model.Attach
 	err := config.DB.Where("hash = ?", hash).First(&attach).Error
 	return &attach, err
 }
 
-func ReadAttachList(limit, offset int) ([]model.Attach, error) {
+// ReadAllAttaches reads all attaches.
+func ReadAllAttaches(limit, offset int) ([]model.Attach, error) {
 	var attaches []model.Attach
 	err := config.DB.Limit(limit).Offset(offset).Find(&attaches).Error
 	return attaches, err
 }
 
+// UpdateAttach updates an attach.
 func UpdateAttach(attach *model.Attach) error {
 	return config.DB.Save(attach).Error
 }
 
+// DeleteAttach deletes an attach.
 func DeleteAttach(id uint) error {
 	return config.DB.Delete(&model.Attach{}, id).Error
 }

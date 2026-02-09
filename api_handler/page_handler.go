@@ -1,8 +1,8 @@
 package api_handler
 
 import (
-	"HtmxBlog/database"
 	"HtmxBlog/model"
+	"HtmxBlog/services"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -24,7 +24,7 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = database.CreatePage(&model.Page{
+	err = services.CreatePage(&model.Page{
 		Name:     name,
 		Route:    route,
 		Template: template,
@@ -46,7 +46,7 @@ func HandlePageDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	database.DeletePage(pageId)
+	services.DeletePage(pageId)
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)

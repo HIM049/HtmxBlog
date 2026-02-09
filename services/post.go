@@ -1,7 +1,7 @@
 package services
 
 import (
-	"HtmxBlog/database"
+	"HtmxBlog/config"
 	"HtmxBlog/model"
 
 	"github.com/google/uuid"
@@ -15,7 +15,7 @@ func CreateDefaultPost() (*model.Post, error) {
 		Permission: model.PermissionPublic, // TODO config default permission
 		State:      model.StateDraft,
 	}
-	err := database.DB.Create(post).Error
+	err := config.DB.Create(post).Error
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +24,7 @@ func CreateDefaultPost() (*model.Post, error) {
 
 func ReadPost(id uint) (*model.Post, error) {
 	var post model.Post
-	if err := database.DB.First(&post, id).Error; err != nil {
+	if err := config.DB.First(&post, id).Error; err != nil {
 		return nil, err
 	}
 	return &post, nil
@@ -32,14 +32,14 @@ func ReadPost(id uint) (*model.Post, error) {
 
 func ReadPosts(num int, offset int) ([]model.Post, error) {
 	var posts []model.Post
-	err := database.DB.Limit(num).Offset(offset).Find(&posts).Error
+	err := config.DB.Limit(num).Offset(offset).Find(&posts).Error
 	return posts, err
 }
 
 func UpdatePost(post *model.Post) error {
-	return database.DB.Save(post).Error
+	return config.DB.Save(post).Error
 }
 
 func DeletePost(id uint) error {
-	return database.DB.Delete(&model.Post{}, id).Error
+	return config.DB.Delete(&model.Post{}, id).Error
 }

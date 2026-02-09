@@ -1,7 +1,7 @@
 package services
 
 import (
-	"HtmxBlog/database"
+	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"crypto/sha256"
 	"encoding/hex"
@@ -67,7 +67,7 @@ func CreateAttach(file *multipart.File, name, mime string) (*model.Attach, error
 		Permission: model.PermissionPublic,
 	}
 	// record to db
-	err = database.DB.Create(attach).Error
+	err = config.DB.Create(attach).Error
 	if err != nil {
 		return nil, err
 	}
@@ -78,26 +78,26 @@ func CreateAttach(file *multipart.File, name, mime string) (*model.Attach, error
 
 func ReadAttachById(id uint) (*model.Attach, error) {
 	var attach model.Attach
-	err := database.DB.First(&attach, id).Error
+	err := config.DB.First(&attach, id).Error
 	return &attach, err
 }
 
 func ReadAttachByHash(hash string) (*model.Attach, error) {
 	var attach model.Attach
-	err := database.DB.Where("hash = ?", hash).First(&attach).Error
+	err := config.DB.Where("hash = ?", hash).First(&attach).Error
 	return &attach, err
 }
 
 func ReadAttachList(limit, offset int) ([]model.Attach, error) {
 	var attaches []model.Attach
-	err := database.DB.Limit(limit).Offset(offset).Find(&attaches).Error
+	err := config.DB.Limit(limit).Offset(offset).Find(&attaches).Error
 	return attaches, err
 }
 
 func UpdateAttach(attach *model.Attach) error {
-	return database.DB.Save(attach).Error
+	return config.DB.Save(attach).Error
 }
 
 func DeleteAttach(id uint) error {
-	return database.DB.Delete(&model.Attach{}, id).Error
+	return config.DB.Delete(&model.Attach{}, id).Error
 }

@@ -1,8 +1,8 @@
 package template
 
 import (
-	"HtmxBlog/database"
 	"HtmxBlog/model"
+	"HtmxBlog/services"
 	"fmt"
 	"os"
 	"sort"
@@ -55,7 +55,7 @@ func GetBaseApp() App {
 
 // UpdateNavigation updates the navigation data
 func UpdateNavigation() error {
-	pages, err := database.ReadAllPages()
+	pages, err := services.ReadAllPages()
 	if err != nil {
 		return err
 	}

@@ -1,7 +1,6 @@
 package view_handler
 
 import (
-	"HtmxBlog/database"
 	"HtmxBlog/services"
 	"HtmxBlog/template"
 	"net/http"
@@ -11,7 +10,7 @@ import (
 )
 
 func AdminView(w http.ResponseWriter, r *http.Request) {
-	pages, _ := database.ReadAllPages()
+	pages, _ := services.ReadAllPages()
 	posts, _ := services.ReadPosts(100, 0)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	template.Tmpl.ExecuteTemplate(w, "admin", map[string]interface{}{

@@ -2,7 +2,6 @@ package main
 
 import (
 	"HtmxBlog/config"
-	"HtmxBlog/database"
 	"HtmxBlog/router"
 	"HtmxBlog/template"
 	"fmt"
@@ -17,7 +16,7 @@ func main() {
 
 	// initialize modules
 	config.Init()
-	database.Init()
+	config.InitDB()
 	template.Init()
 
 	fmt.Println("Server is running on", config.Cfg.Service.Addr())

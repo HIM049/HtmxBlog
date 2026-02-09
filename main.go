@@ -3,6 +3,7 @@ package main
 import (
 	"HtmxBlog/config"
 	"HtmxBlog/router"
+	"HtmxBlog/services"
 	"HtmxBlog/template"
 	"fmt"
 	"net/http"
@@ -18,7 +19,16 @@ func main() {
 	config.Init()
 	config.InitDB()
 	template.Init()
+	router.Init()
+
+	// handle page change
+	services.RegisterOnPageChange(func() {
+		go func() {
+			router.RefreshRoutes()
+			template.UpdateNavigation()
+		}()
+	})
 
 	fmt.Println("Server is running on", config.Cfg.Service.Addr())
-	http.ListenAndServe(config.Cfg.Service.Addr(), router.Init())
+	http.ListenAndServe(config.Cfg.Service.Addr(), router.HRouter)
 }

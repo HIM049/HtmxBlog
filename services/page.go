@@ -5,9 +5,16 @@ import (
 	"HtmxBlog/model"
 )
 
+var onPageChange func()
+
 // CreatePage creates a page.
 func CreatePage(item *model.Page) error {
-	return config.DB.Create(item).Error
+	err := config.DB.Create(item).Error
+	if err != nil {
+		return err
+	}
+	onPageChange()
+	return nil
 }
 
 // ReadPage reads a page by its name.
@@ -19,12 +26,22 @@ func ReadPage(name string) (*model.Page, error) {
 
 // UpdatePage updates a page.
 func UpdatePage(item *model.Page) error {
-	return config.DB.Save(item).Error
+	err := config.DB.Save(item).Error
+	if err != nil {
+		return err
+	}
+	onPageChange()
+	return nil
 }
 
 // DeletePage deletes a page.
 func DeletePage(name string) error {
-	return config.DB.Where("name = ?", name).Delete(model.Page{}).Error
+	err := config.DB.Where("name = ?", name).Delete(model.Page{}).Error
+	if err != nil {
+		return err
+	}
+	onPageChange()
+	return nil
 }
 
 // ReadAllPages reads all pages.
@@ -39,4 +56,9 @@ func ReadNavPages() ([]model.Page, error) {
 	var pages []model.Page
 	err := config.DB.Where("show_in_nav = ?", true).Find(&pages).Error
 	return pages, err
+}
+
+// RegisterOnPageChange registers a callback that called when page changed.
+func RegisterOnPageChange(f func()) {
+	onPageChange = f
 }

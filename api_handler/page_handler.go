@@ -25,9 +25,10 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = services.CreatePage(&model.Page{
-		Name:     name,
-		Route:    route,
-		Template: template,
+		Name:      name,
+		Route:     route,
+		Template:  template,
+		ShowInNav: true,
 	})
 	if err != nil {
 		http.Error(w, "Failed to create page", http.StatusInternalServerError)

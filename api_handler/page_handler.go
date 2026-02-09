@@ -17,16 +17,22 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 
 	name := r.FormValue("name")
 	route := r.FormValue("route")
+	template := r.FormValue("template")
 
-	if name == "" || route == "" {
+	if name == "" || route == "" || template == "" {
 		http.Error(w, "Name and route are required", http.StatusBadRequest)
 		return
 	}
 
-	database.CreatePage(&model.Page{
-		Name:  name,
-		Route: route,
+	err = database.CreatePage(&model.Page{
+		Name:     name,
+		Route:    route,
+		Template: template,
 	})
+	if err != nil {
+		http.Error(w, "Failed to create page", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusCreated)

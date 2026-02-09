@@ -17,8 +17,8 @@ import (
 
 const ATTACHES_DIR = "./app_data/attaches"
 
-// UploadAttach handle uploads an attach file to the server.
-func UploadAttach(file *multipart.File, name, mime string) (*model.Attach, error) {
+// CreateAttach handle uploads an attach file to the server.
+func CreateAttach(file *multipart.File, name, mime string) (*model.Attach, error) {
 	isSuccess := false
 
 	// Generate unique ID (UID)
@@ -46,7 +46,7 @@ func UploadAttach(file *multipart.File, name, mime string) (*model.Attach, error
 	hash := hex.EncodeToString(hasher.Sum(nil))
 
 	// check if attach already exists
-	attach, err := database.ReadAttachByHash(hash)
+	attach, err := ReadAttachByHash(hash)
 	if err == nil {
 		return attach, nil
 	} else {
@@ -66,15 +66,38 @@ func UploadAttach(file *multipart.File, name, mime string) (*model.Attach, error
 		Mime:       mime,
 		Permission: model.PermissionPublic,
 	}
-
 	// record to db
-	err = database.CreateAttach(attach)
+	err = database.DB.Create(attach).Error
 	if err != nil {
 		return nil, err
 	}
 
 	isSuccess = true
-
 	return attach, nil
+}
 
+func ReadAttachById(id uint) (*model.Attach, error) {
+	var attach model.Attach
+	err := database.DB.First(&attach, id).Error
+	return &attach, err
+}
+
+func ReadAttachByHash(hash string) (*model.Attach, error) {
+	var attach model.Attach
+	err := database.DB.Where("hash = ?", hash).First(&attach).Error
+	return &attach, err
+}
+
+func ReadAttachList(limit, offset int) ([]model.Attach, error) {
+	var attaches []model.Attach
+	err := database.DB.Limit(limit).Offset(offset).Find(&attaches).Error
+	return attaches, err
+}
+
+func UpdateAttach(attach *model.Attach) error {
+	return database.DB.Save(attach).Error
+}
+
+func DeleteAttach(id uint) error {
+	return database.DB.Delete(&model.Attach{}, id).Error
 }

@@ -1,7 +1,6 @@
 package api_handler
 
 import (
-	"HtmxBlog/database"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
 	"fmt"
@@ -20,7 +19,7 @@ func LoadAttachHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	attach, err := database.ReadAttachById(uint(id))
+	attach, err := services.ReadAttachById(uint(id))
 	if err != nil {
 		http.Error(w, "Attach not found", http.StatusNotFound)
 		return
@@ -48,7 +47,7 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	attach, err := services.UploadAttach(&file, header.Filename, header.Header.Get("Content-Type"))
+	attach, err := services.CreateAttach(&file, header.Filename, header.Header.Get("Content-Type"))
 	if err != nil {
 		http.Error(w, "Failed to upload attach", http.StatusInternalServerError)
 		return

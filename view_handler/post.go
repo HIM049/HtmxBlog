@@ -1,7 +1,7 @@
 package view_handler
 
 import (
-	"HtmxBlog/database"
+	"HtmxBlog/services"
 	"HtmxBlog/template"
 	"net/http"
 	"strconv"
@@ -16,7 +16,7 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post, err := database.ReadPost(uint(id))
+	post, err := services.ReadPost(uint(id))
 	if err != nil {
 		http.Error(w, "Post not found", http.StatusNotFound)
 		return

@@ -1,13 +1,13 @@
 package view_handler
 
 import (
-	"HtmxBlog/database"
+	"HtmxBlog/services"
 	"HtmxBlog/template"
 	"net/http"
 )
 
 func IndexView(w http.ResponseWriter, r *http.Request) {
-	posts, err := database.ReadPosts(10, 0)
+	posts, err := services.ReadPosts(10, 0)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return

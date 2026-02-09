@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
 const DB_PATH = "./app_data"
 
@@ -16,12 +16,12 @@ const DB_PATH = "./app_data"
 // It panics when some error occurs.
 func Init() {
 	dbPath := filepath.Join(DB_PATH, "app.db")
-	d, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{TranslateError: true})
+	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{TranslateError: true})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
-	db = d
+	DB = db
 
 	err = Migrate()
 	if err != nil {
@@ -30,5 +30,5 @@ func Init() {
 }
 
 func Migrate() error {
-	return db.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{})
+	return DB.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{})
 }

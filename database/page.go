@@ -3,25 +3,25 @@ package database
 import "HtmxBlog/model"
 
 func CreatePage(item *model.Page) error {
-	return db.Create(item).Error
+	return DB.Create(item).Error
 }
 
 func ReadPage(name string) (*model.Page, error) {
 	var item model.Page
-	err := db.Where("name = ?", name).First(&item).Error
+	err := DB.Where("name = ?", name).First(&item).Error
 	return &item, err
 }
 
 func UpdatePage(item *model.Page) error {
-	return db.Save(item).Error
+	return DB.Save(item).Error
 }
 
 func DeletePage(name string) error {
-	return db.Where("name = ?", name).Delete(model.Page{}).Error
+	return DB.Where("name = ?", name).Delete(model.Page{}).Error
 }
 
 func ReadAllPages() ([]model.Page, error) {
 	var pages []model.Page
-	err := db.Find(&pages).Error
+	err := DB.Find(&pages).Error
 	return pages, err
 }

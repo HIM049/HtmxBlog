@@ -2,6 +2,7 @@ package view_handler
 
 import (
 	"HtmxBlog/database"
+	"HtmxBlog/services"
 	"HtmxBlog/template"
 	"net/http"
 	"strconv"
@@ -11,7 +12,7 @@ import (
 
 func AdminView(w http.ResponseWriter, r *http.Request) {
 	pages, _ := database.ReadAllPages()
-	posts, _ := database.ReadPosts(100, 0)
+	posts, _ := services.ReadPosts(100, 0)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	template.Tmpl.ExecuteTemplate(w, "admin", map[string]interface{}{
 		"Pages": pages,
@@ -25,7 +26,7 @@ func EditView(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid post ID", http.StatusBadRequest)
 		return
 	}
-	post, err := database.ReadPost(uint(id))
+	post, err := services.ReadPost(uint(id))
 	if err != nil {
 		http.Error(w, "Post not found", http.StatusNotFound)
 		return

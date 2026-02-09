@@ -1,7 +1,6 @@
 package api_handler
 
 import (
-	"HtmxBlog/database"
 	"HtmxBlog/services"
 	"fmt"
 	"net/http"
@@ -36,7 +35,7 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid Post ID", http.StatusBadRequest)
 		return
 	}
-	post, err := database.ReadPost(uint(id))
+	post, err := services.ReadPost(uint(id))
 	if err != nil {
 		http.Error(w, "Failed to read post", http.StatusInternalServerError)
 		return
@@ -97,7 +96,7 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 		post.State = "release" // model.StateRelease
 	}
 
-	err = database.UpdatePost(post)
+	err = services.UpdatePost(post)
 	if err != nil {
 		http.Error(w, "Failed to update post", http.StatusInternalServerError)
 		return
@@ -121,7 +120,7 @@ func HandlePostDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := database.DeletePostById(uint(id)); err != nil {
+	if err := services.DeletePost(uint(id)); err != nil {
 		http.Error(w, "Failed to delete post", http.StatusInternalServerError)
 		return
 	}

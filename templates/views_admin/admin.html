@@ -1,0 +1,27 @@
+{{ define "admin" }}
+{{ template "header" . }}
+
+<body class="bg-[#ececec]">
+    <div class="max-w-[1000px] mx-auto">
+        <div class="flex justify-between items-center p-6">
+            <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 container mx-auto">
+            <!-- Manage Posts -->
+            <a href="/admin/posts"
+                class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition-colors">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Manage Posts</h5>
+                <p class="font-normal text-gray-700">Create, edit, and delete blog posts.</p>
+            </a>
+
+            <!-- Manage Pages -->
+            <div class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md opacity-50 cursor-not-allowed">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Manage Pages</h5>
+                <p class="font-normal text-gray-700">Static page management (Coming Soon).</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+{{ end }}

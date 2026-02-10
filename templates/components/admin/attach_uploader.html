@@ -1,6 +1,6 @@
 {{ define "attach_uploader"}}
-<div class="w-full max-w-lg mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center">Upload Attachment</h1>
+<div class="bg-white shadow-md rounded p-4">
+    <h3 class="font-bold text-gray-700 border-b pb-2 mb-4">Attachments</h3>
     <form hx-post="/api/admin/post/{{ .Post.ID }}/attach" hx-encoding="multipart/form-data" hx-target="#attach-result"
         hx-swap="innerHTML" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div class="mb-4">

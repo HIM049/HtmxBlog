@@ -1,9 +1,11 @@
 package model
 
 const (
-	PermissionPublic  = "public"
-	PermissionLogin   = "login"
-	PermissionPrivate = "private"
+	VisibilityPublic   = "public"
+	VisibilityHide     = "hide"
+	VisibilityLogin    = "login"
+	VisibilityPassword = "password"
+	VisibilityPrivate  = "private"
 )
 
 const (

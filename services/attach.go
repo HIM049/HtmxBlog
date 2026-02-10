@@ -78,7 +78,7 @@ func CreateAttach(file *multipart.File, name, mime string, postId uint) (*model.
 		Uid:        uuid,
 		Name:       name,
 		Mime:       mime,
-		Permission: model.PermissionPublic,
+		Permission: model.VisibilityPublic,
 		Refers:     []model.Post{*post},
 	}
 	// record to db

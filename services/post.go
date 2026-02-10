@@ -12,7 +12,7 @@ func CreateDefaultPost() (*model.Post, error) {
 	uid := uuid.New().String()
 	post := &model.Post{
 		Uid:        uid,
-		Permission: model.PermissionPublic, // TODO config default permission
+		Visibility: model.VisibilityPublic, // TODO config default permission
 		State:      model.StateDraft,
 	}
 	err := config.DB.Create(post).Error

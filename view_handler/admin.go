@@ -10,12 +10,15 @@ import (
 )
 
 func AdminView(w http.ResponseWriter, r *http.Request) {
-	// pages, _ := services.ReadAllPages()
-	// posts, _ := services.ReadPosts(100, 0)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Tmpl.ExecuteTemplate(w, "admin", map[string]interface{}{
-		// "Pages": pages,
-		// "Posts": posts,
+	template.Tmpl.ExecuteTemplate(w, "admin", nil)
+}
+
+func ManagePagesView(w http.ResponseWriter, r *http.Request) {
+	pages, _ := services.ReadAllPages()
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	template.Tmpl.ExecuteTemplate(w, "page_manage", map[string]interface{}{
+		"Pages": pages,
 	})
 }
 

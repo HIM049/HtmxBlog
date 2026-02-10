@@ -36,6 +36,7 @@ func loadRoutes() *chi.Mux {
 
 	r.Route("/admin", func(r chi.Router) {
 		r.Get("/", view_handler.AdminView)
+		r.Get("/pages", view_handler.ManagePagesView)
 		r.Get("/posts", view_handler.ManagePostsView)
 		r.Get("/post/{id}/edit", view_handler.EditView)
 	})

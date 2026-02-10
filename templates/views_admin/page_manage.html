@@ -1,5 +1,5 @@
-{{ define "post_manage"}}
-{{ template "header"}}
+{{ define "page_manage" }}
+{{ template "header" . }}
 
 <body class="bg-gray-100">
     <div class="max-w-[1000px] mx-auto">
@@ -12,19 +12,16 @@
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </a>
-                <h1 class="text-3xl font-bold">Manage Posts</h1>
+                <h1 class="text-3xl font-bold">Manage Pages</h1>
             </div>
-
-            <button hx-post="/api/admin/post/create"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
-                Create New Post
-            </button>
         </div>
 
 
-        {{ template "manage_posts" . }}
+        <div>
+            {{ template "create_page" . }}
+            {{ template "manage_pages" . }}
+        </div>
     </div>
 </body>
 
-</html>
 {{ end }}

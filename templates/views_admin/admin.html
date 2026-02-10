@@ -1,7 +1,7 @@
 {{ define "admin" }}
 {{ template "header" . }}
 
-<body class="bg-[#ececec]">
+<body class="bg-gray-100">
     <div class="max-w-[1000px] mx-auto">
         <div class="flex justify-between items-center p-6">
             <h1 class="text-3xl font-bold">Admin Dashboard</h1>
@@ -16,10 +16,11 @@
             </a>
 
             <!-- Manage Pages -->
-            <div class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md opacity-50 cursor-not-allowed">
+            <a href="/admin/pages"
+                class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition-colors">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Manage Pages</h5>
-                <p class="font-normal text-gray-700">Static page management (Coming Soon).</p>
-            </div>
+                <p class="font-normal text-gray-700">Static page management.</p>
+            </a>
         </div>
     </div>
 </body>

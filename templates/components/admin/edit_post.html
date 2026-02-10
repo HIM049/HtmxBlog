@@ -37,6 +37,23 @@
             <h3 class="font-bold text-gray-700 border-b pb-2">Meta Info</h3>
 
             <div>
+                <label class="block text-gray-600 text-xs font-bold mb-1" for="visibility">Visibility</label>
+                <div class="relative">
+                    <select form="post-form"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white"
+                        id="visibility" name="visibility">
+                        <option value="public" {{ if eq .Post.Visibility "public" }}selected{{ end }}>Public</option>
+                        <option value="hide" {{ if eq .Post.Visibility "hide" }}selected{{ end }}>Hide</option>
+                        <option value="login" {{ if eq .Post.Visibility "login" }}selected{{ end }}>Login Required
+                        </option>
+                        <option value="password" {{ if eq .Post.Visibility "password" }}selected{{ end }}>Password
+                            Protected</option>
+                        <option value="private" {{ if eq .Post.Visibility "private" }}selected{{ end }}>Private</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
                 <label class="block text-gray-600 text-xs font-bold mb-1" for="category">Category</label>
                 <input form="post-form"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"

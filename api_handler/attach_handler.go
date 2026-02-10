@@ -21,7 +21,7 @@ func LoadAttachHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if attach.Permission == model.PermissionPrivate {
+	if attach.Permission == model.VisibilityPrivate {
 		http.Error(w, "Access Forbidden", http.StatusForbidden)
 		return
 	}

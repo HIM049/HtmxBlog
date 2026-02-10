@@ -1,0 +1,38 @@
+{{ define "manage_posts" }}
+<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-8">
+    <h2 class="text-2xl font-bold mb-4">Manage Posts</h2>
+    <div class="overflow-x-auto">
+        <table class="table-auto w-full">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="px-4 py-2">ID</th>
+                    <th class="px-4 py-2">Title</th>
+                    <th class="px-4 py-2">Category</th>
+                    <th class="px-4 py-2">State</th>
+                    <th class="px-4 py-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .Posts }}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-2">{{ .ID }}</td>
+                    <td class="px-4 py-2 font-medium">{{ .Title }}</td>
+                    <td class="px-4 py-2">
+                        <span class="px-2 inline-flex text-xs leading-5 rounded-full"
+                            style="background-color: {{ .Category.Color }}">
+                            {{ .Category.Name }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-2">{{ .State }}</td>
+                    <td class="px-4 py-2">
+                        <a href="/admin/post/{{ .ID }}/edit" class="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
+                        <button hx-delete="/api/admin/post/{{ .ID }}" hx-confirm="Are you sure?" hx-target="closest tr"
+                            hx-swap="outerHTML" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
+{{ end }}

@@ -51,6 +51,10 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 		post.Title = title
 	}
 
+	if visibility := r.FormValue("visibility"); visibility != "" {
+		post.Visibility = visibility
+	}
+
 	if category := r.FormValue("category"); category != "" {
 		post.Category.Name = category
 	}

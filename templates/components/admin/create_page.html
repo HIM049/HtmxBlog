@@ -1,8 +1,7 @@
 {{ define "create_page" }}
-
-<h1 class="text-3xl font-bold mb-6 text-center pt-8 border-t border-gray-300">Create New Page</h1>
 <form hx-post="/api/admin/page" hx-target="#page-result" hx-swap="innerHTML"
     class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2">Create New Page</h2>
     <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="page-name">Page Name</label>
         <input
@@ -30,5 +29,4 @@
     </div>
 </form>
 <div id="page-result" class="text-center mt-4"></div>
-
 {{ end }}

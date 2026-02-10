@@ -11,7 +11,7 @@ const POSTS_DIR = "./app_data/posts"
 type Post struct {
 	gorm.Model
 	Uid        string `json:"uid" gorm:"unique"`
-	Permission string `json:"permission" gorm:"default:'private'"`
+	Visibility string `json:"visibility" gorm:"default:'private'"`
 	State      string `json:"state" gorm:"default:'draft'"`
 
 	Title      string                 `json:"title"`

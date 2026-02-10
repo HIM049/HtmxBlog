@@ -18,8 +18,14 @@ import (
 const ATTACHES_DIR = "./app_data/attaches"
 
 // CreateAttach handle uploads an attach file to the server.
-func CreateAttach(file *multipart.File, name, mime string) (*model.Attach, error) {
+func CreateAttach(file *multipart.File, name, mime string, postId uint) (*model.Attach, error) {
 	isSuccess := false
+
+	// get post info
+	post, err := ReadPost(postId)
+	if err != nil {
+		return nil, err
+	}
 
 	// Generate unique ID (UID)
 	uuid := uuid.New().String()
@@ -48,6 +54,14 @@ func CreateAttach(file *multipart.File, name, mime string) (*model.Attach, error
 	// check if attach already exists
 	attach, err := ReadAttachByHash(hash)
 	if err == nil {
+		// duplicated
+
+		// append reference
+		attach.Refers = append(attach.Refers, *post)
+		err = UpdateAttach(attach)
+		if err != nil {
+			return nil, err
+		}
 		return attach, nil
 	} else {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -65,6 +79,7 @@ func CreateAttach(file *multipart.File, name, mime string) (*model.Attach, error
 		Name:       name,
 		Mime:       mime,
 		Permission: model.PermissionPublic,
+		Refers:     []model.Post{*post},
 	}
 	// record to db
 	err = config.DB.Create(attach).Error
@@ -77,9 +92,9 @@ func CreateAttach(file *multipart.File, name, mime string) (*model.Attach, error
 }
 
 // ReadAttachById reads an attach by its ID.
-func ReadAttachById(id uint) (*model.Attach, error) {
+func ReadAttachByUid(uid string) (*model.Attach, error) {
 	var attach model.Attach
-	err := config.DB.First(&attach, id).Error
+	err := config.DB.Where("uid = ?", uid).First(&attach).Error
 	return &attach, err
 }
 

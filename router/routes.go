@@ -46,12 +46,12 @@ func loadRoutes() *chi.Mux {
 				r.Post("/create", api_handler.HandlePostCreate)
 				r.Patch("/{id}", api_handler.HandlePostUpdate)
 				r.Delete("/{id}", api_handler.HandlePostDelete)
+
+				r.Post("/{id}/attach", api_handler.UploadAttachHandler)
 			})
 
 			r.Post("/page", api_handler.HandlePageCreate)
 			r.Delete("/page/{id}", api_handler.HandlePageDelete)
-
-			r.Post("/attach", api_handler.UploadAttachHandler)
 
 		})
 	})

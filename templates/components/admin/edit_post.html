@@ -76,18 +76,17 @@
             </div>
 
             <div>
-                <label class="block text-gray-600 text-xs font-bold mb-1" for="category">Category</label>
-                <input form="post-form"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
-                    id="category" name="category" type="text" value="{{ .Post.Category.Name }}" placeholder="Category">
-            </div>
-
-            <div>
-                <label class="block text-gray-600 text-xs font-bold mb-1" for="cat_color">Color</label>
-                <div class="flex items-center gap-2">
-                    <input form="post-form" class="shadow appearance-none border rounded h-8 w-12 p-1 cursor-pointer"
-                        id="cat_color" name="cat_color" type="color" value="{{ .Post.Category.Color }}">
-                    <span class="text-xs text-gray-500">Pick a color</span>
+                <label class="block text-gray-600 text-xs font-bold mb-1" for="category_id">Category</label>
+                <div class="relative">
+                    <select form="post-form"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white"
+                        id="category_id" name="category_id">
+                        <option value="0" {{ if eq .Post.CategoryID 0 }}selected{{ end }}>None</option>
+                        {{ range .Categories }}
+                        <option value="{{ .ID }}" {{ if eq $.Post.CategoryID .ID }}selected{{ end }}>{{ .Name }}
+                        </option>
+                        {{ end }}
+                    </select>
                 </div>
             </div>
 

@@ -35,6 +35,7 @@ func (vp *ViewPost) LoadContent() error {
 	return nil
 }
 
+// ParseContent parses the md content of the post
 func (vp *ViewPost) ParseContent() template.HTML {
 	if vp.Content == "" {
 		return template.HTML("")

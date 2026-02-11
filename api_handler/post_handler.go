@@ -63,12 +63,11 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 		post.State = state
 	}
 
-	if category := r.FormValue("category"); category != "" {
-		post.Category.Name = category
-	}
-
-	if color := r.FormValue("cat_color"); color != "" {
-		post.Category.Color = color
+	if categoryID := r.FormValue("category_id"); categoryID != "" {
+		id, err := strconv.Atoi(categoryID)
+		if err == nil {
+			post.CategoryID = uint(id)
+		}
 	}
 
 	if tags := r.FormValue("tags"); tags != "" {

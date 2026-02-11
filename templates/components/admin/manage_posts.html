@@ -18,10 +18,12 @@
                     <td class="px-4 py-2">{{ .ID }}</td>
                     <td class="px-4 py-2 font-medium">{{ .Title }}</td>
                     <td class="px-4 py-2">
+                        {{ if .Category.ID }}
                         <span class="px-2 inline-flex text-xs leading-5 rounded-full"
                             style="background-color: {{ .Category.Color }}">
                             {{ .Category.Name }}
                         </span>
+                        {{ end }}
                     </td>
                     <td class="px-4 py-2">{{ .State }}</td>
                     <td class="px-4 py-2">

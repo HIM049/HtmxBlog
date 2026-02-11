@@ -24,7 +24,7 @@ func CreateDefaultPost() (*model.Post, error) {
 
 func ReadPost(id uint) (*model.Post, error) {
 	var post model.Post
-	if err := config.DB.First(&post, id).Error; err != nil {
+	if err := config.DB.Preload("Category").First(&post, id).Error; err != nil {
 		return nil, err
 	}
 	return &post, nil
@@ -32,7 +32,7 @@ func ReadPost(id uint) (*model.Post, error) {
 
 func ReadPosts(num int, offset int) ([]model.Post, error) {
 	var posts []model.Post
-	err := config.DB.Limit(num).Offset(offset).Find(&posts).Error
+	err := config.DB.Preload("Category").Limit(num).Offset(offset).Find(&posts).Error
 	return posts, err
 }
 
@@ -52,7 +52,7 @@ func ReadPostsWithConditions(num, offset int, visibility, protect, state string)
 		query.Where("state = ?", state)
 	}
 
-	query.Limit(num).Offset(offset).Find(&posts)
+	query.Preload("Category").Limit(num).Offset(offset).Find(&posts)
 	return posts, query.Error
 }
 

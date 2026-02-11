@@ -20,10 +20,12 @@
                     <!-- Info Section -->
                     <div class="p-4">
                         <div class="flex items-center gap-3 mb-2">
+                            {{ if .Category.ID }}
                             <span
                                 class="px-2.5 py-0.5 text-xs font-semibold text-gray-600 rounded-md uppercase tracking-wide"
                                 style="background-color: {{ .Category.Color }};">{{
                                 .Category.Name }}</span>
+                            {{ end }}
                             <h2 class="text-2xl font-bold text-gray-800 line-clamp-1 transition">
                                 {{ .Title }}</h2>
                         </div>

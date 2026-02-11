@@ -1,0 +1,11 @@
+package model
+
+import (
+	"gorm.io/gorm"
+)
+
+type Category struct {
+	gorm.Model
+	Name  string `json:"name" gorm:"not null"`
+	Color string `json:"color" gorm:"not null"`
+}

@@ -16,15 +16,11 @@ type Post struct {
 	State      string `json:"state" gorm:"default:'draft'"`
 
 	Title      string                 `json:"title"`
-	Category   Category               `json:"category" gorm:"embedded;embeddedPrefix:category_"`
+	CategoryID uint                   `json:"category_id"`
+	Category   Category               `json:"category" gorm:"foreignKey:CategoryID"`
 	Tags       []string               `json:"tags" gorm:"serializer:json"`
 	Attachs    []Attach               `json:"attachs" gorm:"many2many:post_attaches"`
 	CustomVars map[string]interface{} `json:"custom_vars" gorm:"serializer:json"`
-}
-
-type Category struct {
-	Name  string `json:"name" gorm:"not null"`
-	Color string `json:"color" gorm:"not null"`
 }
 
 func (p *Post) ContentPath() string {

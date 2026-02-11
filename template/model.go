@@ -3,7 +3,9 @@ package template
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/utils"
 	"fmt"
+	"html/template"
 	"os"
 	"sort"
 	"strings"
@@ -28,8 +30,20 @@ func (vp *ViewPost) LoadContent() error {
 	if err != nil {
 		return err
 	}
+
 	vp.Content = string(content)
 	return nil
+}
+
+func (vp *ViewPost) ParseContent() template.HTML {
+	if vp.Content == "" {
+		return template.HTML("")
+	}
+	md, err := utils.ParseMarkdown([]byte(vp.Content))
+	if err != nil {
+		return template.HTML("")
+	}
+	return template.HTML(md)
 }
 
 func (p *ViewPost) TagsToString() string {

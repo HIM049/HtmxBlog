@@ -27,6 +27,7 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to load post content", http.StatusInternalServerError)
 		return
 	}
+
 	base := template.GetBaseApp()
 	base.Posts = []template.ViewPost{vp}
 

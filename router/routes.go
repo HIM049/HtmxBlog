@@ -2,6 +2,7 @@ package router
 
 import (
 	"HtmxBlog/api_handler"
+	app_middleware "HtmxBlog/middleware"
 	"HtmxBlog/view_handler"
 	"net/http"
 
@@ -28,17 +29,21 @@ func loadRoutes() *chi.Mux {
 	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 	r.Get("/attach/{id}", api_handler.LoadAttachHandler)
 
-	err := RegisterPagesRouter(r)
-	if err != nil {
-		panic(err)
-	}
-	r.Get("/p/{id}", view_handler.PostView)
+	r.Group(func(r chi.Router) {
+		r.Use(app_middleware.NotFoundInterceptor)
 
-	r.Route("/admin", func(r chi.Router) {
-		r.Get("/", view_handler.AdminView)
-		r.Get("/pages", view_handler.ManagePagesView)
-		r.Get("/posts", view_handler.ManagePostsView)
-		r.Get("/post/{id}/edit", view_handler.EditView)
+		err := RegisterPagesRouter(r)
+		if err != nil {
+			panic(err)
+		}
+		r.Get("/p/{id}", view_handler.PostView)
+
+		r.Route("/admin", func(r chi.Router) {
+			r.Get("/", view_handler.AdminView)
+			r.Get("/pages", view_handler.ManagePagesView)
+			r.Get("/posts", view_handler.ManagePostsView)
+			r.Get("/post/{id}/edit", view_handler.EditView)
+		})
 	})
 
 	r.Route("/api", func(r chi.Router) {

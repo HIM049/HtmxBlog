@@ -1,6 +1,7 @@
 package view_handler
 
 import (
+	"HtmxBlog/model"
 	"HtmxBlog/services"
 	"HtmxBlog/template"
 	"net/http"
@@ -8,7 +9,7 @@ import (
 
 func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		posts, err := services.ReadPosts(10, 0)
+		posts, err := services.ReadPostsWithConditions(10, 0, model.VisibilityPublic, "", model.StateRelease)
 		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return

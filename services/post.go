@@ -36,6 +36,26 @@ func ReadPosts(num int, offset int) ([]model.Post, error) {
 	return posts, err
 }
 
+func ReadPostsWithConditions(num, offset int, visibility, protect, state string) ([]model.Post, error) {
+	var posts []model.Post
+	query := config.DB.Model(&model.Post{})
+
+	if visibility != "" {
+		query.Where("visibility = ?", visibility)
+	}
+
+	if protect != "" {
+		query.Where("protect = ?", protect)
+	}
+
+	if state != "" {
+		query.Where("state = ?", state)
+	}
+
+	query.Limit(num).Offset(offset).Find(&posts)
+	return posts, query.Error
+}
+
 func UpdatePost(post *model.Post) error {
 	return config.DB.Save(post).Error
 }

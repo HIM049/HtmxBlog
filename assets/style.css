@@ -319,9 +319,6 @@
   .h-\[100px\] {
     height: 100px;
   }
-  .h-\[calc\(100vh-100px\)\] {
-    height: calc(100vh - 100px);
-  }
   .h-full {
     height: 100%;
   }

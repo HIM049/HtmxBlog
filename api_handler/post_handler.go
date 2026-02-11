@@ -55,6 +55,14 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 		post.Visibility = visibility
 	}
 
+	if protect := r.FormValue("protect"); protect != "" {
+		post.Protect = protect
+	}
+
+	if state := r.FormValue("state"); state != "" {
+		post.State = state
+	}
+
 	if category := r.FormValue("category"); category != "" {
 		post.Category.Name = category
 	}
@@ -94,10 +102,6 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to save content", http.StatusInternalServerError)
 			return
 		}
-	}
-
-	if status := r.FormValue("status"); status == "published" {
-		post.State = "release" // model.StateRelease
 	}
 
 	err = services.UpdatePost(post)

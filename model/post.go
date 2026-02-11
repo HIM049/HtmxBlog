@@ -12,6 +12,7 @@ type Post struct {
 	gorm.Model
 	Uid        string `json:"uid" gorm:"unique"`
 	Visibility string `json:"visibility" gorm:"default:'private'"`
+	Protect    string `json:"protected" gorm:"default:'none'"`
 	State      string `json:"state" gorm:"default:'draft'"`
 
 	Title      string                 `json:"title"`

@@ -5,6 +5,8 @@ import (
 	"HtmxBlog/model"
 )
 
+var onCategoryChange func()
+
 func CreateCategory(name, color string) (*model.Category, error) {
 	category := &model.Category{
 		Name:  name,
@@ -14,6 +16,7 @@ func CreateCategory(name, color string) (*model.Category, error) {
 	if err != nil {
 		return nil, err
 	}
+	onCategoryChange()
 	return category, nil
 }
 
@@ -30,9 +33,24 @@ func ReadCategories() ([]model.Category, error) {
 }
 
 func UpdateCategory(category *model.Category) error {
-	return config.DB.Save(category).Error
+	err := config.DB.Save(category).Error
+	if err != nil {
+		return err
+	}
+	onCategoryChange()
+	return nil
 }
 
 func DeleteCategory(id uint) error {
-	return config.DB.Delete(&model.Category{}, id).Error
+	err := config.DB.Delete(&model.Category{}, id).Error
+	if err != nil {
+		return err
+	}
+	onCategoryChange()
+	return nil
+}
+
+// RegisterOnCategoryChange registers a callback that called when category changed.
+func RegisterOnCategoryChange(f func()) {
+	onCategoryChange = f
 }

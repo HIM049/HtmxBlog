@@ -28,6 +28,12 @@ func main() {
 			template.UpdateNavigation()
 		}()
 	})
+	// handle category change
+	services.RegisterOnCategoryChange(func() {
+		go func() {
+			template.UpdateCategories()
+		}()
+	})
 
 	fmt.Println("Server is running on", config.Cfg.Service.Addr())
 	http.ListenAndServe(config.Cfg.Service.Addr(), router.HRouter)

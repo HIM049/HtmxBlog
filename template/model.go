@@ -16,6 +16,7 @@ var currentState App
 type App struct {
 	PageTitle  string
 	Navigation []model.Page
+	Categories []model.Category
 	Posts      []ViewPost
 }
 
@@ -65,6 +66,9 @@ func GetBaseApp() App {
 	if currentState.Navigation == nil {
 		UpdateNavigation()
 	}
+	if currentState.Categories == nil {
+		UpdateCategories()
+	}
 	return currentState
 }
 
@@ -75,5 +79,15 @@ func UpdateNavigation() error {
 		return err
 	}
 	currentState.Navigation = pages
+	return nil
+}
+
+// UpdateCategories updates the categories data
+func UpdateCategories() error {
+	categories, err := services.ReadCategories()
+	if err != nil {
+		return err
+	}
+	currentState.Categories = categories
 	return nil
 }

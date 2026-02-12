@@ -36,24 +36,28 @@ func ReadPosts(num int, offset int) ([]model.Post, error) {
 	return posts, err
 }
 
-func ReadPostsWithConditions(num, offset int, visibility, protect, state string) ([]model.Post, error) {
+func ReadPostsWithConditions(num, offset int, visibility, protect, state, categoryID string) ([]model.Post, error) {
 	var posts []model.Post
 	query := config.DB.Model(&model.Post{})
 
 	if visibility != "" {
-		query.Where("visibility = ?", visibility)
+		query = query.Where("visibility = ?", visibility)
 	}
 
 	if protect != "" {
-		query.Where("protect = ?", protect)
+		query = query.Where("protect = ?", protect)
 	}
 
 	if state != "" {
-		query.Where("state = ?", state)
+		query = query.Where("state = ?", state)
 	}
 
-	query.Preload("Category").Limit(num).Offset(offset).Find(&posts)
-	return posts, query.Error
+	if categoryID != "" {
+		query = query.Where("category_id = ?", categoryID)
+	}
+
+	err := query.Preload("Category").Limit(num).Offset(offset).Find(&posts).Error
+	return posts, err
 }
 
 func UpdatePost(post *model.Post) error {

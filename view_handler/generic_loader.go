@@ -9,7 +9,8 @@ import (
 
 func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		posts, err := services.ReadPostsWithConditions(10, 0, model.VisibilityPublic, "", model.StateRelease)
+		categoryID := r.URL.Query().Get("category")
+		posts, err := services.ReadPostsWithConditions(10, 0, model.VisibilityPublic, "", model.StateRelease, categoryID)
 		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return

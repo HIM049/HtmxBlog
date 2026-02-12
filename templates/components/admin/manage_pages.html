@@ -1,24 +1,100 @@
 {{ define "manage_pages" }}
 
-<div class="mt-8 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <h2 class="text-xl font-bold mb-4 border-b pb-2">Existing Pages</h2>
-    <ul id="page-list" class="space-y-2">
-        {{ range .Pages }}
-        <li class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
-            <div>
-                <span class="font-semibold">{{ .Name }}</span>
-                <span class="text-sm text-gray-500 ml-2">({{ .Route }})</span>
-            </div>
-            <button hx-delete="/api/admin/page/{{ .Name }}" hx-confirm="Are you sure you want to delete this page?"
-                hx-target="closest li" hx-swap="outerHTML"
-                class="text-red-500 hover:text-red-700 font-medium text-sm border border-red-200 hover:border-red-400 px-3 py-1 rounded transition">
-                Delete
-            </button>
-        </li>
-        {{ else }}
-        <li class="text-gray-500 italic text-center py-4">No pages found.</li>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <!-- Sorted Pages -->
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
+        <h2 class="text-xl font-bold mb-4 border-b pb-2">Sorted Pages</h2>
+        <form id="sort-pages-form" hx-post="/api/admin/page/reorder" hx-trigger="reorder" hx-swap="none">
+            <ul id="sorted-list" class="space-y-2 min-h-[50px]">
+                {{ range .SortedPages }}
+                <li data-id="{{ .Name }}"
+                    class="flex justify-between items-center p-2 bg-gray-50 border border-gray-200 rounded cursor-move">
+                    <input type="hidden" name="pages" value="{{ .Name }}">
+                    <div>
+                        <span class="font-semibold">{{ .Name }}</span>
+                        <span class="text-sm text-gray-500 ml-2">({{ .Route }})</span>
+                    </div>
+                </li>
+                {{ end }}
+            </ul>
+        </form>
+    </div>
+
+    <!-- Hidden Pages -->
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
+        <h2 class="text-xl font-bold mb-4 border-b pb-2">Hidden Pages</h2>
+        <ul id="hidden-list" class="space-y-2 min-h-[50px]">
+            {{ range .HiddenPages }}
+            <li data-id="{{ .Name }}"
+                class="flex justify-between items-center p-2 bg-white border border-dashed border-gray-300 rounded cursor-move">
+                <input type="hidden" name="pages" value="{{ .Name }}">
+                <div>
+                    <span class="font-semibold">{{ .Name }}</span>
+                    <span class="text-sm text-gray-500 ml-2">({{ .Route }})</span>
+                </div>
+            </li>
+            {{ end }}
+        </ul>
+        <form id="hide-page-form" hx-post="/api/admin/page/unsort" hx-trigger="submit" hx-swap="none">
+            <input type="hidden" name="page" id="hide-page-input">
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var sortedEl = document.getElementById('sorted-list');
+        var hiddenEl = document.getElementById('hidden-list');
+
+        new Sortable(sortedEl, {
+            group: 'pages',
+            animation: 150,
+            ghostClass: 'bg-blue-100',
+            onSort: function (evt) {
+                // Trigger reorder when list changes
+                htmx.trigger(document.getElementById('sort-pages-form'), 'reorder');
+            }
+        });
+
+        new Sortable(hiddenEl, {
+            group: 'pages',
+            animation: 150,
+            ghostClass: 'bg-gray-100',
+            onAdd: function (evt) {
+                // Trigger unsort (hide) when item is added to hidden list
+                var pageName = evt.item.getAttribute('data-id');
+                document.getElementById('hide-page-input').value = pageName;
+                htmx.trigger(document.getElementById('hide-page-form'), 'submit');
+            }
+        });
+    });
+</script>
+
+<div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2">Manage All Pages</h2>
+    <ul class="space-y-2">
+        {{ range .SortedPages }}
+        {{ template "page_item" . }}
+        {{ end }}
+        {{ range .HiddenPages }}
+        {{ template "page_item" . }}
         {{ end }}
     </ul>
 </div>
 
+{{ end }}
+
+{{ define "page_item" }}
+<li class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+    <div>
+        <span class="font-semibold">{{ .Name }}</span>
+        <span class="text-sm text-gray-500 ml-2">({{ .Route }})</span>
+    </div>
+    <button hx-delete="/api/admin/page/{{ .Name }}" hx-confirm="Are you sure you want to delete this page?"
+        hx-target="closest li" hx-swap="outerHTML"
+        class="text-red-500 hover:text-red-700 font-medium text-sm border border-red-200 hover:border-red-400 px-3 py-1 rounded transition">
+        Delete
+    </button>
+</li>
 {{ end }}

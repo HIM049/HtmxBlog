@@ -54,8 +54,36 @@ func ReadAllPages() ([]model.Page, error) {
 // ReadNavPages reads all pages that are shown in the navigation.
 func ReadNavPages() ([]model.Page, error) {
 	var pages []model.Page
-	err := config.DB.Where("show_in_nav = ?", true).Find(&pages).Error
+	err := config.DB.Where("sort > ?", 0).Order("sort asc").Find(&pages).Error
 	return pages, err
+}
+
+// ReorderPages reorders pages by their names.
+func ReorderPages(names []string) error {
+	tx := config.DB.Begin()
+	for i, name := range names {
+		// sort index starts from 1
+		// 0 is default value, mean no sort
+		if err := tx.Model(&model.Page{}).Where("name = ?", name).Update("sort", i+1).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
+	onPageChange()
+	return nil
+}
+
+// UnsortPage sets the sort value of a page to 0.
+func UnsortPage(name string) error {
+	err := config.DB.Model(&model.Page{}).Where("name = ?", name).Update("sort", 0).Error
+	if err != nil {
+		return err
+	}
+	onPageChange()
+	return nil
 }
 
 // RegisterOnPageChange registers a callback that called when page changed.

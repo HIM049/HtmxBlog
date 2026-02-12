@@ -55,10 +55,14 @@
                     <div class="flex flex-col space-y-1">
                         {{ range .Categories }}
                         <a href="/?category={{ .ID }}"
-                            class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition-colors group">
-                            <div class="w-3 h-3 rounded-full shrink-0 shadow-sm" style="background-color: {{ .Color }}">
+                            class="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 rounded-full shrink-0 shadow-sm"
+                                    style="background-color: {{ .Color }}"></div>
+                                <span class="text-gray-600 group-hover:text-gray-900 font-medium text-sm">{{ .Name
+                                    }}</span>
                             </div>
-                            <span class="text-gray-600 group-hover:text-gray-900 font-medium text-sm">{{ .Name }}</span>
+                            <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{{ .Count }}</span>
                         </a>
                         {{ end }}
                     </div>

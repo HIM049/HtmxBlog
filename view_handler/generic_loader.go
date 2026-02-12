@@ -19,7 +19,7 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 		base := template.GetBaseApp()
 		base.PageTitle = "HIMs Blog"
 		for _, post := range posts {
-			base.Posts = append(base.Posts, template.ViewPost{
+			base.Posts = append(base.Posts, model.ViewPost{
 				Post:    post,
 				Content: post.ContentPath(),
 			})

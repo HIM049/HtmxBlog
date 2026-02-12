@@ -32,6 +32,23 @@ func ReadCategories() ([]model.Category, error) {
 	return categories, err
 }
 
+func ReadViewCategories() ([]model.ViewCategory, error) {
+	var results []model.ViewCategory
+	err := config.DB.Table("categories").
+		Select("categories.*, count(posts.id) as count").
+		Joins(
+			"left join posts on posts.category_id = categories.id AND posts.deleted_at IS NULL AND posts.visibility = ? AND posts.state = ?",
+			model.VisibilityPublic,
+			model.StateRelease,
+		).
+		Group("categories.id").
+		Scan(&results).Error
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
 func UpdateCategory(category *model.Category) error {
 	err := config.DB.Save(category).Error
 	if err != nil {

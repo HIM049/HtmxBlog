@@ -69,7 +69,7 @@ func EditView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vp := &template.ViewPost{Post: *post}
+	vp := &model.ViewPost{Post: *post}
 	vp.LoadContent()
 	categories, _ := services.ReadCategories()
 

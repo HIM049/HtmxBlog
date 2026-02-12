@@ -7,6 +7,8 @@ import (
 	"github.com/google/uuid"
 )
 
+var onPostChange func()
+
 // CreateDefaultPost creates a post with default values
 func CreateDefaultPost() (*model.Post, error) {
 	uid := uuid.New().String()
@@ -19,6 +21,7 @@ func CreateDefaultPost() (*model.Post, error) {
 	if err != nil {
 		return nil, err
 	}
+	onPostChange()
 	return post, nil
 }
 
@@ -61,9 +64,23 @@ func ReadPostsWithConditions(num, offset int, visibility, protect, state, catego
 }
 
 func UpdatePost(post *model.Post) error {
-	return config.DB.Save(post).Error
+	err := config.DB.Save(post).Error
+	if err != nil {
+		return err
+	}
+	onPostChange()
+	return nil
 }
 
 func DeletePost(id uint) error {
-	return config.DB.Delete(&model.Post{}, id).Error
+	err := config.DB.Delete(&model.Post{}, id).Error
+	if err != nil {
+		return err
+	}
+	onPostChange()
+	return nil
+}
+
+func RegisterOnPostChange(f func()) {
+	onPostChange = f
 }

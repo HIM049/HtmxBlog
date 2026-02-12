@@ -1,6 +1,7 @@
 package view_handler
 
 import (
+	"HtmxBlog/model"
 	"HtmxBlog/services"
 	"HtmxBlog/template"
 	"net/http"
@@ -22,14 +23,14 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vp := template.ViewPost{Post: *post}
+	vp := model.ViewPost{Post: *post}
 	if err = vp.LoadContent(); err != nil {
 		http.Error(w, "Failed to load post content", http.StatusInternalServerError)
 		return
 	}
 
 	base := template.GetBaseApp()
-	base.Posts = []template.ViewPost{vp}
+	base.Posts = []model.ViewPost{vp}
 
 	template.Tmpl.ExecuteTemplate(w, "post", base)
 

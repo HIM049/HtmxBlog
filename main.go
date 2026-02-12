@@ -19,6 +19,7 @@ func main() {
 	config.Init()
 	config.InitDB()
 	template.Init()
+	template.InitBaseApp()
 	router.Init()
 
 	// handle page change
@@ -30,6 +31,11 @@ func main() {
 	})
 	// handle category change
 	services.RegisterOnCategoryChange(func() {
+		go func() {
+			template.UpdateCategories()
+		}()
+	})
+	services.RegisterOnPostChange(func() {
 		go func() {
 			template.UpdateCategories()
 		}()

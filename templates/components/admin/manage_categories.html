@@ -5,22 +5,43 @@
     <h2 class="text-xl font-bold mb-4 border-b pb-2">Existing Categories</h2>
     <ul id="category-list" class="space-y-2">
         {{ range .Categories }}
-        <li class="flex justify-between items-center p-2 hover:bg-gray-50 rounded border-b last:border-b-0">
-            <div class="flex items-center gap-3">
-                <div class="w-6 h-6 rounded-full shadow-sm border border-gray-200"
-                    style="background-color: {{ .Color }}"></div>
-                <span class="font-semibold">{{ .Name }}</span>
-            </div>
-            <button hx-delete="/api/admin/category/{{ .ID }}"
-                hx-confirm="Are you sure you want to delete this category?" hx-target="closest li" hx-swap="outerHTML"
-                class="text-red-500 hover:text-red-700 font-medium text-sm border border-red-200 hover:border-red-400 px-3 py-1 rounded transition">
-                Delete
-            </button>
-        </li>
+        {{ template "category_item" . }}
         {{ else }}
         <li class="text-gray-500 italic text-center py-4">No categories found.</li>
         {{ end }}
     </ul>
 </div>
 
+{{ end }}
+
+{{ define "category_item" }}
+<li class="flex justify-between items-center p-2 hover:bg-gray-50 rounded border-b last:border-b-0">
+    <div class="flex items-center gap-3">
+        <input type="color" name="color" value="{{ .Color }}" hx-patch="/api/admin/category/{{ .ID }}"
+            hx-trigger="change" hx-target="closest li" hx-swap="outerHTML"
+            class="w-8 h-8 rounded shadow-sm border border-gray-200 cursor-pointer p-0 bg-transparent">
+        <input type="text" name="name" value="{{ .Name }}" hx-patch="/api/admin/category/{{ .ID }}" hx-trigger="change"
+            hx-target="closest li" hx-swap="outerHTML"
+            class="font-semibold bg-transparent border-transparent hover:border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded px-2 py-1 transition-colors">
+        {{ if eq .Visibility "hide" }}
+        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">Hidden</span>
+        {{ else if eq .Visibility "private" }}
+        <span class="text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">Private</span>
+        {{ end }}
+    </div>
+    <div class="flex items-center gap-2">
+        <select name="visibility" hx-patch="/api/admin/category/{{ .ID }}" hx-trigger="change" hx-target="closest li"
+            hx-swap="outerHTML"
+            class="text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-8 py-0 pl-2 pr-8">
+            <option value="public" {{ if eq .Visibility "public" }}selected{{ end }}>Public</option>
+            <option value="hide" {{ if eq .Visibility "hide" }}selected{{ end }}>Hide</option>
+            <option value="private" {{ if eq .Visibility "private" }}selected{{ end }}>Private</option>
+        </select>
+        <button hx-delete="/api/admin/category/{{ .ID }}" hx-confirm="Are you sure you want to delete this category?"
+            hx-target="closest li" hx-swap="outerHTML"
+            class="text-red-500 hover:text-red-700 font-medium text-sm border border-red-200 hover:border-red-400 px-3 py-1 rounded transition h-8">
+            Delete
+        </button>
+    </div>
+</li>
 {{ end }}

@@ -9,8 +9,9 @@ var onCategoryChange func()
 
 func CreateCategory(name, color string) (*model.Category, error) {
 	category := &model.Category{
-		Name:  name,
-		Color: color,
+		Name:       name,
+		Color:      color,
+		Visibility: model.VisibilityPublic,
 	}
 	err := config.DB.Create(category).Error
 	if err != nil {
@@ -34,13 +35,14 @@ func ReadCategories() ([]model.Category, error) {
 
 func ReadViewCategories() ([]model.ViewCategory, error) {
 	var results []model.ViewCategory
-	err := config.DB.Table("categories").
+	err := config.DB.Debug().Model(&model.Category{}).
 		Select("categories.*, count(posts.id) as count").
 		Joins(
 			"left join posts on posts.category_id = categories.id AND posts.deleted_at IS NULL AND posts.visibility = ? AND posts.state = ?",
 			model.VisibilityPublic,
 			model.StateRelease,
 		).
+		Where("categories.visibility = ?", model.VisibilityPublic).
 		Group("categories.id").
 		Scan(&results).Error
 	if err != nil {
@@ -65,6 +67,22 @@ func DeleteCategory(id uint) error {
 	}
 	onCategoryChange()
 	return nil
+}
+
+// SetCategoryVisibility sets the visibility of a category
+func SetCategoryVisibility(id uint, visibility string) (*model.Category, error) {
+	category, err := ReadCategory(id)
+	if err != nil {
+		return nil, err
+	}
+
+	category.Visibility = visibility
+
+	err = UpdateCategory(category)
+	if err != nil {
+		return nil, err
+	}
+	return category, nil
 }
 
 // RegisterOnCategoryChange registers a callback that called when category changed.

@@ -2,6 +2,7 @@ package api_handler
 
 import (
 	"HtmxBlog/services"
+	"HtmxBlog/template"
 	"net/http"
 	"strconv"
 
@@ -56,4 +57,43 @@ func HandleCategoryDelete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(""))
+}
+
+func HandleCategoryUpdate(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	if idStr == "" {
+		http.Error(w, "Category ID is required", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid Category ID", http.StatusBadRequest)
+		return
+	}
+
+	category, err := services.ReadCategory(uint(id))
+	if err != nil {
+		http.Error(w, "Category not found", http.StatusNotFound)
+		return
+	}
+
+	if name := r.FormValue("name"); name != "" {
+		category.Name = name
+	}
+	if color := r.FormValue("color"); color != "" {
+		category.Color = color
+	}
+	if visibility := r.FormValue("visibility"); visibility != "" {
+		category.Visibility = visibility
+	}
+
+	err = services.UpdateCategory(category)
+	if err != nil {
+		http.Error(w, "Failed to update category", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	template.Tmpl.ExecuteTemplate(w, "category_item", category)
 }

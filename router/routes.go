@@ -65,8 +65,11 @@ func loadRoutes() *chi.Mux {
 				r.Delete("/{id}", api_handler.HandlePageDelete)
 			})
 
-			r.Post("/category", api_handler.HandleCategoryCreate)
-			r.Delete("/category/{id}", api_handler.HandleCategoryDelete)
+			r.Route("/category", func(r chi.Router) {
+				r.Post("/", api_handler.HandleCategoryCreate)
+				r.Delete("/{id}", api_handler.HandleCategoryDelete)
+				r.Patch("/{id}", api_handler.HandleCategoryUpdate)
+			})
 
 		})
 	})

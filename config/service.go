@@ -7,12 +7,14 @@ import (
 )
 
 type Service struct {
-	Port string
+	Port        string
+	AdminPasswd string
 }
 
 func ReadService(k *koanf.Koanf) Service {
 	return Service{
-		Port: k.String("service.port"),
+		Port:        k.String("service.port"),
+		AdminPasswd: k.String("service.admin_password"),
 	}
 }
 

@@ -4,3 +4,4 @@ dsn = "app.db"
 
 [service]
 port = "8080"
+admin_password = "password"

@@ -16,6 +16,11 @@ func AdminView(w http.ResponseWriter, r *http.Request) {
 	template.Tmpl.ExecuteTemplate(w, "admin", nil)
 }
 
+func AuthView(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	template.Tmpl.ExecuteTemplate(w, "auth", nil)
+}
+
 func ManagePagesView(w http.ResponseWriter, r *http.Request) {
 	pages, _ := services.ReadAllPages()
 

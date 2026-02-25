@@ -1,6 +1,8 @@
 package router
 
 import (
+	"HtmxBlog/services"
+	"HtmxBlog/view_handler"
 	"net/http"
 	"sync"
 
@@ -28,4 +30,18 @@ func (h *HotRouter) Update(newMux *chi.Mux) {
 	defer h.lock.Unlock()
 
 	h.mux = newMux
+}
+
+// RegisterPagesRouter registers all pages as routes.
+// It will panic if any error occurs.
+func RegisterPagesRouter(r chi.Router) error {
+	pages, err := services.ReadAllPages()
+	if err != nil {
+		return err
+	}
+
+	for _, page := range pages {
+		r.Get(page.Route, view_handler.GenericViewLoader(page.Template))
+	}
+	return nil
 }

@@ -39,45 +39,55 @@ func loadRoutes() *chi.Mux {
 		r.Get("/p/{id}", view_handler.PostView)
 
 		r.Route("/admin", func(r chi.Router) {
-			r.Get("/", view_handler.AdminView)
-			r.Get("/pages", view_handler.ManagePagesView)
-			r.Get("/posts", view_handler.ManagePostsView)
-			r.Get("/categories", view_handler.ManageCategoriesView)
-			r.Get("/settings", view_handler.ManageSettingsView)
-			r.Get("/post/{id}/edit", view_handler.EditView)
+			r.Get("/auth", view_handler.AuthView)
+			r.Group(func(r chi.Router) {
+				r.Use(app_middleware.AccessControlMiddleware)
+
+				r.Get("/", view_handler.AdminView)
+				r.Get("/pages", view_handler.ManagePagesView)
+				r.Get("/posts", view_handler.ManagePostsView)
+				r.Get("/categories", view_handler.ManageCategoriesView)
+				r.Get("/settings", view_handler.ManageSettingsView)
+				r.Get("/post/{id}/edit", view_handler.EditView)
+			})
 		})
 	})
 
 	r.Route("/api", func(r chi.Router) {
+
 		r.Route("/admin", func(r chi.Router) {
+			r.Post("/auth", api_handler.AuthHandler)
 
-			r.Route("/post", func(r chi.Router) {
-				r.Post("/create", api_handler.HandlePostCreate)
-				r.Patch("/{id}", api_handler.HandlePostUpdate)
-				r.Delete("/{id}", api_handler.HandlePostDelete)
+			r.Group(func(r chi.Router) {
+				r.Use(app_middleware.AccessControlMiddleware)
 
-				r.Post("/{id}/attach", api_handler.UploadAttachHandler)
+				r.Route("/post", func(r chi.Router) {
+					r.Post("/create", api_handler.HandlePostCreate)
+					r.Patch("/{id}", api_handler.HandlePostUpdate)
+					r.Delete("/{id}", api_handler.HandlePostDelete)
+
+					r.Post("/{id}/attach", api_handler.UploadAttachHandler)
+				})
+
+				r.Route("/page", func(r chi.Router) {
+					r.Post("/create", api_handler.HandlePageCreate)
+					r.Post("/reorder", api_handler.HandlePageReorder)
+					r.Post("/unsort", api_handler.HandlePageUnsort)
+					r.Delete("/{id}", api_handler.HandlePageDelete)
+				})
+
+				r.Route("/category", func(r chi.Router) {
+					r.Post("/", api_handler.HandleCategoryCreate)
+					r.Delete("/{id}", api_handler.HandleCategoryDelete)
+					r.Patch("/{id}", api_handler.HandleCategoryUpdate)
+				})
+
+				r.Route("/setting", func(r chi.Router) {
+					r.Post("/", api_handler.HandleSettingCreate)
+					r.Delete("/{id}", api_handler.HandleSettingDelete)
+					r.Patch("/{id}", api_handler.HandleSettingUpdate)
+				})
 			})
-
-			r.Route("/page", func(r chi.Router) {
-				r.Post("/create", api_handler.HandlePageCreate)
-				r.Post("/reorder", api_handler.HandlePageReorder)
-				r.Post("/unsort", api_handler.HandlePageUnsort)
-				r.Delete("/{id}", api_handler.HandlePageDelete)
-			})
-
-			r.Route("/category", func(r chi.Router) {
-				r.Post("/", api_handler.HandleCategoryCreate)
-				r.Delete("/{id}", api_handler.HandleCategoryDelete)
-				r.Patch("/{id}", api_handler.HandleCategoryUpdate)
-			})
-
-			r.Route("/setting", func(r chi.Router) {
-				r.Post("/", api_handler.HandleSettingCreate)
-				r.Delete("/{id}", api_handler.HandleSettingDelete)
-				r.Patch("/{id}", api_handler.HandleSettingUpdate)
-			})
-
 		})
 	})
 

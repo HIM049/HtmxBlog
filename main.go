@@ -18,6 +18,7 @@ func main() {
 	// initialize modules
 	config.Init()
 	config.InitDB()
+	services.UpdateConfig()
 	template.Init()
 	template.InitBaseApp()
 	router.Init()
@@ -38,6 +39,12 @@ func main() {
 	services.RegisterOnPostChange(func() {
 		go func() {
 			template.UpdateCategories()
+		}()
+	})
+	services.RegisterOnSettingChange(func() {
+		go func() {
+			services.UpdateConfig()
+			template.UpdateSettings()
 		}()
 	})
 

@@ -11,6 +11,7 @@ var Cfg *Config
 type Config struct {
 	Database Database
 	Service  Service
+	Settings map[string]string
 }
 
 // Init loads the config from the config.toml file.

@@ -57,6 +57,14 @@ func ManagePostsView(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ManageSettingsView(w http.ResponseWriter, r *http.Request) {
+	settings, _ := services.ReadAllSettings()
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	template.Tmpl.ExecuteTemplate(w, "manage_settings", map[string]interface{}{
+		"Settings": settings,
+	})
+}
+
 func EditView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {

@@ -1,7 +1,7 @@
 {{ define "footer" }}
 <footer class="max-w-[900px] mx-auto h-[100px] mt-5">
     <div class="flex justify-center gap-6 px-4 md:px-0 py-6 text-gray-500 text-sm">
-        HIM's Blog © 2026 - SOME SLOGEN
+        {{ .Settings.site_name }} © 2026 - {{ .Settings.site_slogan }}
     </div>
 </footer>
 {{ end }}

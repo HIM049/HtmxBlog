@@ -1,0 +1,83 @@
+{{ define "manage_settings" }}
+{{ template "header" . }}
+
+<body class="bg-gray-100">
+    <div class="max-w-[1000px] mx-auto">
+        <div class="flex justify-between items-center p-6">
+            <div class="flex items-center gap-4">
+                <a href="/admin" class="text-gray-500 hover:text-gray-900 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </a>
+                <h1 class="text-3xl font-bold">Manage Settings</h1>
+            </div>
+        </div>
+
+        <div>
+            <!-- Create Setting -->
+            <div class="mb-8 bg-white shadow-md rounded px-8 pt-6 pb-8">
+                <h2 class="text-xl font-bold mb-4 border-b pb-2">Add New Setting</h2>
+                <form hx-post="/api/admin/setting" hx-swap="none" hx-on::after-request="this.reset()"
+                    class="flex gap-4 items-end">
+                    <div class="flex-1">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Key</label>
+                        <input type="text" name="key" required placeholder="e.g. site_title"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Value</label>
+                        <input type="text" name="value" placeholder="e.g. My Awesome Blog"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 h-[42px]">
+                        Add
+                    </button>
+                </form>
+            </div>
+
+            <!-- Settings List -->
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" hx-get="/admin/settings"
+                hx-select="#settings-list" hx-target="#settings-list" hx-trigger="newSetting from:body">
+                <h2 class="text-xl font-bold mb-4 border-b pb-2">Existing Settings</h2>
+                <ul id="settings-list" class="space-y-4">
+                    {{ range .Settings }}
+                    {{ template "setting_item" . }}
+                    {{ else }}
+                    <li class="text-gray-500 italic text-center py-4">No settings found.</li>
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+{{ end }}
+
+{{ define "setting_item" }}
+<li class="flex justify-between items-center p-3 hover:bg-gray-50 rounded border border-gray-100 transition-colors">
+    <div class="flex-1 grid grid-cols-2 gap-4">
+        <div>
+            <span class="text-sm text-gray-400 block mb-1">Key</span>
+            <input type="text" name="key" value="{{ .Key }}" hx-patch="/api/admin/setting/{{ .ID }}" hx-trigger="change"
+                hx-target="closest li" hx-swap="outerHTML"
+                class="font-mono text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1 w-full focus:bg-white transition-all">
+        </div>
+        <div>
+            <span class="text-sm text-gray-400 block mb-1">Value</span>
+            <input type="text" name="value" value="{{ .Value }}" hx-patch="/api/admin/setting/{{ .ID }}"
+                hx-trigger="change" hx-target="closest li" hx-swap="outerHTML"
+                class="text-sm bg-transparent border-transparent hover:border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded px-2 py-1 w-full transition-all">
+        </div>
+    </div>
+    <div class="ml-4">
+        <button hx-delete="/api/admin/setting/{{ .ID }}" hx-confirm="Are you sure you want to delete this setting?"
+            hx-target="closest li" hx-swap="outerHTML"
+            class="text-red-500 hover:text-red-700 font-medium text-sm border border-red-200 hover:border-red-400 px-3 py-1 rounded transition h-10">
+            Delete
+        </button>
+    </div>
+</li>
+{{ end }}

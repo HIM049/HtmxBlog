@@ -1,6 +1,7 @@
 package template
 
 import (
+	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
 )
@@ -12,9 +13,13 @@ type App struct {
 	Navigation []model.Page
 	Categories []model.ViewCategory
 	Posts      []model.ViewPost
+	Settings   map[string]string
 }
 
+// InitBaseApp initializes the base application data
+// It should be called after config.Init(), config.InitDB(), services.UpdateConfig()
 func InitBaseApp() {
+	UpdateSettings()
 	UpdateNavigation()
 	UpdateCategories()
 }
@@ -42,4 +47,8 @@ func UpdateCategories() error {
 	}
 	currentState.Categories = categories
 	return nil
+}
+
+func UpdateSettings() {
+	currentState.Settings = config.Cfg.Settings
 }

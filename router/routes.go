@@ -43,6 +43,7 @@ func loadRoutes() *chi.Mux {
 			r.Get("/pages", view_handler.ManagePagesView)
 			r.Get("/posts", view_handler.ManagePostsView)
 			r.Get("/categories", view_handler.ManageCategoriesView)
+			r.Get("/settings", view_handler.ManageSettingsView)
 			r.Get("/post/{id}/edit", view_handler.EditView)
 		})
 	})
@@ -69,6 +70,12 @@ func loadRoutes() *chi.Mux {
 				r.Post("/", api_handler.HandleCategoryCreate)
 				r.Delete("/{id}", api_handler.HandleCategoryDelete)
 				r.Patch("/{id}", api_handler.HandleCategoryUpdate)
+			})
+
+			r.Route("/setting", func(r chi.Router) {
+				r.Post("/", api_handler.HandleSettingCreate)
+				r.Delete("/{id}", api_handler.HandleSettingDelete)
+				r.Patch("/{id}", api_handler.HandleSettingUpdate)
 			})
 
 		})

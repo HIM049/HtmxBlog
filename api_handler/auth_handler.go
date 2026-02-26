@@ -3,7 +3,13 @@ package api_handler
 import (
 	"HtmxBlog/config"
 	"net/http"
+	"time"
+
+	"github.com/google/uuid"
 )
+
+var CurrentToken string
+var CreateTime time.Time
 
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
@@ -19,14 +25,20 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	newToken := uuid.New().String()
+
 	if passwd == config.Cfg.Service.AdminPasswd {
 		http.SetCookie(w, &http.Cookie{
 			Name:     "token",
-			Value:    config.Cfg.Service.AdminPasswd,
+			Value:    newToken,
 			Path:     "/",
 			HttpOnly: true,
 			MaxAge:   3600 * 24, // 24 hours
 		})
+
+		CurrentToken = newToken
+		CreateTime = time.Now()
+
 		w.Header().Set("HX-Redirect", "/admin")
 		return
 	}

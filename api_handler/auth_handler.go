@@ -33,7 +33,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 			Value:    newToken,
 			Path:     "/",
 			HttpOnly: true,
-			MaxAge:   3600 * 24, // 24 hours
+			MaxAge:   3600 * config.Cfg.Service.ValidTime,
 		})
 
 		CurrentToken = newToken

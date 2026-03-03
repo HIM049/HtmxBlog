@@ -33,7 +33,7 @@ jobs:
 
             - name: Build Go binary
               run: |
-                  GOOS=linux GOARCH=amd64 go build -v -o HtmxBlog main.go
+                  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o HtmxBlog main.go
 
             - name: Package artifacts
               run: |

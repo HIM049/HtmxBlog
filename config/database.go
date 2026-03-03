@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 
 	"github.com/knadh/koanf/v2"
+	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -33,8 +35,20 @@ const DB_PATH = "./app_data"
 // InitDB initializes the database connection.
 // It panics when some error occurs.
 func InitDB() {
-	dbPath := filepath.Join(DB_PATH, "app.db")
-	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{TranslateError: true})
+	var db *gorm.DB
+	var err error
+	switch Cfg.Database.Driver {
+	case "sqlite":
+		dbPath := filepath.Join(DB_PATH, "app.db")
+		db, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{TranslateError: true})
+	case "mysql":
+		db, err = gorm.Open(mysql.Open(Cfg.Database.DSN), &gorm.Config{TranslateError: true})
+	case "postgres":
+		db, err = gorm.Open(postgres.Open(Cfg.Database.DSN), &gorm.Config{TranslateError: true})
+	default:
+		panic("database driver not supported")
+	}
+
 	if err != nil {
 		panic("failed to connect database")
 	}

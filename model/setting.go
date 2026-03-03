@@ -4,6 +4,6 @@ import "gorm.io/gorm"
 
 type Setting struct {
 	gorm.Model
-	Key   string `gorm:"uniqueIndex;not null;size:255"`
+	Key   string `gorm:"uniqueIndex;not null;size:191"`
 	Value string
 }

@@ -33,19 +33,18 @@ jobs:
 
             - name: Build Go binary
               run: |
-                  GOOS=linux GOARCH=amd64 go build -v -o HtmxBlog_linux main.go
+                  GOOS=linux GOARCH=amd64 go build -v -o HtmxBlog main.go
 
             - name: Package artifacts
               run: |
                   mkdir -p release
-                  cp HtmxBlog_linux release/
+                  cp HtmxBlog release/
                   cp config.toml release/
                   cp -r assets release/
                   cp -r templates release/
-                  tar -czvf HtmxBlog_linux.tar.gz -C release .
 
             - name: Upload Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: HtmxBlog-Linux-Build
-                  path: HtmxBlog_linux.tar.gz
+                  name: HtmxBlog
+                  path: release/

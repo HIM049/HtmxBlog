@@ -18,9 +18,6 @@ type Database struct {
 
 func ReadDatabase(k *koanf.Koanf) Database {
 	driver := k.String("database.driver")
-	if driver != "sqlite" {
-		panic("database driver not supported")
-	}
 
 	return Database{
 		Driver: driver,
@@ -39,7 +36,7 @@ func InitDB() {
 	var err error
 	switch Cfg.Database.Driver {
 	case "sqlite":
-		dbPath := filepath.Join(DB_PATH, "app.db")
+		dbPath := filepath.Join(DB_PATH, Cfg.Database.DSN)
 		db, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{TranslateError: true})
 	case "mysql":
 		db, err = gorm.Open(mysql.Open(Cfg.Database.DSN), &gorm.Config{TranslateError: true})

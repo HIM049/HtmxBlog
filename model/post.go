@@ -16,7 +16,7 @@ type Post struct {
 	State      string `json:"state" gorm:"default:'draft'"`
 
 	Title      string                 `json:"title"`
-	CategoryID uint                   `json:"category_id"`
+	CategoryID *uint                  `json:"category_id"`
 	Category   Category               `json:"category" gorm:"foreignKey:CategoryID"`
 	Tags       []string               `json:"tags" gorm:"serializer:json"`
 	Attachs    []Attach               `json:"attachs" gorm:"many2many:post_attaches"`

@@ -25,6 +25,13 @@ func (vp *ViewPost) LoadContent() error {
 	return nil
 }
 
+func (p *ViewPost) GetCategoryID() uint {
+	if p.CategoryID != nil {
+		return *p.CategoryID
+	}
+	return 0
+}
+
 // ParseContent parses the md content of the post
 func (vp *ViewPost) ParseContent() template.HTML {
 	if vp.Content == "" {

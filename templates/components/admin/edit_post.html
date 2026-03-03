@@ -81,9 +81,9 @@
                     <select form="post-form"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white"
                         id="category_id" name="category_id">
-                        <option value="0" {{ if eq .Post.CategoryID 0 }}selected{{ end }}>None</option>
+                        <option value="0" {{ if eq .Post.GetCategoryID 0 }}selected{{ end }}>None</option>
                         {{ range .Categories }}
-                        <option value="{{ .ID }}" {{ if eq $.Post.CategoryID .ID }}selected{{ end }}>{{ .Name }}
+                        <option value="{{ .ID }}" {{ if eq $.Post.GetCategoryID .ID }}selected{{ end }}>{{ .Name }}
                         </option>
                         {{ end }}
                     </select>

@@ -1,0 +1,53 @@
+name: Build for Linux
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies and Build CSS
+        run: |
+          pnpm install
+          pnpm exec tailwindcss -i ./templates/style.css -o ./assets/style.css
+
+      - name: Build Go binary
+        run: |
+          GOOS=linux GOARCH=amd64 go build -v -o HtmxBlog_linux main.go
+
+      - name: Package artifacts
+        run: |
+          mkdir -p release
+          cp HtmxBlog_linux release/
+          cp config.toml release/
+          cp -r assets release/
+          cp -r templates release/
+          tar -czvf HtmxBlog_linux.tar.gz -C release .
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HtmxBlog-Linux-Build
+          path: HtmxBlog_linux.tar.gz

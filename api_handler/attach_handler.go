@@ -3,6 +3,7 @@ package api_handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/template"
 	"fmt"
 	"net/http"
 	"path/filepath"
@@ -57,25 +58,9 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := fmt.Sprintf("/attach/%s", attach.Uid)
-	markdown := fmt.Sprintf("![%s](%s)", attach.Name, url)
-
-	result := fmt.Sprintf(`
-		<div class="flex items-center justify-between p-4 bg-gray-50 rounded border border-gray-200">
-			<div>
-				<div class="font-bold text-gray-700">%s</div>
-				<div class="text-xs text-gray-500">%s</div>
-			</div>
-			<button onclick="navigator.clipboard.writeText('%s'); this.innerText = 'Copied!'; setTimeout(() => this.innerText = 'Copy Link', 2000)"
-				class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
-				Copy Link
-			</button>
-		</div>
-	`, attach.Name, attach.Mime, markdown)
-
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(result))
+	template.Tmpl.ExecuteTemplate(w, "attach_item", attach)
 }
 
 // TODO file reference system

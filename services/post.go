@@ -27,7 +27,7 @@ func CreateDefaultPost() (*model.Post, error) {
 
 func ReadPost(id uint) (*model.Post, error) {
 	var post model.Post
-	if err := config.DB.Preload("Category").First(&post, id).Error; err != nil {
+	if err := config.DB.Preload("Category").Preload("Attachs").First(&post, id).Error; err != nil {
 		return nil, err
 	}
 	return &post, nil

@@ -721,6 +721,9 @@
   .mb-10 {
     margin-bottom: calc(var(--spacing) * 10);
   }
+  .mb-12 {
+    margin-bottom: calc(var(--spacing) * 12);
+  }
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
   }
@@ -756,6 +759,10 @@
   }
   .inline-flex {
     display: inline-flex;
+  }
+  .size-5 {
+    width: calc(var(--spacing) * 5);
+    height: calc(var(--spacing) * 5);
   }
   .h-3 {
     height: calc(var(--spacing) * 3);
@@ -1196,6 +1203,9 @@
   .text-blue-600 {
     color: var(--color-blue-600);
   }
+  .text-gray-200 {
+    color: var(--color-gray-200);
+  }
   .text-gray-400 {
     color: var(--color-gray-400);
   }
@@ -1405,6 +1415,13 @@
     &:hover {
       @media (hover: hover) {
         color: var(--color-blue-900);
+      }
+    }
+  }
+  .hover\:text-gray-800 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-gray-800);
       }
     }
   }

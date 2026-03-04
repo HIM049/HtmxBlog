@@ -8,12 +8,27 @@ import (
 
 var currentState App
 
+const PageSize = 5
+
+type Pagination struct {
+	CurrentPage int
+	TotalPages  int
+	TotalPosts  int64
+	HasPrev     bool
+	HasNext     bool
+	PrevPage    int
+	NextPage    int
+	PageNumbers []int
+	CategoryID  string
+}
+
 type App struct {
 	PageTitle  string
 	Navigation []model.Page
 	Categories []model.ViewCategory
 	Posts      []model.ViewPost
 	Settings   map[string]string
+	Pagination Pagination
 }
 
 // InitBaseApp initializes the base application data

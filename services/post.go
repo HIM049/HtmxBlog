@@ -63,6 +63,30 @@ func ReadPostsWithConditions(num, offset int, visibility, protect, state, catego
 	return posts, err
 }
 
+func CountPostsWithConditions(visibility, protect, state, categoryID string) (int64, error) {
+	var count int64
+	query := config.DB.Model(&model.Post{})
+
+	if visibility != "" {
+		query = query.Where("visibility = ?", visibility)
+	}
+
+	if protect != "" {
+		query = query.Where("protect = ?", protect)
+	}
+
+	if state != "" {
+		query = query.Where("state = ?", state)
+	}
+
+	if categoryID != "" {
+		query = query.Where("category_id = ?", categoryID)
+	}
+
+	err := query.Count(&count).Error
+	return count, err
+}
+
 func UpdatePost(post *model.Post) error {
 	err := config.DB.Save(post).Error
 	if err != nil {

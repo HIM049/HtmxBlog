@@ -88,7 +88,7 @@ func CountPostsWithConditions(visibility, protect, state, categoryID string) (in
 }
 
 func UpdatePost(post *model.Post) error {
-	err := config.DB.Save(post).Error
+	err := config.DB.Model(post).Select("*").Omit("Category").Updates(post).Error
 	if err != nil {
 		return err
 	}

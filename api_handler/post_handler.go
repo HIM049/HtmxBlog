@@ -65,9 +65,13 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 
 	if categoryID := r.FormValue("category_id"); categoryID != "" {
 		id, err := strconv.Atoi(categoryID)
-		val := uint(id)
 		if err == nil {
-			post.CategoryID = &val
+			if id == 0 {
+				post.CategoryID = nil
+			} else {
+				val := uint(id)
+				post.CategoryID = &val
+			}
 		}
 	}
 

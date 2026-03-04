@@ -59,7 +59,7 @@ func ReadPostsWithConditions(num, offset int, visibility, protect, state, catego
 		query = query.Where("category_id = ?", categoryID)
 	}
 
-	err := query.Preload("Category").Limit(num).Offset(offset).Find(&posts).Error
+	err := query.Preload("Category").Limit(num).Offset(offset).Order("created_at desc").Find(&posts).Error
 	return posts, err
 }
 

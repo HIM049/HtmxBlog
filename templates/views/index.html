@@ -71,10 +71,14 @@
 
                         <!-- Page Numbers -->
                         {{ range .Pagination.PageNumbers }}
+                        {{ if eq . 0 }}
+                        <span class="p-2 text-gray-400 font-bold select-none cursor-default">...</span>
+                        {{ else }}
                         <a href="?page={{ . }}{{ if $.Pagination.CategoryID }}&category={{ $.Pagination.CategoryID }}{{ end }}"
                             class="rounded-full text-sm font-bold transition-all {{ if eq . $.Pagination.CurrentPage }}px-4 py-2 bg-[#0099cc] text-white shadow-md{{ else }}p-2 text-gray-600 hover:bg-gray-50{{ end }}">
                             <p class="size-5 flex justify-center items-center">{{ . }}</p>
                         </a>
+                        {{ end }}
                         {{ end }}
 
                         <!-- Next Page -->

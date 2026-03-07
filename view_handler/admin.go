@@ -13,12 +13,12 @@ import (
 
 func AdminView(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Tmpl.ExecuteTemplate(w, "admin", nil)
+	template.AdminTmpl.ExecuteTemplate(w, "admin", nil)
 }
 
 func AuthView(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Tmpl.ExecuteTemplate(w, "auth", nil)
+	template.AdminTmpl.ExecuteTemplate(w, "auth", nil)
 }
 
 func ManagePagesView(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func ManagePagesView(w http.ResponseWriter, r *http.Request) {
 	})
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Tmpl.ExecuteTemplate(w, "page_manage", map[string]interface{}{
+	template.AdminTmpl.ExecuteTemplate(w, "page_manage", map[string]interface{}{
 		"SortedPages": sortedPages,
 		"HiddenPages": hiddenPages,
 	})
@@ -49,7 +49,7 @@ func ManagePagesView(w http.ResponseWriter, r *http.Request) {
 func ManageCategoriesView(w http.ResponseWriter, r *http.Request) {
 	categories, _ := services.ReadCategories()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Tmpl.ExecuteTemplate(w, "category_manage", map[string]interface{}{
+	template.AdminTmpl.ExecuteTemplate(w, "category_manage", map[string]interface{}{
 		"Categories": categories,
 	})
 }
@@ -57,7 +57,7 @@ func ManageCategoriesView(w http.ResponseWriter, r *http.Request) {
 func ManagePostsView(w http.ResponseWriter, r *http.Request) {
 	posts, _ := services.ReadPosts(100, 0)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Tmpl.ExecuteTemplate(w, "post_manage", map[string]interface{}{
+	template.AdminTmpl.ExecuteTemplate(w, "post_manage", map[string]interface{}{
 		"Posts": posts,
 	})
 }
@@ -65,7 +65,7 @@ func ManagePostsView(w http.ResponseWriter, r *http.Request) {
 func ManageSettingsView(w http.ResponseWriter, r *http.Request) {
 	settings, _ := services.ReadAllSettings()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Tmpl.ExecuteTemplate(w, "manage_settings", map[string]interface{}{
+	template.AdminTmpl.ExecuteTemplate(w, "manage_settings", map[string]interface{}{
 		"Settings": settings,
 	})
 }
@@ -87,7 +87,7 @@ func EditView(w http.ResponseWriter, r *http.Request) {
 	categories, _ := services.ReadCategories()
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Tmpl.ExecuteTemplate(w, "update_post", map[string]interface{}{
+	template.AdminTmpl.ExecuteTemplate(w, "update_post", map[string]interface{}{
 		"Post":       vp,
 		"Categories": categories,
 	})

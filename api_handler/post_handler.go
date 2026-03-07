@@ -1,12 +1,12 @@
 package api_handler
 
 import (
+	"HtmxBlog/model"
 	"HtmxBlog/services"
 	"fmt"
 	"net/http"
 	"strconv"
 
-	"os"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
@@ -101,8 +101,10 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if content := r.FormValue("content"); content != "" {
-		// Content might be very large, writing to file directly
-		if err := os.WriteFile(post.ContentPath(), []byte(content), 0644); err != nil {
+		if err := services.UpdateContent(&model.ViewPost{
+			Post:    *post,
+			Content: content,
+		}); err != nil {
 			http.Error(w, "Failed to save content", http.StatusInternalServerError)
 			return
 		}

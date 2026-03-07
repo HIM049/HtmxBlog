@@ -35,7 +35,7 @@ func ReadPost(id uint) (*model.Post, error) {
 
 func ReadPosts(num int, offset int) ([]model.Post, error) {
 	var posts []model.Post
-	err := config.DB.Preload("Category").Limit(num).Offset(offset).Find(&posts).Error
+	err := config.DB.Preload("Category").Limit(num).Offset(offset).Order("created_at desc").Find(&posts).Error
 	return posts, err
 }
 
@@ -96,9 +96,32 @@ func UpdatePost(post *model.Post) error {
 	return nil
 }
 
+func UpdateContent(p *model.ViewPost) error {
+	if err := os.WriteFile(p.ContentPath(), []byte(p.Content), 0644); err != nil {
+		return err
+	}
+	onPostChange()
+	return nil
+}
+
 func DeletePost(id uint) error {
 	err := config.DB.Delete(&model.Post{}, id).Error
 	if err != nil {
+		return err
+	}
+	onPostChange()
+	return nil
+}
+
+func DestroyPost(id uint) error {
+	var post model.Post
+	if err := config.DB.Unscoped().First(&post, id).Error; err != nil {
+		return err
+	}
+	if err := os.Remove(post.ContentPath()); err != nil {
+		return err
+	}
+	if err := config.DB.Unscoped().Delete(&post).Error; err != nil {
 		return err
 	}
 	onPostChange()

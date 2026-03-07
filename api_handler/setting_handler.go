@@ -25,7 +25,7 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = services.CreateSettings(&model.Setting{
+	err = services.CreateSetting(&model.Setting{
 		Key:   key,
 		Value: value,
 	})
@@ -53,7 +53,7 @@ func HandleSettingDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := services.DeleteSettings(uint(id)); err != nil {
+	if err := services.DeleteSetting(uint(id)); err != nil {
 		http.Error(w, "Failed to delete setting", http.StatusInternalServerError)
 		return
 	}
@@ -89,7 +89,7 @@ func HandleSettingUpdate(w http.ResponseWriter, r *http.Request) {
 		setting.Value = value
 	}
 
-	err = services.UpdateSettings(setting)
+	err = services.UpdateSetting(setting)
 	if err != nil {
 		http.Error(w, "Failed to update setting", http.StatusInternalServerError)
 		return

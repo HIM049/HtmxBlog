@@ -7,7 +7,7 @@ import (
 
 var onSettingChange func()
 
-func CreateSettings(item *model.Setting) error {
+func CreateSetting(item *model.Setting) error {
 	err := config.DB.Create(item).Error
 	if err != nil {
 		return err
@@ -22,13 +22,7 @@ func ReadSetting(id uint) (*model.Setting, error) {
 	return &item, err
 }
 
-func ReadSettings() (*model.Setting, error) {
-	var item model.Setting
-	err := config.DB.First(&item).Error
-	return &item, err
-}
-
-func UpdateSettings(item *model.Setting) error {
+func UpdateSetting(item *model.Setting) error {
 	err := config.DB.Save(item).Error
 	if err != nil {
 		return err
@@ -37,7 +31,7 @@ func UpdateSettings(item *model.Setting) error {
 	return nil
 }
 
-func DeleteSettings(id uint) error {
+func DeleteSetting(id uint) error {
 	err := config.DB.Delete(&model.Setting{}, id).Error
 	if err != nil {
 		return err

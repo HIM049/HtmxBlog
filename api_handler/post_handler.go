@@ -100,21 +100,21 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 		post.CustomVars = vars
 	}
 
+	var genericPost model.GenericPost = post
+
 	if content := r.FormValue("content"); content != "" {
-		if err := services.UpdateContent(&model.ViewPost{
+		genericPost = &model.ViewPost{
 			Post:    *post,
 			Content: content,
-		}); err != nil {
-			http.Error(w, "Failed to save content", http.StatusInternalServerError)
-			return
 		}
 	}
 
-	err = services.UpdatePost(post)
+	err = services.UpdatePostWithContent(genericPost)
 	if err != nil {
 		http.Error(w, "Failed to update post", http.StatusInternalServerError)
 		return
 	}
+
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("OK"))

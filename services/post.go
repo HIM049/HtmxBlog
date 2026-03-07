@@ -3,6 +3,7 @@ package services
 import (
 	"HtmxBlog/config"
 	"HtmxBlog/model"
+	"os"
 
 	"github.com/google/uuid"
 )
@@ -87,18 +88,32 @@ func CountPostsWithConditions(visibility, protect, state, categoryID string) (in
 	return count, err
 }
 
-func UpdatePost(post *model.Post) error {
+func updatePost(post *model.Post) error {
 	err := config.DB.Model(post).Select("*").Omit("Category").Updates(post).Error
 	if err != nil {
 		return err
 	}
-	onPostChange()
 	return nil
 }
 
-func UpdateContent(p *model.ViewPost) error {
+func updateContent(p *model.ViewPost) error {
 	if err := os.WriteFile(p.ContentPath(), []byte(p.Content), 0644); err != nil {
 		return err
+	}
+	return nil
+}
+
+func UpdatePostWithContent(p model.GenericPost) error {
+	post := p.GetPost()
+	err := updatePost(post)
+	if err != nil {
+		return err
+	}
+	if vp, conv := p.GetViewPost(); !conv {
+		err = updateContent(vp)
+		if err != nil {
+			return err
+		}
 	}
 	onPostChange()
 	return nil

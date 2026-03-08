@@ -3,6 +3,7 @@ package api_handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/utils"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -98,6 +99,13 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		post.CustomVars = vars
+	}
+
+	if createdAt := r.FormValue("created_at"); createdAt != "" {
+		t, err := utils.ParseDateTimeLocal(createdAt)
+		if err == nil {
+			post.CreatedAt = t
+		}
 	}
 
 	var genericPost model.GenericPost = post

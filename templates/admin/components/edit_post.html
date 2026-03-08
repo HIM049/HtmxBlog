@@ -97,6 +97,14 @@
                     id="tags" name="tags" type="text" value="{{ .Post.TagsToString }}"
                     placeholder="Tags (comma separated)">
             </div>
+
+            <div>
+                <label class="block text-gray-600 text-xs font-bold mb-1" for="created_at">Created At</label>
+                <input form="post-form"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
+                    id="created_at" name="created_at" type="datetime-local"
+                    value="{{ .Post.CreatedAt.Format `2006-01-02T15:04` }}">
+            </div>
         </div>
 
         <!-- Custom Vars -->

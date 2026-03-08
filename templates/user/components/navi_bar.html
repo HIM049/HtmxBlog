@@ -2,14 +2,16 @@
 
 <nav class="h-[100px] flex items-center justify-between mx-auto px-14">
     <a href="/">
-        <div class="text-xl font-bold bg-[#0099cc] text-white px-4 py-2 rounded-xl shadow-sm">
+        <div
+            class="text-xl font-bold text-black hover:text-white hover:bg-[#0099cc] hover:shadow-standard-sm px-4 py-2 rounded-xl transition-all duration-300">
             {{ .Settings.site_name }}
         </div>
     </a>
     <ul class="flex space-x-6 items-center">
         {{ range .Navigation }}
         <li>
-            <a href="{{ .Route }}" class="px-4 py-2 rounded-lg font-medium text-gray-800 transition hover:bg-white/70">
+            <a href="{{ .Route }}"
+                class="px-4 py-2 font-bold rounded-lg text-gray-800 hover:shadow-standard-sm transition hover:bg-white/70">
                 {{ .Name }}
             </a>
         </li>

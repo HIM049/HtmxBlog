@@ -31,6 +31,12 @@
                 {{ end }}
             </div>
         </div>
+
+        <button hx-on:click="window.scrollTo({top: 0, behavior: 'smooth'})"
+            class="w-full hover:bg-white rounded-full hover:shadow-standard-sm p-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-900 transition-all duration-300 group">
+            <img src="/assets/arrow_up_24dp.svg" alt="Back to Top" class="color-gray-900">
+            <span class=" font-bold text-sm pr-2">Back to Top</span>
+        </button>
     </div>
 
 </div>

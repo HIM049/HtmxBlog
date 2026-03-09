@@ -39,6 +39,7 @@ func main() {
 	services.RegisterOnPostChange(func() {
 		go func() {
 			template.UpdateCategories()
+			template.UpdateTags()
 		}()
 	})
 	services.RegisterOnSettingChange(func() {

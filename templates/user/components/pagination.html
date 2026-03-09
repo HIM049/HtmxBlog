@@ -1,0 +1,53 @@
+{{ define "pagination"}}
+
+{{ if gt .Pagination.TotalPages 1 }}
+<div class="mb-12 flex justify-center">
+    <div class="bg-white rounded-full shadow-standard p-1 flex items-center">
+        <!-- Previous Page -->
+        {{ if .Pagination.HasPrev }}
+        <a href="?page={{ .Pagination.PrevPage }}{{ if .Pagination.CategoryID }}&category={{ .Pagination.CategoryID }}{{ end }}"
+            class="p-2 rounded-full text-gray-400 hover:text-gray-800 hover:bg-gray-100 transition-colors">
+            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
+        {{ else }}
+        <div class="p-2 text-gray-200">
+            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </div>
+        {{ end }}
+
+        <!-- Page Numbers -->
+        {{ range .Pagination.PageNumbers }}
+        {{ if eq . 0 }}
+        <span class="p-2 text-gray-400 font-bold select-none cursor-default">...</span>
+        {{ else }}
+        <a href="?page={{ . }}{{ if $.Pagination.CategoryID }}&category={{ $.Pagination.CategoryID }}{{ end }}"
+            class="rounded-full text-sm font-bold transition-all {{ if eq . $.Pagination.CurrentPage }}px-4 py-2 bg-[#0099cc] text-white shadow-md{{ else }}p-2 text-gray-600 hover:bg-gray-50{{ end }}">
+            <p class="size-5 flex justify-center items-center">{{ . }}</p>
+        </a>
+        {{ end }}
+        {{ end }}
+
+        <!-- Next Page -->
+        {{ if .Pagination.HasNext }}
+        <a href="?page={{ .Pagination.NextPage }}{{ if .Pagination.CategoryID }}&category={{ .Pagination.CategoryID }}{{ end }}"
+            class="p-2 rounded-full text-gray-400 hover:text-gray-800 hover:bg-gray-100 transition-colors">
+            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
+        {{ else }}
+        <div class="p-2 text-gray-200">
+            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}
+
+{{ end }}

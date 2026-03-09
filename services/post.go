@@ -88,6 +88,26 @@ func CountPostsWithConditions(visibility, protect, state, categoryID string) (in
 	return count, err
 }
 
+func ReadAllTags() (map[string]int, error) {
+	var results []struct {
+		Tags []string `gorm:"serializer:json"`
+	}
+	err := config.DB.Model(&model.Post{}).Where("visibility = ?", model.VisibilityPublic).Where("state = ?", model.StateRelease).Select("tags").Find(&results).Error
+	if err != nil {
+		return nil, err
+	}
+
+	tagMap := make(map[string]int)
+	for _, res := range results {
+		for _, tag := range res.Tags {
+			if tag != "" {
+				tagMap[tag]++
+			}
+		}
+	}
+	return tagMap, nil
+}
+
 func updatePost(post *model.Post) error {
 	err := config.DB.Model(post).Select("*").Omit("Category").Updates(post).Error
 	if err != nil {

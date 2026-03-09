@@ -4,6 +4,7 @@ import (
 	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"sort"
 )
 
 var currentState App
@@ -26,6 +27,7 @@ type App struct {
 	PageTitle  string
 	Navigation []model.Page
 	Categories []model.ViewCategory
+	Tags       []string
 	Posts      []model.ViewPost
 	Settings   map[string]string
 	Pagination Pagination
@@ -37,6 +39,7 @@ func InitBaseApp() {
 	UpdateSettings()
 	UpdateNavigation()
 	UpdateCategories()
+	UpdateTags()
 }
 
 // GetBaseApp returns the base application data
@@ -61,6 +64,36 @@ func UpdateCategories() error {
 		return err
 	}
 	currentState.Categories = categories
+	return nil
+}
+
+// UpdateTags updates the tags data
+func UpdateTags() error {
+	tagMap, err := services.ReadAllTags()
+	if err != nil {
+		return err
+	}
+
+	type tagCount struct {
+		Name  string
+		Count int
+	}
+
+	var tags []tagCount
+	for name, count := range tagMap {
+		tags = append(tags, tagCount{Name: name, Count: count})
+	}
+
+	sort.Slice(tags, func(i, j int) bool {
+		return tags[i].Count > tags[j].Count
+	})
+
+	var sortedTags []string
+	for _, t := range tags {
+		sortedTags = append(sortedTags, t.Name)
+	}
+
+	currentState.Tags = sortedTags
 	return nil
 }
 

@@ -16,7 +16,7 @@ func ReadTag(tag *model.Tag) error {
 
 func ReadAllTags() ([]model.Tag, error) {
 	var tags []model.Tag
-	err := config.DB.Find(&tags).Error
+	err := config.DB.Preload("Posts").Find(&tags).Error
 	return tags, err
 }
 

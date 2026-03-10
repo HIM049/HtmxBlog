@@ -13,19 +13,21 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 	return func(w http.ResponseWriter, r *http.Request) {
 		categoryID := r.URL.Query().Get("category")
 		pageStr := r.URL.Query().Get("page")
+		tag := r.URL.Query().Get("tag")
+
 		page, _ := strconv.Atoi(pageStr)
 		if page < 1 {
 			page = 1
 		}
 
 		offset := (page - 1) * template.PageSize
-		posts, err := services.ReadPostsWithConditions(template.PageSize, offset, model.VisibilityPublic, "", model.StateRelease, categoryID)
+		posts, err := services.ReadPostsWithConditions(template.PageSize, offset, model.VisibilityPublic, "", model.StateRelease, categoryID, tag)
 		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
-		totalPosts, err := services.CountPostsWithConditions(model.VisibilityPublic, "", model.StateRelease, categoryID)
+		totalPosts, err := services.CountPostsWithConditions(model.VisibilityPublic, "", model.StateRelease, categoryID, tag)
 		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -52,6 +54,7 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 			PrevPage:    page - 1,
 			NextPage:    page + 1,
 			CategoryID:  categoryID,
+			Tag:         tag,
 		}
 
 		// Generate page numbers

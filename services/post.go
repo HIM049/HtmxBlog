@@ -40,48 +40,38 @@ func ReadPosts(num int, offset int) ([]model.Post, error) {
 	return posts, err
 }
 
-func ReadPostsWithConditions(num, offset int, visibility, protect, state, categoryID string) ([]model.Post, error) {
+func ReadPostsWithConditions(num, offset int, visibility, protect, state, categoryID, tag string) ([]model.Post, error) {
 	var posts []model.Post
 	query := config.DB.Model(&model.Post{})
-
-	if visibility != "" {
-		query = query.Where("visibility = ?", visibility)
-	}
-
-	if protect != "" {
-		query = query.Where("protect = ?", protect)
-	}
-
-	if state != "" {
-		query = query.Where("state = ?", state)
-	}
+	query = query.Where(model.Post{Visibility: visibility, Protect: protect, State: state})
 
 	if categoryID != "" {
 		query = query.Where("category_id = ?", categoryID)
 	}
 
-	err := query.Preload("Category").Preload("Tags").Limit(num).Offset(offset).Order("created_at desc").Find(&posts).Error
+	if tag != "" {
+		query = query.Joins("JOIN post_tags ON post_tags.post_id = posts.id").
+			Joins("JOIN tags ON tags.id = post_tags.tag_id").
+			Where("tags.name = ?", tag)
+	}
+
+	err := query.Preload("Category").Preload("Tags").Limit(num).Offset(offset).Order("posts.created_at desc").Find(&posts).Error
 	return posts, err
 }
 
-func CountPostsWithConditions(visibility, protect, state, categoryID string) (int64, error) {
+func CountPostsWithConditions(visibility, protect, state, categoryID, tag string) (int64, error) {
 	var count int64
 	query := config.DB.Model(&model.Post{})
-
-	if visibility != "" {
-		query = query.Where("visibility = ?", visibility)
-	}
-
-	if protect != "" {
-		query = query.Where("protect = ?", protect)
-	}
-
-	if state != "" {
-		query = query.Where("state = ?", state)
-	}
+	query = query.Where(model.Post{Visibility: visibility, Protect: protect, State: state})
 
 	if categoryID != "" {
 		query = query.Where("category_id = ?", categoryID)
+	}
+
+	if tag != "" {
+		query = query.Joins("JOIN post_tags ON post_tags.post_id = posts.id").
+			Joins("JOIN tags ON tags.id = post_tags.tag_id").
+			Where("tags.name = ?", tag)
 	}
 
 	err := query.Count(&count).Error

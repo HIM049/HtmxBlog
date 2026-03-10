@@ -21,6 +21,7 @@ type Pagination struct {
 	NextPage    int
 	PageNumbers []int
 	CategoryID  string
+	Tag         string
 }
 
 type App struct {

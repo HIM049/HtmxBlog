@@ -76,13 +76,25 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if tags := r.FormValue("tags"); tags != "" {
-		tagsList := strings.Split(tags, ",")
-		var cleanTags []string
-		for _, tag := range tagsList {
-			cleanTags = append(cleanTags, strings.TrimSpace(tag))
+	if tags, ok := r.Form["tags"]; ok {
+		tagsVal := tags[0]
+		var postTags []model.Tag
+		if tagsVal != "" {
+			tagsList := strings.Split(tagsVal, ",")
+			for _, tagName := range tagsList {
+				trimmed := strings.TrimSpace(tagName)
+				if trimmed == "" {
+					continue
+				}
+				tag, err := services.GetTag(trimmed)
+				if err != nil {
+					fmt.Println("Failed to get tag: ", err)
+					continue
+				}
+				postTags = append(postTags, *tag)
+			}
 		}
-		post.Tags = cleanTags
+		post.Tags = postTags
 	}
 
 	if customVars := r.FormValue("custom_vars"); customVars != "" {

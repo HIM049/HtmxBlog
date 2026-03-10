@@ -27,7 +27,7 @@ type App struct {
 	PageTitle  string
 	Navigation []model.Page
 	Categories []model.ViewCategory
-	Tags       []string
+	Tags       []model.Tag
 	Posts      []model.ViewPost
 	Settings   map[string]string
 	Pagination Pagination
@@ -69,31 +69,16 @@ func UpdateCategories() error {
 
 // UpdateTags updates the tags data
 func UpdateTags() error {
-	tagMap, err := services.ReadAllTags()
+	tags, err := services.ReadAllTags()
 	if err != nil {
 		return err
 	}
 
-	type tagCount struct {
-		Name  string
-		Count int
-	}
-
-	var tags []tagCount
-	for name, count := range tagMap {
-		tags = append(tags, tagCount{Name: name, Count: count})
-	}
-
 	sort.Slice(tags, func(i, j int) bool {
-		return tags[i].Count > tags[j].Count
+		return len(tags[i].Posts) > len(tags[j].Posts)
 	})
 
-	var sortedTags []string
-	for _, t := range tags {
-		sortedTags = append(sortedTags, t.Name)
-	}
-
-	currentState.Tags = sortedTags
+	currentState.Tags = tags
 	return nil
 }
 

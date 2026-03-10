@@ -28,7 +28,7 @@ func CreateDefaultPost() (*model.Post, error) {
 
 func ReadPost(id uint) (*model.Post, error) {
 	var post model.Post
-	if err := config.DB.Preload("Category").Preload("Attachs").First(&post, id).Error; err != nil {
+	if err := config.DB.Preload("Category").Preload("Tags").Preload("Attachs").First(&post, id).Error; err != nil {
 		return nil, err
 	}
 	return &post, nil
@@ -36,7 +36,7 @@ func ReadPost(id uint) (*model.Post, error) {
 
 func ReadPosts(num int, offset int) ([]model.Post, error) {
 	var posts []model.Post
-	err := config.DB.Preload("Category").Limit(num).Offset(offset).Order("created_at desc").Find(&posts).Error
+	err := config.DB.Preload("Category").Preload("Tags").Limit(num).Offset(offset).Order("created_at desc").Find(&posts).Error
 	return posts, err
 }
 
@@ -60,7 +60,7 @@ func ReadPostsWithConditions(num, offset int, visibility, protect, state, catego
 		query = query.Where("category_id = ?", categoryID)
 	}
 
-	err := query.Preload("Category").Limit(num).Offset(offset).Order("created_at desc").Find(&posts).Error
+	err := query.Preload("Category").Preload("Tags").Limit(num).Offset(offset).Order("created_at desc").Find(&posts).Error
 	return posts, err
 }
 
@@ -88,32 +88,12 @@ func CountPostsWithConditions(visibility, protect, state, categoryID string) (in
 	return count, err
 }
 
-func ReadAllTags() (map[string]int, error) {
-	var results []struct {
-		Tags []string `gorm:"serializer:json"`
-	}
-	err := config.DB.Model(&model.Post{}).Where("visibility = ?", model.VisibilityPublic).Where("state = ?", model.StateRelease).Select("tags").Find(&results).Error
-	if err != nil {
-		return nil, err
-	}
-
-	tagMap := make(map[string]int)
-	for _, res := range results {
-		for _, tag := range res.Tags {
-			if tag != "" {
-				tagMap[tag]++
-			}
-		}
-	}
-	return tagMap, nil
-}
-
 func updatePost(post *model.Post) error {
-	err := config.DB.Model(post).Select("*").Omit("Category").Updates(post).Error
+	err := config.DB.Model(post).Select("*").Omit("Category", "Tags").Updates(post).Error
 	if err != nil {
 		return err
 	}
-	return nil
+	return config.DB.Model(post).Association("Tags").Replace(post.Tags)
 }
 
 func updateContent(p *model.ViewPost) error {

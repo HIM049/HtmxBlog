@@ -3,6 +3,8 @@ package model
 import (
 	"path/filepath"
 
+	"strings"
+
 	"gorm.io/gorm"
 )
 
@@ -18,11 +20,19 @@ type Post struct {
 	Title      string                 `json:"title"`
 	CategoryID *uint                  `json:"category_id"`
 	Category   Category               `json:"category" gorm:"foreignKey:CategoryID"`
-	Tags       []string               `json:"tags" gorm:"serializer:json"`
+	Tags       []Tag                  `json:"tags" gorm:"many2many:post_tags"`
 	Attachs    []Attach               `json:"attachs" gorm:"many2many:post_attaches"`
 	CustomVars map[string]interface{} `json:"custom_vars" gorm:"serializer:json"`
 }
 
 func (p *Post) ContentPath() string {
 	return filepath.Join(POSTS_DIR, p.Uid)
+}
+
+func (p *Post) TagsToString() string {
+	var names []string
+	for _, tag := range p.Tags {
+		names = append(names, tag.Name)
+	}
+	return strings.Join(names, ", ")
 }

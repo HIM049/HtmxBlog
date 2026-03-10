@@ -44,10 +44,6 @@ func (vp *ViewPost) ParseContent() template.HTML {
 	return template.HTML(md)
 }
 
-func (p *ViewPost) TagsToString() string {
-	return strings.Join(p.Tags, ", ")
-}
-
 func (p *ViewPost) CustomVarsToString() string {
 	var lines []string
 	for k, v := range p.CustomVars {

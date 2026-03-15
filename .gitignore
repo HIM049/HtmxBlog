@@ -4,3 +4,5 @@
 /node_modules
 /tmp
 /app_data
+/assets/*.css
+/assets/*.js

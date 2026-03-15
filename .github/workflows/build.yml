@@ -26,11 +26,12 @@ jobs:
             - name: Install pnpm
               uses: pnpm/action-setup@v4
 
-            - name: Install dependencies and Build CSS
+            - name: Install dependencies and Build Assets
               run: |
                   pnpm install
                   pnpm exec tailwindcss -i ./templates/user/style.css -o ./assets/style.css --minify
                   pnpm exec tailwindcss -i ./templates/admin/style.css -o ./assets/admin_style.css --minify
+                  pnpm exec shx cp node_modules/htmx.org/dist/htmx.min.js assets/htmx.js
 
             - name: Build Go binary
               run: |

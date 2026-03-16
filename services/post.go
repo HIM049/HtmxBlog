@@ -36,7 +36,7 @@ func ReadPost(id uint) (*model.Post, error) {
 
 func ReadPosts(num int, offset int) ([]model.Post, error) {
 	var posts []model.Post
-	err := config.DB.Preload("Category").Preload("Tags").Limit(num).Offset(offset).Order("created_at desc").Find(&posts).Error
+	err := config.DB.Preload("Category").Preload("Tags").Limit(num).Offset(offset).Order("id desc").Find(&posts).Error
 	return posts, err
 }
 

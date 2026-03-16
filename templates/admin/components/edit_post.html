@@ -3,9 +3,9 @@
 <!-- Main form for post data -->
 <form id="post-form" hx-patch="/api/admin/post/{{ .Post.ID }}" hx-swap="none" hx-indicator="#save-indicator"></form>
 
-<div class="flex gap-6">
+<div class="flex gap-6 justify-center w-full max-w-5xl mx-auto">
     <!-- Left Column: Title and Content -->
-    <div class="flex-1 flex flex-col bg-white shadow-md rounded overflow-hidden">
+    <div class="flex-1 flex flex-col bg-white shadow-md rounded overflow-hidden max-w-[648px]">
         <div class="p-4 border-b">
             <input form="post-form"
                 class="text-2xl font-bold w-full outline-none border-b-2 border-transparent focus:border-blue-500 transition-colors py-2"

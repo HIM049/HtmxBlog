@@ -1,10 +1,10 @@
 {{ define "manage_posts" }}
-<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-8">
+<div class="bg-white dark:bg-zinc-800 shadow-md rounded px-8 pt-6 pb-8 mb-8">
     <h2 class="text-2xl font-bold mb-4">Manage Posts</h2>
     <div class="overflow-x-auto">
         <table class="table-auto w-full">
             <thead>
-                <tr class="bg-gray-100 text-left">
+                <tr class="bg-gray-100 dark:bg-zinc-700 text-left">
                     <th class="px-4 py-2">ID</th>
                     <th class="px-4 py-2">Title</th>
                     <th class="px-4 py-2">Category</th>
@@ -14,12 +14,12 @@
             </thead>
             <tbody>
                 {{ range .Posts }}
-                <tr class="border-b border-gray-300 hover:bg-gray-50">
+                <tr class="border-b border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700/50">
                     <td class="px-4 py-2">{{ .ID }}</td>
                     <td class="px-4 py-2 font-medium">{{ .Title }}</td>
                     <td class="px-4 py-2">
                         {{ if .Category.ID }}
-                        <span class="px-2 inline-flex text-xs leading-5 rounded-full"
+                        <span class="px-2 inline-flex text-xs leading-5 rounded-full text-gray-800"
                             style="background-color: {{ .Category.Color }}">
                             {{ .Category.Name }}
                         </span>
@@ -27,9 +27,9 @@
                     </td>
                     <td class="px-4 py-2">{{ .State }}</td>
                     <td class="px-4 py-2">
-                        <a href="/admin/post/{{ .ID }}/edit" class="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
+                        <a href="/admin/post/{{ .ID }}/edit" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-2">Edit</a>
                         <button hx-delete="/api/admin/post/{{ .ID }}" hx-confirm="Are you sure?" hx-target="closest tr"
-                            hx-swap="outerHTML" class="text-red-600 hover:text-red-900">Delete</button>
+                            hx-swap="outerHTML" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300">Delete</button>
                     </td>
                 </tr>
                 {{ end }}

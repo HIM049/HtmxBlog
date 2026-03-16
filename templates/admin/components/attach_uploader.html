@@ -1,14 +1,14 @@
 {{ define "attach_uploader"}}
-<div class="bg-white shadow-md rounded p-4">
-    <h3 class="font-bold text-gray-700 border-b pb-2 mb-4">Attachments</h3>
+<div class="bg-white dark:bg-zinc-800 shadow-md rounded p-4">
+    <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2 mb-4">Attachments</h3>
     <form hx-post="/api/admin/post/{{ .Post.ID }}/attach" hx-encoding="multipart/form-data" hx-target="#attach-list"
-        hx-swap="afterbegin" class="p-4 bg-gray-50 rounded border border-gray-200 mb-6">
+        hx-swap="afterbegin" class="p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-6">
         <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="file">
+            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="file">
                 Select File
             </label>
             <input
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                 id="file" type="file" name="file" required>
         </div>
         <div class="flex items-center justify-between">
@@ -21,7 +21,19 @@
     </form>
     <div id="attach-list" class="mt-4 mb-8">
         {{ range .Post.Attachs }}
-        {{ template "attach_item" . }}
+        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
+            <div class="overflow-hidden mr-4">
+                <div class="font-bold text-gray-700 dark:text-gray-300 truncate" title="{{ .Name }}">{{ .Name }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">{{ .Mime }}</div>
+            </div>
+            <div class="shrink-0">
+                <button
+                    onclick="navigator.clipboard.writeText('/attach/{{ .Uid }}'); this.innerText = 'Copied!'; this.classList.remove('bg-blue-600', 'hover:bg-blue-700'); this.classList.add('bg-green-600', 'hover:bg-green-700'); setTimeout(() => { this.innerText = 'Copy Link'; this.classList.remove('bg-green-600', 'hover:bg-green-700'); this.classList.add('bg-blue-600', 'hover:bg-blue-700'); }, 2000)"
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
+                    Copy Link
+                </button>
+            </div>
+        </div>
         {{ end }}
     </div>
 </div>

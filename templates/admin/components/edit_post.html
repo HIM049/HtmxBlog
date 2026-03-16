@@ -5,21 +5,21 @@
 
 <div class="flex gap-6 justify-center w-full max-w-5xl mx-auto">
     <!-- Left Column: Title and Content -->
-    <div class="flex-1 flex flex-col bg-white shadow-md rounded overflow-hidden max-w-[648px]">
-        <div class="p-4 border-b">
+    <div class="flex-1 flex flex-col bg-white dark:bg-zinc-800 shadow-md rounded overflow-hidden max-w-[648px]">
+        <div class="p-4 border-b dark:border-zinc-700">
             <input form="post-form"
-                class="text-2xl font-bold w-full outline-none border-b-2 border-transparent focus:border-blue-500 transition-colors py-2"
+                class="text-2xl font-bold w-full outline-none border-b-2 border-transparent focus:border-blue-500 bg-transparent dark:text-gray-100 transition-colors py-2"
                 id="title" name="title" type="text" value="{{ .Post.Title }}" placeholder="Post Title">
         </div>
         <div class="flex-1 p-4 overflow-y-auto">
-            <textarea form="post-form" class="w-full h-full resize-none outline-none font-mono text-gray-700"
+            <textarea form="post-form" class="w-full h-full resize-none outline-none font-mono text-gray-700 dark:text-gray-300 bg-transparent"
                 id="content" name="content"
                 placeholder="Type your markdown content here...">{{ .Post.Content }}</textarea>
         </div>
         <!-- Save Actions -->
-        <div class="p-4 border-t bg-gray-50 flex justify-between items-center">
+        <div class="p-4 border-t dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900/50 flex justify-between items-center">
             <div id="save-indicator"
-                class="text-sm font-semibold text-blue-600 opacity-0 transition-opacity duration-300 htmx-request:opacity-100">
+                class="text-sm font-semibold text-blue-600 dark:text-blue-400 opacity-0 transition-opacity duration-300 htmx-request:opacity-100">
                 Saving changes...
             </div>
             <button form="post-form" type="submit"
@@ -33,14 +33,14 @@
     <div class="w-80 flex flex-col gap-6 pr-2">
 
         <!-- Meta Info -->
-        <div class="bg-white shadow-md rounded p-4 space-y-4">
-            <h3 class="font-bold text-gray-700 border-b pb-2">Meta Info</h3>
+        <div class="bg-white dark:bg-zinc-800 shadow-md rounded p-4 space-y-4">
+            <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2">Meta Info</h3>
 
             <div>
-                <label class="block text-gray-600 text-xs font-bold mb-1" for="visibility">Visibility</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="visibility">Visibility</label>
                 <div class="relative">
                     <select form="post-form"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white"
+                        class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                         id="visibility" name="visibility">
                         <option value="public" {{ if eq .Post.Visibility "public" }}selected{{ end }}>Public</option>
                         <option value="hide" {{ if eq .Post.Visibility "hide" }}selected{{ end }}>Hide</option>
@@ -50,10 +50,10 @@
             </div>
 
             <div>
-                <label class="block text-gray-600 text-xs font-bold mb-1" for="protect">Protect</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="protect">Protect</label>
                 <div class="relative">
                     <select form="post-form"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white"
+                        class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                         id="protect" name="protect">
                         <option value="none" {{ if eq .Post.Protect "none" }}selected{{ end }}>None</option>
                         <option value="login" {{ if eq .Post.Protect "login" }}selected{{ end }}>Login Required</option>
@@ -64,10 +64,10 @@
             </div>
 
             <div>
-                <label class="block text-gray-600 text-xs font-bold mb-1" for="state">State</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="state">State</label>
                 <div class="relative">
                     <select form="post-form"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white"
+                        class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                         id="state" name="state">
                         <option value="draft" {{ if eq .Post.State "draft" }}selected{{ end }}>Draft</option>
                         <option value="release" {{ if eq .Post.State "release" }}selected{{ end }}>Published</option>
@@ -76,10 +76,10 @@
             </div>
 
             <div>
-                <label class="block text-gray-600 text-xs font-bold mb-1" for="category_id">Category</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="category_id">Category</label>
                 <div class="relative">
                     <select form="post-form"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white"
+                        class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                         id="category_id" name="category_id">
                         <option value="0" {{ if eq .Post.GetCategoryID 0 }}selected{{ end }}>None</option>
                         {{ range .Categories }}
@@ -91,27 +91,27 @@
             </div>
 
             <div>
-                <label class="block text-gray-600 text-xs font-bold mb-1" for="tags">Tags</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="tags">Tags</label>
                 <input form="post-form"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                     id="tags" name="tags" type="text" value="{{ .Post.TagsToString }}"
                     placeholder="Tags (comma separated)">
             </div>
 
             <div>
-                <label class="block text-gray-600 text-xs font-bold mb-1" for="created_at">Created At</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="created_at">Created At</label>
                 <input form="post-form"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                     id="created_at" name="created_at" type="datetime-local"
                     value="{{ .Post.CreatedAt.Format `2006-01-02T15:04` }}">
             </div>
         </div>
 
         <!-- Custom Vars -->
-        <div class="bg-white shadow-md rounded p-4">
-            <h3 class="font-bold text-gray-700 border-b pb-2 mb-2">Custom Vars</h3>
+        <div class="bg-white dark:bg-zinc-800 shadow-md rounded p-4">
+            <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2 mb-2">Custom Vars</h3>
             <textarea form="post-form"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline h-32"
+                class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline h-32 bg-white dark:bg-zinc-700"
                 id="custom_vars" name="custom_vars" placeholder="key: value">{{ .Post.CustomVarsToString }}</textarea>
         </div>
 

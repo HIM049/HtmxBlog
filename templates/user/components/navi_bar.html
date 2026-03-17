@@ -3,28 +3,37 @@
 <nav class="h-[100px] flex items-center justify-between mx-auto px-14">
     <a href="/">
         <div
-            class="text-xl font-bold text-black hover:text-white hover:bg-[#0099cc] hover:shadow-standard-sm px-4 py-2 rounded-xl transition-all duration-300">
+            class="text-xl font-bold text-black dark:text-white hover:text-white hover:bg-[#0099cc] hover:shadow-standard-sm px-4 py-2 rounded-xl transition-all duration-300">
             {{ .Settings.site_name }}
         </div>
     </a>
-    <ul class="flex space-x-6 items-center">
+    <ul class="flex space-x-2 items-center">
         {{ range .Navigation }}
         <li>
             <a href="{{ .Route }}"
-                class="px-4 py-2 font-bold rounded-lg text-gray-800 hover:shadow-standard-sm transition hover:bg-white">
+                class="px-4 py-2 font-bold rounded-lg text-zinc-800 dark:text-zinc-100 hover:shadow-standard-sm transition hover:bg-white dark:hover:bg-zinc-700">
                 {{ .Name }}
             </a>
         </li>
         {{ end }}
         <li>
-            <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                </path>
-            </svg>
+            <button id="theme-toggle" onclick="toggleTheme()"
+                class="p-2 font-bold rounded-lg text-zinc-800 dark:text-zinc-100 hover:shadow-standard-sm transition hover:bg-white dark:hover:bg-zinc-700">
+                <svg class="w-6 h-6 text-black dark:text-white" xmlns="http://www.w3.org/2000/svg" height="24px"
+                    viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                    <path
+                        d="M324-111.5Q251-143 197-197t-85.5-127Q80-397 80-480t31.5-156Q143-709 197-763t127-85.5Q397-880 480-880t156 31.5Q709-817 763-763t85.5 127Q880-563 880-480t-31.5 156Q817-251 763-197t-127 85.5Q563-80 480-80t-156-31.5ZM520-163q119-15 199.5-104.5T800-480q0-123-80.5-212.5T520-797v634Z" />
+                </svg>
+            </button>
         </li>
     </ul>
 </nav>
+
+<script>
+    function toggleTheme() {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+</script>
 
 {{ end }}

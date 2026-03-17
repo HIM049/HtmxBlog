@@ -1,14 +1,15 @@
 {{ define "post" }}
 {{ template "header" . }}
 
-<body class="bg-[#ececec]">
+<body class="bg-[#ececec] dark:bg-zinc-800">
     <div class="max-w-[900px] mx-auto">
         {{ template "navi_bar" . }}
         <div class="container mx-auto mt-8 p-4">
             <div class="flex flex-col space-y-6">
                 <!-- Post Section -->
                 {{ range .Posts }}
-                <div class="bg-white rounded-2xl shadow-standard transition overflow-hidden w-full max-w-xl mx-auto">
+                <div
+                    class="bg-white dark:bg-zinc-700 rounded-2xl shadow-standard transition overflow-hidden w-full max-w-xl mx-auto">
                     <!-- Image Section -->
                     {{ if .CustomVars.cover }}
                     <div class="h-64 w-full">
@@ -22,20 +23,20 @@
                         <div class="flex items-start gap-3 mb-2">
                             {{ if .Category.ID }}
                             <span
-                                class="px-2.5 py-0.5 text-xs font-semibold text-gray-600 rounded-md uppercase tracking-wide shrink-0 my-1.5"
+                                class="px-2.5 py-0.5 text-xs font-semibold text-zinc-600 rounded-md uppercase tracking-wide shrink-0 my-1.5"
                                 style="background-color: {{ .Category.Color }};">{{
                                 .Category.Name }}</span>
                             {{ end }}
-                            <h2 class="text-2xl font-bold text-gray-800 line-clamp-2 transition">
+                            <h2 class="text-2xl font-bold text-zinc-800 dark:text-white line-clamp-2 transition">
                                 {{ .Title }}</h2>
                         </div>
 
                         <div class="flex justify-end items-end mt-4">
-                            <span class="text-sm text-gray-500 font-mono">{{ .CreatedAt.Format "2006-01-02" }}</span>
+                            <span class="text-sm text-zinc-500 font-mono">{{ .CreatedAt.Format "2006-01-02" }}</span>
                         </div>
                     </div>
 
-                    <div class="prose prose-slate mx-auto p-5">{{ .ParseContent }}</div>
+                    <div class="prose prose-slate mx-auto p-5 dark:prose-invert">{{ .ParseContent }}</div>
                 </div>
                 {{ end }}
             </div>

@@ -9,5 +9,5 @@ type Attach struct {
 	Name       string `json:"name"`
 	Mime       string `json:"mime"`
 	Permission string `json:"permission" gorm:"default:'private'"`
-	Refers     []Post `json:"refers" gorm:"many2many:post_attaches"`
+	Refers     []Post `json:"-" gorm:"many2many:post_attaches"`
 }

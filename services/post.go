@@ -3,10 +3,14 @@ package services
 import (
 	"HtmxBlog/config"
 	"HtmxBlog/model"
+	"encoding/json"
 	"os"
+	"path/filepath"
 
 	"github.com/google/uuid"
 )
+
+const DRAFTS_DIR = "./app_data/drafts"
 
 var onPostChange func()
 
@@ -79,7 +83,7 @@ func CountPostsWithConditions(visibility, protect, state, categoryID, tag string
 }
 
 func updatePost(post *model.Post) error {
-	err := config.DB.Model(post).Select("*").Omit("Category", "Tags").Updates(post).Error
+	err := config.DB.Model(post).Select("*").Omit("Category", "Tags", "Attachs").Updates(post).Error
 	if err != nil {
 		return err
 	}
@@ -105,8 +109,64 @@ func UpdatePostWithContent(p model.GenericPost) error {
 			return err
 		}
 	}
+
+	// Clean up draft if it exists after publishing
+	draftPath := filepath.Join(DRAFTS_DIR, post.Uid+".json")
+	if _, err := os.Stat(draftPath); err == nil {
+		os.Remove(draftPath)
+	}
+
 	onPostChange()
 	return nil
+}
+
+func SaveDraft(id uint, p *model.ViewPost) error {
+	post, err := ReadPost(id)
+	if err != nil {
+		return err
+	}
+
+	// Ensure drafts directory exists
+	if _, err := os.Stat(DRAFTS_DIR); os.IsNotExist(err) {
+		os.MkdirAll(DRAFTS_DIR, 0755)
+	}
+
+	draftPath := filepath.Join(DRAFTS_DIR, post.Uid+".json")
+	data, err := json.MarshalIndent(p, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(draftPath, data, 0644)
+}
+
+func GetDraft(id uint) (*model.ViewPost, error) {
+	post, err := ReadPost(id)
+	if err != nil {
+		return nil, err
+	}
+
+	draftPath := filepath.Join(DRAFTS_DIR, post.Uid+".json")
+	if _, err := os.Stat(draftPath); os.IsNotExist(err) {
+		return nil, err // No draft found
+	}
+
+	data, err := os.ReadFile(draftPath)
+	if err != nil {
+		return nil, err
+	}
+
+	var vp model.ViewPost
+	if err := json.Unmarshal(data, &vp); err != nil {
+		return nil, err
+	}
+
+	// Ensure ID, UID, and Attachs match the current live record
+	vp.ID = post.ID
+	vp.Uid = post.Uid
+	vp.Attachs = post.Attachs
+
+	return &vp, nil
 }
 
 func DeletePost(id uint) error {

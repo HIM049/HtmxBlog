@@ -21,7 +21,7 @@ type Post struct {
 	CategoryID *uint                  `json:"category_id"`
 	Category   Category               `json:"category" gorm:"foreignKey:CategoryID"`
 	Tags       []Tag                  `json:"tags" gorm:"many2many:post_tags"`
-	Attachs    []Attach               `json:"attachs" gorm:"many2many:post_attaches"`
+	Attachs    []Attach               `json:"-" gorm:"many2many:post_attaches"`
 	CustomVars map[string]interface{} `json:"custom_vars" gorm:"serializer:json"`
 }
 

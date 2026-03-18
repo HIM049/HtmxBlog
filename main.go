@@ -14,6 +14,7 @@ func main() {
 	os.MkdirAll("./app_data", 0755)
 	os.MkdirAll("./app_data/posts", 0755)
 	os.MkdirAll("./app_data/attaches", 0755)
+	os.MkdirAll("./app_data/drafts", 0755)
 
 	// initialize modules
 	config.Init()

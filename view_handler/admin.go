@@ -76,19 +76,29 @@ func EditView(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid post ID", http.StatusBadRequest)
 		return
 	}
-	post, err := services.ReadPost(uint(id))
-	if err != nil {
-		http.Error(w, "Post not found", http.StatusNotFound)
-		return
+
+	// Try loading draft first
+	vp, err := services.GetDraft(uint(id))
+	var hasDraft bool
+	if err == nil && vp != nil {
+		hasDraft = true
+	} else {
+		// Load from DB
+		post, err := services.ReadPost(uint(id))
+		if err != nil {
+			http.Error(w, "Post not found", http.StatusNotFound)
+			return
+		}
+		vp = &model.ViewPost{Post: *post}
+		vp.LoadContent()
 	}
 
-	vp := &model.ViewPost{Post: *post}
-	vp.LoadContent()
 	categories, _ := services.ReadCategories()
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	template.AdminTmpl.ExecuteTemplate(w, "update_post", map[string]interface{}{
 		"Post":       vp,
 		"Categories": categories,
+		"HasDraft":   hasDraft,
 	})
 }

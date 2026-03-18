@@ -30,22 +30,9 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("HX-Redirect", fmt.Sprintf("/admin/post/%d/edit", post.ID))
 }
 
-func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-	if err != nil {
-		http.Error(w, "Invalid Post ID", http.StatusBadRequest)
-		return
-	}
-	post, err := services.ReadPost(uint(id))
-	if err != nil {
-		http.Error(w, "Failed to read post", http.StatusInternalServerError)
-		return
-	}
-
-	// Update logic
+func parsePostForm(post *model.Post, r *http.Request) error {
 	if err := r.ParseForm(); err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
-		return
+		return err
 	}
 
 	if title := r.FormValue("title"); title != "" {
@@ -119,26 +106,91 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 			post.CreatedAt = t
 		}
 	}
+	return nil
+}
 
-	var genericPost model.GenericPost = post
+func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "Invalid Post ID", http.StatusBadRequest)
+		return
+	}
+	post, err := services.ReadPost(uint(id))
+	if err != nil {
+		http.Error(w, "Failed to read post", http.StatusInternalServerError)
+		return
+	}
 
+	if err := parsePostForm(post, r); err != nil {
+		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		return
+	}
+
+	var vp *model.ViewPost
 	if content := r.FormValue("content"); content != "" {
-		genericPost = &model.ViewPost{
+		vp = &model.ViewPost{
 			Post:    *post,
 			Content: content,
 		}
+	} else {
+		vp = &model.ViewPost{Post: *post}
+		vp.LoadContent()
 	}
 
-	err = services.UpdatePostWithContent(genericPost)
+	// Update ALWAYS saves to draft
+	err = services.SaveDraft(uint(id), vp)
 	if err != nil {
-		http.Error(w, "Failed to update post", http.StatusInternalServerError)
+		http.Error(w, "Failed to save draft", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	w.Write([]byte("Saved to draft"))
+}
 
+func HandlePostPublish(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "Invalid Post ID", http.StatusBadRequest)
+		return
+	}
+	post, err := services.ReadPost(uint(id))
+	if err != nil {
+		http.Error(w, "Failed to read post", http.StatusInternalServerError)
+		return
+	}
+
+	// Parse current form state (Sync editor to what will be published)
+	if err := parsePostForm(post, r); err != nil {
+		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		return
+	}
+
+	var vp *model.ViewPost
+	if content := r.FormValue("content"); content != "" {
+		vp = &model.ViewPost{
+			Post:    *post,
+			Content: content,
+		}
+	} else {
+		vp = &model.ViewPost{Post: *post}
+		vp.LoadContent()
+	}
+
+	// Set state to release
+	vp.State = model.StateRelease
+
+	// Perform actual update (promote draft/current state to published)
+	err = services.UpdatePostWithContent(vp)
+	if err != nil {
+		http.Error(w, "Failed to publish post", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Published"))
 }
 
 func HandlePostDelete(w http.ResponseWriter, r *http.Request) {

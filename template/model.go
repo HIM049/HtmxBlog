@@ -32,6 +32,7 @@ type App struct {
 	Posts      []model.ViewPost
 	Settings   map[string]string
 	Pagination Pagination
+	Comments   []*services.CommentNode
 }
 
 // InitBaseApp initializes the base application data

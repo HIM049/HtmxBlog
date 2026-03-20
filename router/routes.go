@@ -48,6 +48,7 @@ func loadRoutes() *chi.Mux {
 				r.Get("/posts", view_handler.ManagePostsView)
 				r.Get("/categories", view_handler.ManageCategoriesView)
 				r.Get("/settings", view_handler.ManageSettingsView)
+				r.Get("/comments", view_handler.ManageCommentsView)
 				r.Get("/post/{id}/edit", view_handler.EditView)
 			})
 		})
@@ -55,11 +56,16 @@ func loadRoutes() *chi.Mux {
 
 	r.Route("/api", func(r chi.Router) {
 
+		r.Post("/comment", api_handler.HandleCommentCreate)
+
 		r.Route("/admin", func(r chi.Router) {
 			r.Post("/auth", api_handler.AuthHandler)
 
 			r.Group(func(r chi.Router) {
 				r.Use(app_middleware.AccessControlMiddleware)
+
+				r.Delete("/comment/{id}", api_handler.HandleCommentDelete)
+				r.Post("/comment/{id}/approve", api_handler.HandleCommentApprove)
 
 				r.Route("/post", func(r chi.Router) {
 					r.Post("/create", api_handler.HandlePostCreate)

@@ -1,0 +1,43 @@
+{{ define "comment_form" }}
+<div id="comment-form-container" class="p-6 bg-white dark:bg-zinc-700 rounded-2xl shadow-standard">
+    <h3 class="text-xl font-bold text-zinc-800 dark:text-white mb-4">Create a Comment</h3>
+    <p id="reply-to-name" class="text-sm text-zinc-600 dark:text-zinc-400 mb-4 h-5"></p>
+    
+    <form 
+        hx-post="/api/comment" 
+        hx-target="#comment-message" 
+        hx-on::after-request="if(event.detail.successful) { this.reset(); document.getElementById('parent-id').value = '0'; document.getElementById('reply-to-name').innerText = ''; }"
+        class="space-y-4"
+    >
+        <input type="hidden" name="post_id" value="{{ (index .Posts 0).ID }}">
+        <input type="hidden" id="parent-id" name="parent" value="0">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Name *</label>
+                <input type="text" name="name" required class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Email *</label>
+                <input type="email" name="email" required class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition">
+            </div>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Website (Optional)</label>
+            <input type="url" name="url" class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Comment *</label>
+            <textarea name="content" rows="4" required class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition"></textarea>
+        </div>
+        
+        <div id="comment-message"></div>
+        
+        <button type="submit" class="bg-blue-600 hover:brightness-60 text-white font-bold py-2.5 px-6 rounded-xl transition duration-300 shadow-md outline-none">
+            Submit Comment
+        </button>
+    </form>
+</div>
+{{ end }}

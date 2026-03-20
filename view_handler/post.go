@@ -32,6 +32,11 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 	base := template.GetBaseApp()
 	base.Posts = []model.ViewPost{vp}
 
+	comments, err := services.ReadCommentsByPostID(uint(id))
+	if err == nil {
+		base.Comments = services.BuildCommentTree(comments)
+	}
+
 	template.Tmpl.ExecuteTemplate(w, "post", base)
 
 }

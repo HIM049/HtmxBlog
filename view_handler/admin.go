@@ -62,6 +62,14 @@ func ManagePostsView(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ManageCommentsView(w http.ResponseWriter, r *http.Request) {
+	comments, _ := services.ReadAllComments()
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	template.AdminTmpl.ExecuteTemplate(w, "comment_manage", map[string]interface{}{
+		"Comments": comments,
+	})
+}
+
 func ManageSettingsView(w http.ResponseWriter, r *http.Request) {
 	settings, _ := services.ReadAllSettings()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

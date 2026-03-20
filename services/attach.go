@@ -119,5 +119,5 @@ func UpdateAttach(attach *model.Attach) error {
 
 // DeleteAttach deletes an attach.
 func DeleteAttach(id uint) error {
-	return config.DB.Delete(&model.Attach{}, id).Error
+	panic("unimplemented")
 }

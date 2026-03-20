@@ -59,5 +59,5 @@ func InitDB() {
 }
 
 func Migrate() error {
-	return DB.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{}, &model.Setting{})
+	return DB.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{}, &model.Setting{}, &model.Comment{})
 }

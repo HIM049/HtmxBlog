@@ -22,7 +22,7 @@
             class="w-8 h-8 rounded shadow-sm border border-gray-200 dark:border-zinc-600 cursor-pointer p-0 bg-transparent">
         <input type="text" name="name" value="{{ .Name }}" hx-patch="/api/admin/category/{{ .ID }}" hx-trigger="change"
             hx-target="closest li" hx-swap="outerHTML"
-            class="font-semibold bg-transparent border-transparent hover:border-gray-300 dark:hover:border-zinc-600 focus:border-indigo-300 dark:focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded px-2 py-1 transition-colors dark:text-gray-100">
+            class="font-semibold bg-transparent border-transparent hover:border-gray-300 dark:hover:border-zinc-600 focus:border-blue-300 dark:focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded px-2 py-1 transition-colors dark:text-gray-100">
         {{ if eq .Visibility "hide" }}
         <span class="text-xs text-gray-400 bg-gray-100 dark:bg-zinc-700 px-2 py-0.5 rounded-full">Hidden</span>
         {{ else if eq .Visibility "private" }}
@@ -32,7 +32,7 @@
     <div class="flex items-center gap-2">
         <select name="visibility" hx-patch="/api/admin/category/{{ .ID }}" hx-trigger="change" hx-target="closest li"
             hx-swap="outerHTML"
-            class="text-sm border-gray-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-gray-100 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-8 py-0 pl-2 pr-8">
+            class="text-sm border-gray-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-gray-100 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-8 py-0 pl-2 pr-8">
             <option value="public" {{ if eq .Visibility "public" }}selected{{ end }}>Public</option>
             <option value="hide" {{ if eq .Visibility "hide" }}selected{{ end }}>Hide</option>
             <option value="private" {{ if eq .Visibility "private" }}selected{{ end }}>Private</option>

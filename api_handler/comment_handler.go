@@ -3,6 +3,7 @@ package api_handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/utils"
 	"net/http"
 	"strconv"
 
@@ -49,7 +50,7 @@ func HandleCommentCreate(w http.ResponseWriter, r *http.Request) {
 		Email:     email,
 		Url:       url,
 		Content:   content,
-		IP:        r.RemoteAddr,
+		IP:        utils.GetRealIP(r),
 		UserAgent: r.UserAgent(),
 		State:     model.StatePending,
 	}

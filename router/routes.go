@@ -37,7 +37,7 @@ func loadRoutes() *chi.Mux {
 		if err != nil {
 			panic(err)
 		}
-		r.Get("/p/{id}", view_handler.PostView)
+		r.Get("/post/{id}", view_handler.PostView)
 
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/auth", view_handler.AuthView)

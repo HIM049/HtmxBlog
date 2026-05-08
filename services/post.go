@@ -12,7 +12,7 @@ import (
 
 const DRAFTS_DIR = "./app_data/drafts"
 
-var onPostChange func()
+var onPostChange = func() {}
 
 // CreateDefaultPost creates a post with default values
 func CreateDefaultPost() (*model.Post, error) {

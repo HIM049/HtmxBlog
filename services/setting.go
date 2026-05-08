@@ -5,7 +5,7 @@ import (
 	"HtmxBlog/model"
 )
 
-var onSettingChange func()
+var onSettingChange = func() {}
 
 func CreateSetting(item *model.Setting) error {
 	err := config.DB.Create(item).Error

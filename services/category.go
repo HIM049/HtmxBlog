@@ -5,7 +5,7 @@ import (
 	"HtmxBlog/model"
 )
 
-var onCategoryChange func()
+var onCategoryChange = func() {}
 
 func CreateCategory(name, color string) (*model.Category, error) {
 	category := &model.Category{

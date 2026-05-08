@@ -5,7 +5,7 @@ import (
 	"HtmxBlog/model"
 )
 
-var onPageChange func()
+var onPageChange = func() {}
 
 // CreatePage creates a page.
 func CreatePage(item *model.Page) error {

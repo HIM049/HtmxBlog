@@ -1,6 +1,6 @@
 [database]
-driver = "sqlite"
-dsn = "app.db"
+driver = "postgres"
+dsn = "postgres://postgres:Seven7777@localhost:5432/htmx_blog"
 
 [service]
 port = "8080"

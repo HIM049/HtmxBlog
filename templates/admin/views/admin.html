@@ -1,51 +1,108 @@
-{{ define "admin" }}
-{{ template "header" . }}
+{{ define "admin" }} {{ template "header" . }}
 
 <body class="bg-gray-100 dark:bg-zinc-900 dark:text-gray-100">
     <div class="max-w-[1000px] mx-auto">
         <div class="flex justify-between items-center p-6">
             <h1 class="text-3xl font-bold">Admin Dashboard</h1>
 
-            <button id="theme-toggle" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
-                onclick="toggleTheme()">
+            <button
+                id="theme-toggle"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
+                onclick="toggleTheme()"
+            >
                 Switch Theme
             </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 container mx-auto">
             <!-- Manage Posts -->
-            <a href="/admin/posts"
-                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Manage Posts</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-300">Create, edit, and delete blog posts.</p>
+            <a
+                href="/admin/posts"
+                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors"
+            >
+                <h5
+                    class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
+                >
+                    Manage Posts
+                </h5>
+                <p class="font-normal text-gray-700 dark:text-gray-300">
+                    Create, edit, and delete blog posts.
+                </p>
             </a>
 
             <!-- Manage Pages -->
-            <a href="/admin/pages"
-                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Manage Pages</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-300">Static page management.</p>
+            <a
+                href="/admin/pages"
+                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors"
+            >
+                <h5
+                    class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
+                >
+                    Manage Pages
+                </h5>
+                <p class="font-normal text-gray-700 dark:text-gray-300">
+                    Static page management.
+                </p>
             </a>
 
             <!-- Manage Categories -->
-            <a href="/admin/categories"
-                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Manage Categories</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-300">Category management.</p>
+            <a
+                href="/admin/categories"
+                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors"
+            >
+                <h5
+                    class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
+                >
+                    Manage Categories
+                </h5>
+                <p class="font-normal text-gray-700 dark:text-gray-300">
+                    Category management.
+                </p>
             </a>
 
             <!-- Manage Settings -->
-            <a href="/admin/settings"
-                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Manage Settings</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-300">Application global settings.</p>
+            <a
+                href="/admin/settings"
+                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors"
+            >
+                <h5
+                    class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
+                >
+                    Manage Settings
+                </h5>
+                <p class="font-normal text-gray-700 dark:text-gray-300">
+                    Application global settings.
+                </p>
+            </a>
+
+            <!-- Manage Redirects -->
+            <a
+                href="/admin/redirects"
+                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors"
+            >
+                <h5
+                    class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
+                >
+                    Manage Redirects
+                </h5>
+                <p class="font-normal text-gray-700 dark:text-gray-300">
+                    URL redirect rule management.
+                </p>
             </a>
 
             <!-- Manage Comments -->
-            <a href="/admin/comments"
-                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Manage Comments</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-300">Review and delete user comments.</p>
+            <a
+                href="/admin/comments"
+                class="block p-6 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-600 transition-colors"
+            >
+                <h5
+                    class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
+                >
+                    Manage Comments
+                </h5>
+                <p class="font-normal text-gray-700 dark:text-gray-300">
+                    Review and delete user comments.
+                </p>
             </a>
         </div>
     </div>
@@ -53,8 +110,8 @@
 
 <script>
     function toggleTheme() {
-        const isDark = document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        const isDark = document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
     }
 </script>
 {{ end }}

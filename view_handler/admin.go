@@ -78,6 +78,14 @@ func ManageSettingsView(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ManageRedirectsView(w http.ResponseWriter, r *http.Request) {
+	redirects, _ := services.ReadAllRedirects()
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	template.AdminTmpl.ExecuteTemplate(w, "manage_redirects", map[string]interface{}{
+		"Redirects": redirects,
+	})
+}
+
 func EditView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {

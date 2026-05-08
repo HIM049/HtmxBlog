@@ -3,6 +3,7 @@ package router
 import (
 	"HtmxBlog/api_handler"
 	app_middleware "HtmxBlog/middleware"
+	"HtmxBlog/services"
 	"HtmxBlog/view_handler"
 	"net/http"
 
@@ -49,6 +50,7 @@ func loadRoutes() *chi.Mux {
 				r.Get("/categories", view_handler.ManageCategoriesView)
 				r.Get("/settings", view_handler.ManageSettingsView)
 				r.Get("/comments", view_handler.ManageCommentsView)
+				r.Get("/redirects", view_handler.ManageRedirectsView)
 				r.Get("/post/{id}/edit", view_handler.EditView)
 			})
 		})
@@ -94,10 +96,27 @@ func loadRoutes() *chi.Mux {
 					r.Delete("/{id}", api_handler.HandleSettingDelete)
 					r.Patch("/{id}", api_handler.HandleSettingUpdate)
 				})
+
+				r.Route("/redirect", func(r chi.Router) {
+					r.Post("/", api_handler.HandleRedirectCreate)
+					r.Delete("/{id}", api_handler.HandleRedirectDelete)
+					r.Patch("/{id}", api_handler.HandleRedirectUpdate)
+				})
 			})
 		})
 	})
 
 	// TODO share link system. use static url to route share link
+
+	// Fallback: check redirect rules first, otherwise redirect to home
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		redirect, err := services.FindRedirectBySource(r.URL.Path)
+		if err == nil {
+			http.Redirect(w, r, redirect.TargetPath, redirect.StatusCode)
+			return
+		}
+		http.Redirect(w, r, "/", http.StatusFound)
+	})
+
 	return r
 }

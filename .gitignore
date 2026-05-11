@@ -6,3 +6,4 @@
 /app_data
 /assets/*.css
 /assets/*.js
+.env

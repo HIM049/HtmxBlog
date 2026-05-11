@@ -1,8 +1,0 @@
-[database]
-driver = "postgres"
-dsn = "postgres://postgres:Seven7777@localhost:5432/htmx_blog"
-
-[service]
-port = "8080"
-admin_password = "password"
-vaild_hour = 24

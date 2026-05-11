@@ -2,8 +2,7 @@ package config
 
 import (
 	"fmt"
-
-	"github.com/knadh/koanf/v2"
+	"strconv"
 )
 
 type Service struct {
@@ -12,11 +11,12 @@ type Service struct {
 	ValidTime   int
 }
 
-func ReadService(k *koanf.Koanf) Service {
+func ReadService() Service {
+	validTime, _ := strconv.Atoi(getEnv("VALID_HOUR"))
 	return Service{
-		Port:        k.String("service.port"),
-		AdminPasswd: k.String("service.admin_password"),
-		ValidTime:   k.Int("service.vaild_hour"),
+		Port:        getEnv("PORT"),
+		AdminPasswd: getEnv("ADMIN_PASSWORD"),
+		ValidTime:   validTime,
 	}
 }
 

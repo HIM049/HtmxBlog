@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/glebarez/sqlite"
-	"github.com/knadh/koanf/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -16,12 +15,10 @@ type Database struct {
 	DSN    string
 }
 
-func ReadDatabase(k *koanf.Koanf) Database {
-	driver := k.String("database.driver")
-
+func ReadDatabase() Database {
 	return Database{
-		Driver: driver,
-		DSN:    k.String("database.dsn"),
+		Driver: getEnv("DB_DRIVER"),
+		DSN:    getEnv("DB_DSN"),
 	}
 }
 

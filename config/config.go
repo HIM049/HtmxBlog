@@ -1,9 +1,9 @@
 package config
 
 import (
-	"github.com/knadh/koanf/parsers/toml"
-	"github.com/knadh/koanf/providers/file"
-	"github.com/knadh/koanf/v2"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
 var Cfg *Config
@@ -14,14 +14,20 @@ type Config struct {
 	Settings map[string]string
 }
 
-// Init loads the config from the config.toml file.
-// It panics when some error occurs.
+// Init loads configuration from environment variables.
 func Init() {
-	k := koanf.New(".")
-	k.Load(file.Provider("config.toml"), toml.Parser())
+	_ = godotenv.Load()
 
 	Cfg = &Config{
-		Database: ReadDatabase(k),
-		Service:  ReadService(k),
+		Database: ReadDatabase(),
+		Service:  ReadService(),
 	}
+}
+
+// getEnv reads an environment variable, panics if not set.
+func getEnv(key string) string {
+	if val, ok := os.LookupEnv(key); ok {
+		return val
+	}
+	panic("environment variable not found: " + key)
 }

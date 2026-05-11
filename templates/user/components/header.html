@@ -1,20 +1,25 @@
 {{ define "header" }}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<header>
-    <title>{{ .PageTitle }}</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/assets/style.css" rel="stylesheet">
-    <script src="/assets/htmx.js"></script>
+    <header>
+        <title>{{ .PageTitle }}</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="/assets/style.css" rel="stylesheet" />
+        <link rel="icon" href="/assets/favicon.png" />
+        <script src="/assets/htmx.js"></script>
 
-    <script>
-        if (localStorage.getItem('theme') === 'dark' ||
-            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-</header>
-{{ end }}
+        <script>
+            if (
+                localStorage.getItem("theme") === "dark" ||
+                (!("theme" in localStorage) &&
+                    window.matchMedia("(prefers-color-scheme: dark)").matches)
+            ) {
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+            }
+        </script>
+    </header>
+    {{ end }}
+</html>

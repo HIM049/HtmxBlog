@@ -1,52 +1,52 @@
 name: Build for Linux
 
 on:
-    push:
-        branches: ["main", "master"]
-    pull_request:
-        branches: ["main", "master"]
-    workflow_dispatch:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+  workflow_dispatch:
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Set up Go
-              uses: actions/setup-go@v5
-              with:
-                  go-version: "1.24"
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-            - name: Install pnpm
-              uses: pnpm/action-setup@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-            - name: Install dependencies and Build Assets
-              run: |
-                  pnpm install
-                  pnpm exec tailwindcss -i ./templates/user/style.css -o ./assets/style.css --minify
-                  pnpm exec tailwindcss -i ./templates/admin/style.css -o ./assets/admin_style.css --minify
-                  pnpm exec shx cp node_modules/htmx.org/dist/htmx.min.js assets/htmx.js
+      - name: Install dependencies and Build Assets
+        run: |
+          pnpm install
+          pnpm exec tailwindcss -i ./templates/user/style.css -o ./assets/style.css --minify
+          pnpm exec tailwindcss -i ./templates/admin/style.css -o ./assets/admin_style.css --minify
+          pnpm exec shx cp node_modules/htmx.org/dist/htmx.min.js assets/htmx.js
 
-            - name: Build Go binary
-              run: |
-                  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o HtmxBlog main.go
+      - name: Build Go binary
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o HtmxBlog main.go
 
-            - name: Package artifacts
-              run: |
-                  mkdir -p release
-                  cp HtmxBlog release/
-                  cp config.toml release/
-                  cp -r assets release/
-                  cp -r templates release/
+      - name: Package artifacts
+        run: |
+          mkdir -p release
+          cp HtmxBlog release/
+          cp .env.example release/
+          cp -r assets release/
+          cp -r templates release/
 
-            - name: Upload Artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: HtmxBlog
-                  path: release/
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HtmxBlog
+          path: release/

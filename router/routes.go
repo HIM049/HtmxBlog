@@ -11,6 +11,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+const APP_VERSION = "0.1.0"
+
 var HRouter *HotRouter
 
 func Init() {
@@ -57,6 +59,10 @@ func loadRoutes() *chi.Mux {
 	})
 
 	r.Route("/api", func(r chi.Router) {
+		r.Get("/version", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(APP_VERSION))
+		})
 
 		r.Post("/comment", api_handler.HandleCommentCreate)
 

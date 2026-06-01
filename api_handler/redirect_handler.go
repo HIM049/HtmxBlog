@@ -42,8 +42,8 @@ func HandleRedirectCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("HX-Trigger", "newRedirect")
+	w.WriteHeader(http.StatusCreated)
 }
 
 func HandleRedirectDelete(w http.ResponseWriter, r *http.Request) {

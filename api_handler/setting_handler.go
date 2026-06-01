@@ -35,9 +35,9 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("HX-Trigger", "newSetting")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`<div class="text-green-600 font-bold p-4 bg-green-50 rounded shadow-md border border-green-200">Setting created successfully!</div>`))
-	w.Header().Set("HX-Trigger", "newSetting")
 }
 
 func HandleSettingDelete(w http.ResponseWriter, r *http.Request) {
@@ -96,5 +96,5 @@ func HandleSettingUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	template.Tmpl.ExecuteTemplate(w, "setting_item", setting)
+	template.AdminTmpl.ExecuteTemplate(w, "setting_item", setting)
 }

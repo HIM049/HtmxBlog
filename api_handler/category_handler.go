@@ -31,9 +31,9 @@ func HandleCategoryCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("HX-Trigger", "newCategory")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`<div class="text-green-600 font-bold p-4 bg-green-50 rounded shadow-md border border-green-200">Category created successfully!</div>`))
-	w.Header().Set("HX-Trigger", "newCategory")
 }
 
 func HandleCategoryDelete(w http.ResponseWriter, r *http.Request) {
@@ -95,5 +95,5 @@ func HandleCategoryUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	template.Tmpl.ExecuteTemplate(w, "category_item", category)
+	template.AdminTmpl.ExecuteTemplate(w, "category_item", category)
 }

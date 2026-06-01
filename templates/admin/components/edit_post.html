@@ -76,18 +76,6 @@
             </div>
 
             <div>
-                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="state">State</label>
-                <div class="relative">
-                    <select form="post-form"
-                        class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
-                        id="state" name="state">
-                        <option value="draft" {{ if eq .Post.State "draft" }}selected{{ end }}>Draft</option>
-                        <option value="release" {{ if eq .Post.State "release" }}selected{{ end }}>Published</option>
-                    </select>
-                </div>
-            </div>
-
-            <div>
                 <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="category_id">Category</label>
                 <div class="relative">
                     <select form="post-form"

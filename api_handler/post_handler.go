@@ -47,10 +47,6 @@ func parsePostForm(post *model.Post, r *http.Request) error {
 		post.Protect = protect
 	}
 
-	if state := r.FormValue("state"); state != "" {
-		post.State = state
-	}
-
 	if categoryID := r.FormValue("category_id"); categoryID != "" {
 		id, err := strconv.Atoi(categoryID)
 		if err == nil {

@@ -3,6 +3,7 @@ package api_handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/template"
 	"HtmxBlog/utils"
 	"net/http"
 	"strconv"
@@ -86,9 +87,14 @@ func HandleCommentApprove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	comment, err := services.ReadComment(uint(id))
+	if err != nil {
+		http.Error(w, "Failed to read comment", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "text/html")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Approved"))
+	template.AdminTmpl.ExecuteTemplate(w, "comment_item", comment)
 }
 
 // HandleCommentDelete handles comment deletion for admin.
@@ -112,5 +118,5 @@ func HandleCommentDelete(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Deleted"))
+	w.Write([]byte(""))
 }

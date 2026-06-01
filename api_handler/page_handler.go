@@ -35,6 +35,7 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("HX-Trigger", "newPage")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("<div>Page created successfully!</div>"))
 }
@@ -46,9 +47,13 @@ func HandlePageDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	services.DeletePage(pageId)
+	if err := services.DeletePage(pageId); err != nil {
+		http.Error(w, "Failed to delete page", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("HX-Trigger", "newPage")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(""))
 }

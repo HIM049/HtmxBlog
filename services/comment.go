@@ -30,6 +30,13 @@ func ReadAllComments() ([]model.Comment, error) {
 	return comments, err
 }
 
+// ReadComment reads a comment by ID.
+func ReadComment(id uint) (*model.Comment, error) {
+	var comment model.Comment
+	err := config.DB.First(&comment, id).Error
+	return &comment, err
+}
+
 // UpdateComment updates a comment in the database.
 func UpdateComment(comment *model.Comment) error {
 	return config.DB.Save(comment).Error

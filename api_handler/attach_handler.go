@@ -60,7 +60,7 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusCreated)
-	template.Tmpl.ExecuteTemplate(w, "attach_item", attach)
+	template.AdminTmpl.ExecuteTemplate(w, "attach_item", attach)
 }
 
 // TODO file reference system

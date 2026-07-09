@@ -39,7 +39,11 @@ func loadRoutes() *chi.Mux {
 		if err != nil {
 			panic(err)
 		}
-		r.Get("/post/{id}", view_handler.PostView)
+
+		r.Group(func(r chi.Router) {
+			r.Use(app_middleware.AccessRecordMiddleware)
+			r.Get("/post/{id}", view_handler.PostView)
+		})
 
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/auth", view_handler.AuthView)

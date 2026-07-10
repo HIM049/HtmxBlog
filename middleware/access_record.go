@@ -3,9 +3,10 @@ package middleware
 import (
 	"HtmxBlog/config"
 	"HtmxBlog/model"
-	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/charmbracelet/log"
 )
 
 func AccessRecordMiddleware(next http.Handler) http.Handler {
@@ -35,7 +36,7 @@ func AccessRecordMiddleware(next http.Handler) http.Handler {
 
 			err := config.DB.Create(&record).Error
 			if err != nil {
-				fmt.Println("error: ", err.Error())
+				log.Errorf("Failed to create record: %v", err)
 			}
 		}()
 		next.ServeHTTP(w, r)

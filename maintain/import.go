@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/charmbracelet/log"
 	"gorm.io/gorm"
 )
 
@@ -29,30 +30,30 @@ func ImportAll(filePath string) error {
 		return fmt.Errorf("invalid snapshot file: missing version")
 	}
 
-	fmt.Printf("Importing snapshot v%s (exported at %s)\n\n", snapshot.Version, snapshot.ExportedAt)
+	log.Infof("Importing snapshot v%s (exported at %s)\n", snapshot.Version, snapshot.ExportedAt)
 
 	// Run import in a transaction
 	err = config.DB.Transaction(func(tx *gorm.DB) error {
 		// Clear tables in reverse dependency order
-		fmt.Println("Clearing existing data...")
+		log.Info("Cleaning existing data...")
 		if err := clearTables(tx); err != nil {
 			return fmt.Errorf("failed to clear tables: %w", err)
 		}
 
 		// Insert categories
-		fmt.Printf("  importing categories: %d records\n", len(snapshot.Tables.Categories))
+		log.Infof("  importing categories: %d records", len(snapshot.Tables.Categories))
 		if err := insertAll(tx, snapshot.Tables.Categories); err != nil {
 			return fmt.Errorf("failed to import categories: %w", err)
 		}
 
 		// Insert tags
-		fmt.Printf("  importing tags: %d records\n", len(snapshot.Tables.Tags))
+		log.Infof("  importing tags: %d records", len(snapshot.Tables.Tags))
 		if err := insertAll(tx, snapshot.Tables.Tags); err != nil {
 			return fmt.Errorf("failed to import tags: %w", err)
 		}
 
 		// Insert attaches (without Refers to avoid circular dependency)
-		fmt.Printf("  importing attaches: %d records\n", len(snapshot.Tables.Attaches))
+		log.Infof("  importing attaches: %d records", len(snapshot.Tables.Attaches))
 		for _, a := range snapshot.Tables.Attaches {
 			a.Refers = nil // clear Refers; will be restored via post association
 			if err := tx.Create(&a).Error; err != nil {
@@ -61,7 +62,7 @@ func ImportAll(filePath string) error {
 		}
 
 		// Insert posts with associations
-		fmt.Printf("  importing posts: %d records\n", len(snapshot.Tables.Posts))
+		log.Infof("  importing posts: %d records", len(snapshot.Tables.Posts))
 		for _, p := range snapshot.Tables.Posts {
 			post := p
 			// GORM will handle post_tags and post_attaches join tables
@@ -71,25 +72,25 @@ func ImportAll(filePath string) error {
 		}
 
 		// Insert pages
-		fmt.Printf("  importing pages: %d records\n", len(snapshot.Tables.Pages))
+		log.Infof("  importing pages: %d records", len(snapshot.Tables.Pages))
 		if err := insertAll(tx, snapshot.Tables.Pages); err != nil {
 			return fmt.Errorf("failed to import pages: %w", err)
 		}
 
 		// Insert comments
-		fmt.Printf("  importing comments: %d records\n", len(snapshot.Tables.Comments))
+		log.Infof("  importing comments: %d records", len(snapshot.Tables.Comments))
 		if err := insertAll(tx, snapshot.Tables.Comments); err != nil {
 			return fmt.Errorf("failed to import comments: %w", err)
 		}
 
 		// Insert settings
-		fmt.Printf("  importing settings: %d records\n", len(snapshot.Tables.Settings))
+		log.Infof("  importing settings: %d records", len(snapshot.Tables.Settings))
 		if err := insertAll(tx, snapshot.Tables.Settings); err != nil {
 			return fmt.Errorf("failed to import settings: %w", err)
 		}
 
 		// Insert redirects
-		fmt.Printf("  importing redirects: %d records\n", len(snapshot.Tables.Redirects))
+		log.Infof("  importing redirects: %d records", len(snapshot.Tables.Redirects))
 		if err := insertAll(tx, snapshot.Tables.Redirects); err != nil {
 			return fmt.Errorf("failed to import redirects: %w", err)
 		}
@@ -101,7 +102,7 @@ func ImportAll(filePath string) error {
 		return err
 	}
 
-	fmt.Println("\nImport completed successfully.")
+	log.Info("\nImport completed successfully.")
 	return nil
 }
 
@@ -114,7 +115,7 @@ func clearTables(tx *gorm.DB) error {
 		return err
 	}
 
-	tables := []interface{}{
+	tables := []any{
 		&model.Comment{},
 		&model.Post{},
 		&model.Attach{},

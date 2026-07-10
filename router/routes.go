@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-const APP_VERSION = "0.1.0"
+const APP_VERSION = "0.2.0"
 
 var HRouter *HotRouter
 

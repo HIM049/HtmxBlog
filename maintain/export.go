@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/charmbracelet/log"
 )
 
 // Snapshot holds all database tables for export/import.
@@ -46,49 +48,49 @@ func ExportAll(outPath string) error {
 	if err := config.DB.Find(&snapshot.Tables.Categories).Error; err != nil {
 		return fmt.Errorf("failed to read categories: %w", err)
 	}
-	fmt.Printf("  categories: %d records\n", len(snapshot.Tables.Categories))
+	log.Infof("  categories: %d records\n", len(snapshot.Tables.Categories))
 
 	// Read tags
 	if err := config.DB.Find(&snapshot.Tables.Tags).Error; err != nil {
 		return fmt.Errorf("failed to read tags: %w", err)
 	}
-	fmt.Printf("  tags: %d records\n", len(snapshot.Tables.Tags))
+	log.Infof("  tags: %d records\n", len(snapshot.Tables.Tags))
 
 	// Read posts with associations
 	if err := config.DB.Preload("Category").Preload("Tags").Preload("Attachs").Find(&snapshot.Tables.Posts).Error; err != nil {
 		return fmt.Errorf("failed to read posts: %w", err)
 	}
-	fmt.Printf("  posts: %d records\n", len(snapshot.Tables.Posts))
+	log.Infof("  posts: %d records\n", len(snapshot.Tables.Posts))
 
 	// Read attaches
 	if err := config.DB.Find(&snapshot.Tables.Attaches).Error; err != nil {
 		return fmt.Errorf("failed to read attaches: %w", err)
 	}
-	fmt.Printf("  attaches: %d records\n", len(snapshot.Tables.Attaches))
+	log.Infof("  attaches: %d records\n", len(snapshot.Tables.Attaches))
 
 	// Read pages
 	if err := config.DB.Find(&snapshot.Tables.Pages).Error; err != nil {
 		return fmt.Errorf("failed to read pages: %w", err)
 	}
-	fmt.Printf("  pages: %d records\n", len(snapshot.Tables.Pages))
+	log.Infof("  pages: %d records\n", len(snapshot.Tables.Pages))
 
 	// Read comments
 	if err := config.DB.Find(&snapshot.Tables.Comments).Error; err != nil {
 		return fmt.Errorf("failed to read comments: %w", err)
 	}
-	fmt.Printf("  comments: %d records\n", len(snapshot.Tables.Comments))
+	log.Infof("  comments: %d records\n", len(snapshot.Tables.Comments))
 
 	// Read settings
 	if err := config.DB.Find(&snapshot.Tables.Settings).Error; err != nil {
 		return fmt.Errorf("failed to read settings: %w", err)
 	}
-	fmt.Printf("  settings: %d records\n", len(snapshot.Tables.Settings))
+	log.Infof("  settings: %d records\n", len(snapshot.Tables.Settings))
 
 	// Read redirects
 	if err := config.DB.Find(&snapshot.Tables.Redirects).Error; err != nil {
 		return fmt.Errorf("failed to read redirects: %w", err)
 	}
-	fmt.Printf("  redirects: %d records\n", len(snapshot.Tables.Redirects))
+	log.Infof("  redirects: %d records\n", len(snapshot.Tables.Redirects))
 
 	// Serialize to JSON
 	data, err := json.MarshalIndent(snapshot, "", "  ")
@@ -100,6 +102,6 @@ func ExportAll(outPath string) error {
 		return fmt.Errorf("failed to write file: %w", err)
 	}
 
-	fmt.Printf("\nExported successfully to: %s\n", outPath)
+	log.Infof("\nExported successfully to: %s", outPath)
 	return nil
 }

@@ -10,6 +10,7 @@ import (
 
 	"strings"
 
+	"github.com/charmbracelet/log"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -63,15 +64,14 @@ func parsePostForm(post *model.Post, r *http.Request) error {
 		tagsVal := tags[0]
 		var postTags []model.Tag
 		if tagsVal != "" {
-			tagsList := strings.Split(tagsVal, ",")
-			for _, tagName := range tagsList {
+			for tagName := range strings.SplitSeq(tagsVal, ",") {
 				trimmed := strings.TrimSpace(tagName)
 				if trimmed == "" {
 					continue
 				}
 				tag, err := services.GetTag(trimmed)
 				if err != nil {
-					fmt.Println("Failed to get tag: ", err)
+					log.Errorf("Failed to get tag %v", err)
 					continue
 				}
 				postTags = append(postTags, *tag)
@@ -81,9 +81,8 @@ func parsePostForm(post *model.Post, r *http.Request) error {
 	}
 
 	if customVars := r.FormValue("custom_vars"); customVars != "" {
-		vars := make(map[string]interface{})
-		lines := strings.Split(customVars, "\n")
-		for _, line := range lines {
+		vars := make(map[string]any)
+		for line := range strings.SplitSeq(customVars, "\n") {
 			parts := strings.SplitN(line, ":", 2)
 			if len(parts) == 2 {
 				key := strings.TrimSpace(parts[0])

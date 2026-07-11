@@ -1,8 +1,8 @@
 package router
 
 import (
+	"HtmxBlog/handler"
 	"HtmxBlog/services"
-	"HtmxBlog/view_handler"
 	"net/http"
 	"sync"
 
@@ -41,7 +41,7 @@ func RegisterPagesRouter(r chi.Router) error {
 	}
 
 	for _, page := range pages {
-		r.Get(page.Route, view_handler.GenericViewLoader(page.Template))
+		r.Get(page.Route, handler.GenericViewLoader(page.Template))
 	}
 	return nil
 }

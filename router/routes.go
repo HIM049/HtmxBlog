@@ -1,11 +1,10 @@
 package router
 
 import (
-	"HtmxBlog/api_handler"
 	"HtmxBlog/config"
+	"HtmxBlog/handler"
 	app_middleware "HtmxBlog/middleware"
 	"HtmxBlog/services"
-	"HtmxBlog/view_handler"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -29,7 +28,7 @@ func loadRoutes() *chi.Mux {
 	r.Use(middleware.Recoverer)
 
 	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
-	r.Get("/attach/{id}", api_handler.LoadAttachHandler)
+	r.Get("/attach/{id}", handler.LoadAttachHandler)
 
 	r.Group(func(r chi.Router) {
 		r.Use(app_middleware.NotFoundInterceptor)
@@ -42,23 +41,23 @@ func loadRoutes() *chi.Mux {
 				panic("failed to register router: " + err.Error())
 			}
 
-			r.Get("/post/{id}", view_handler.PostView)
+			r.Get("/post/{id}", handler.PostView)
 		})
 
 		r.Route("/admin", func(r chi.Router) {
-			r.Get("/auth", view_handler.AuthView)
+			r.Get("/auth", handler.AuthView)
 			r.Group(func(r chi.Router) {
 				r.Use(app_middleware.AccessControlMiddleware)
 
-				r.Get("/", view_handler.AdminView)
-				r.Get("/pages", view_handler.ManagePagesView)
-				r.Get("/posts", view_handler.ManagePostsView)
-				r.Get("/categories", view_handler.ManageCategoriesView)
-				r.Get("/settings", view_handler.ManageSettingsView)
-				r.Get("/comments", view_handler.ManageCommentsView)
-				r.Get("/redirects", view_handler.ManageRedirectsView)
-				r.Get("/statistics", view_handler.StatisticsView)
-				r.Get("/post/{id}/edit", view_handler.EditView)
+				r.Get("/", handler.AdminView)
+				r.Get("/pages", handler.ManagePagesView)
+				r.Get("/posts", handler.ManagePostsView)
+				r.Get("/categories", handler.ManageCategoriesView)
+				r.Get("/settings", handler.ManageSettingsView)
+				r.Get("/comments", handler.ManageCommentsView)
+				r.Get("/redirects", handler.ManageRedirectsView)
+				r.Get("/statistics", handler.StatisticsView)
+				r.Get("/post/{id}/edit", handler.EditView)
 			})
 		})
 	})
@@ -69,49 +68,49 @@ func loadRoutes() *chi.Mux {
 			w.Write([]byte(config.APP_VERSION))
 		})
 
-		r.Post("/comment", api_handler.HandleCommentCreate)
+		r.Post("/comment", handler.HandleCommentCreate)
 
 		r.Route("/admin", func(r chi.Router) {
-			r.Post("/auth", api_handler.AuthHandler)
+			r.Post("/auth", handler.AuthHandler)
 
 			r.Group(func(r chi.Router) {
 				r.Use(app_middleware.AccessControlMiddleware)
 
-				r.Delete("/comment/{id}", api_handler.HandleCommentDelete)
-				r.Post("/comment/{id}/approve", api_handler.HandleCommentApprove)
+				r.Delete("/comment/{id}", handler.HandleCommentDelete)
+				r.Post("/comment/{id}/approve", handler.HandleCommentApprove)
 
 				r.Route("/post", func(r chi.Router) {
-					r.Post("/create", api_handler.HandlePostCreate)
-					r.Patch("/{id}", api_handler.HandlePostUpdate)
-					r.Post("/{id}/publish", api_handler.HandlePostPublish)
-					r.Delete("/{id}", api_handler.HandlePostDelete)
+					r.Post("/create", handler.HandlePostCreate)
+					r.Patch("/{id}", handler.HandlePostUpdate)
+					r.Post("/{id}/publish", handler.HandlePostPublish)
+					r.Delete("/{id}", handler.HandlePostDelete)
 
-					r.Post("/{id}/attach", api_handler.UploadAttachHandler)
+					r.Post("/{id}/attach", handler.UploadAttachHandler)
 				})
 
 				r.Route("/page", func(r chi.Router) {
-					r.Post("/create", api_handler.HandlePageCreate)
-					r.Post("/reorder", api_handler.HandlePageReorder)
-					r.Post("/unsort", api_handler.HandlePageUnsort)
-					r.Delete("/{id}", api_handler.HandlePageDelete)
+					r.Post("/create", handler.HandlePageCreate)
+					r.Post("/reorder", handler.HandlePageReorder)
+					r.Post("/unsort", handler.HandlePageUnsort)
+					r.Delete("/{id}", handler.HandlePageDelete)
 				})
 
 				r.Route("/category", func(r chi.Router) {
-					r.Post("/", api_handler.HandleCategoryCreate)
-					r.Delete("/{id}", api_handler.HandleCategoryDelete)
-					r.Patch("/{id}", api_handler.HandleCategoryUpdate)
+					r.Post("/", handler.HandleCategoryCreate)
+					r.Delete("/{id}", handler.HandleCategoryDelete)
+					r.Patch("/{id}", handler.HandleCategoryUpdate)
 				})
 
 				r.Route("/setting", func(r chi.Router) {
-					r.Post("/", api_handler.HandleSettingCreate)
-					r.Delete("/{id}", api_handler.HandleSettingDelete)
-					r.Patch("/{id}", api_handler.HandleSettingUpdate)
+					r.Post("/", handler.HandleSettingCreate)
+					r.Delete("/{id}", handler.HandleSettingDelete)
+					r.Patch("/{id}", handler.HandleSettingUpdate)
 				})
 
 				r.Route("/redirect", func(r chi.Router) {
-					r.Post("/", api_handler.HandleRedirectCreate)
-					r.Delete("/{id}", api_handler.HandleRedirectDelete)
-					r.Patch("/{id}", api_handler.HandleRedirectUpdate)
+					r.Post("/", handler.HandleRedirectCreate)
+					r.Delete("/{id}", handler.HandleRedirectDelete)
+					r.Patch("/{id}", handler.HandleRedirectUpdate)
 				})
 			})
 		})

@@ -1,4 +1,4 @@
-package view_handler
+package handler
 
 import (
 	"HtmxBlog/model"

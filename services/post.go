@@ -10,8 +10,6 @@ import (
 	"github.com/google/uuid"
 )
 
-const DRAFTS_DIR = "./app_data/drafts"
-
 var onPostChange = func() {}
 
 // CreateDefaultPost creates a post with default values
@@ -111,7 +109,7 @@ func UpdatePostWithContent(p model.GenericPost) error {
 	}
 
 	// Clean up draft if it exists after publishing
-	draftPath := filepath.Join(DRAFTS_DIR, post.Uid+".json")
+	draftPath := filepath.Join(config.DRAFTS_DIR, post.Uid+".json")
 	if _, err := os.Stat(draftPath); err == nil {
 		os.Remove(draftPath)
 	}
@@ -120,18 +118,13 @@ func UpdatePostWithContent(p model.GenericPost) error {
 	return nil
 }
 
-func SaveDraft(id uint, p *model.ViewPost) error {
-	post, err := ReadPost(id)
-	if err != nil {
-		return err
-	}
-
+func SaveDraft(uid string, p *model.ViewPost) error {
 	// Ensure drafts directory exists
-	if _, err := os.Stat(DRAFTS_DIR); os.IsNotExist(err) {
-		os.MkdirAll(DRAFTS_DIR, 0755)
+	if _, err := os.Stat(config.DRAFTS_DIR); os.IsNotExist(err) {
+		os.MkdirAll(config.DRAFTS_DIR, 0755)
 	}
 
-	draftPath := filepath.Join(DRAFTS_DIR, post.Uid+".json")
+	draftPath := filepath.Join(config.DRAFTS_DIR, uid+".json")
 	data, err := json.MarshalIndent(p, "", "  ")
 	if err != nil {
 		return err
@@ -146,7 +139,7 @@ func GetDraft(id uint) (*model.ViewPost, error) {
 		return nil, err
 	}
 
-	draftPath := filepath.Join(DRAFTS_DIR, post.Uid+".json")
+	draftPath := filepath.Join(config.DRAFTS_DIR, post.Uid+".json")
 	if _, err := os.Stat(draftPath); os.IsNotExist(err) {
 		return nil, err // No draft found
 	}
@@ -167,6 +160,11 @@ func GetDraft(id uint) (*model.ViewPost, error) {
 	vp.Attachs = post.Attachs
 
 	return &vp, nil
+}
+
+func DeleteDraft(uid string) error {
+	draftPath := filepath.Join(config.DRAFTS_DIR, uid+".json")
+	return os.Remove(draftPath)
 }
 
 func DeletePost(id uint) error {

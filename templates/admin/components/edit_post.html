@@ -10,7 +10,11 @@
             <input form="post-form"
                 class="text-2xl font-bold w-full outline-none border-b-2 border-transparent focus:border-blue-500 bg-transparent dark:text-gray-100 transition-colors py-2"
                 id="title" name="title" type="text" value="{{ .Post.Title }}" placeholder="Post Title">
-            {{ if .HasDraft }}
+            {{ if eq .Post.State "draft" }}
+            <span class="ml-4 px-2 py-1 bg-zinc-100 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-300 text-xs font-bold rounded border border-zinc-200 dark:border-zinc-600 whitespace-nowrap">
+                Draft
+            </span>
+            {{ else if .HasDraft }}
             <span class="ml-4 px-2 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 text-xs font-bold rounded border border-yellow-200 dark:border-yellow-700/50 whitespace-nowrap">
                 Unpublished Draft
             </span>

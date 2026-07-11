@@ -23,6 +23,15 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check premission
+	if post.State != model.StateRelease || post.Visibility == model.VisibilityPrivate {
+		cookie, err := r.Cookie("token")
+		if err != nil || cookie.Value != state.CurrentToken || services.IsTokenExpired() {
+			http.Error(w, "Post not found", http.StatusNotFound)
+			return
+		}
+	}
+
 	vp := model.ViewPost{Post: *post}
 	if err = vp.LoadContent(); err != nil {
 		http.Error(w, "Failed to load post content", http.StatusInternalServerError)

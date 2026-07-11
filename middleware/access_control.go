@@ -1,16 +1,15 @@
 package middleware
 
 import (
-	"HtmxBlog/config"
+	"HtmxBlog/services"
 	"HtmxBlog/state"
 	"net/http"
-	"time"
 )
 
 func AccessControlMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("token")
-		if err != nil || cookie.Value != state.CurrentToken || time.Since(state.CreateTime) > time.Duration(config.Cfg.Service.ValidTime)*time.Hour {
+		if err != nil || cookie.Value != state.CurrentToken || services.IsTokenExpired() {
 			http.Redirect(w, r, "/admin/auth", http.StatusFound)
 			return
 		}

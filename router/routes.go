@@ -37,7 +37,7 @@ func loadRoutes() *chi.Mux {
 
 		err := RegisterPagesRouter(r)
 		if err != nil {
-			panic(err)
+			panic("failed to register router: " + err.Error())
 		}
 
 		r.Group(func(r chi.Router) {

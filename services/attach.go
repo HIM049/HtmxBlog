@@ -118,6 +118,13 @@ func UpdateAttach(attach *model.Attach) error {
 }
 
 // DeleteAttach deletes an attach.
-func DeleteAttach(id uint) error {
-	panic("unimplemented")
+func DeleteAttach(uid string) error {
+	dstPath := filepath.Join(ATTACHES_DIR, uid)
+
+	err := os.Remove(dstPath)
+	if err != nil {
+		return err
+	}
+
+	return config.DB.Where("uid = ?", uid).Delete(&model.Attach{}).Error
 }

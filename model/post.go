@@ -17,12 +17,12 @@ type Post struct {
 	Protect    string `json:"protected" gorm:"default:'none'"`
 	State      string `json:"state" gorm:"default:'draft'"`
 
-	Title      string                 `json:"title"`
-	CategoryID *uint                  `json:"category_id"`
-	Category   Category               `json:"category" gorm:"foreignKey:CategoryID"`
-	Tags       []Tag                  `json:"tags" gorm:"many2many:post_tags"`
-	Attachs    []Attach               `json:"-" gorm:"many2many:post_attaches"`
-	CustomVars map[string]interface{} `json:"custom_vars" gorm:"serializer:json"`
+	Title      string         `json:"title"`
+	CategoryID *uint          `json:"category_id"`
+	Category   Category       `json:"category" gorm:"foreignKey:CategoryID"`
+	Tags       []Tag          `json:"tags" gorm:"many2many:post_tags"`
+	Attachs    []Attach       `json:"-" gorm:"many2many:post_attaches"`
+	CustomVars map[string]any `json:"custom_vars" gorm:"serializer:json"`
 }
 
 func (p *Post) ContentPath() string {

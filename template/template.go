@@ -17,7 +17,7 @@ func Init() {
 
 	tmpl, err := TemplateLoader("templates/user")
 	if err != nil {
-		panic(err)
+		panic("failed to load tmpl: " + err.Error())
 	}
 	Tmpl = tmpl
 }

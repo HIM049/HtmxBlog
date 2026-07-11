@@ -63,4 +63,14 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 	template.AdminTmpl.ExecuteTemplate(w, "attach_item", attach)
 }
 
-// TODO file reference system
+func RemoveAttachHandler(w http.ResponseWriter, r *http.Request) {
+	uid := chi.URLParam(r, "id")
+
+	err := services.DeleteAttach(uid)
+	if err != nil {
+		http.Error(w, "Failed to delete attach", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

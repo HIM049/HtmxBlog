@@ -16,10 +16,11 @@
             </div>
         </div>
 
-
         <div>
             {{ template "create_page" . }}
-            {{ template "manage_pages" . }}
+            <div hx-get="/admin/fragment/page-list"
+                 hx-trigger="load, pageChanged from:body"
+                 hx-swap="innerHTML"></div>
         </div>
     </div>
 </body>

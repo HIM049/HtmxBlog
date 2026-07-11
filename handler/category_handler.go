@@ -9,6 +9,21 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// ManageCategoriesView renders the category management page skeleton.
+func ManageCategoriesView(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	state.AdminTmpl.ExecuteTemplate(w, "category_manage", nil)
+}
+
+// CategoryListComponent renders the category list fragment.
+func CategoryListComponent(w http.ResponseWriter, r *http.Request) {
+	categories, _ := services.ReadCategories()
+	w.Header().Set("Content-Type", "text/html")
+	state.AdminTmpl.ExecuteTemplate(w, "manage_categories", map[string]interface{}{
+		"Categories": categories,
+	})
+}
+
 func HandleCategoryCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -31,7 +46,7 @@ func HandleCategoryCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	w.Header().Set("HX-Trigger", "newCategory")
+	w.Header().Set("HX-Trigger", "categoryChanged")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`<div class="text-green-600 font-bold p-4 bg-green-50 rounded shadow-md border border-green-200">Category created successfully!</div>`))
 }
@@ -54,9 +69,8 @@ func HandleCategoryDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("HX-Trigger", "categoryChanged")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(""))
 }
 
 func HandleCategoryUpdate(w http.ResponseWriter, r *http.Request) {
@@ -94,6 +108,6 @@ func HandleCategoryUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html")
-	state.AdminTmpl.ExecuteTemplate(w, "category_item", category)
+	w.Header().Set("HX-Trigger", "categoryChanged")
+	w.WriteHeader(http.StatusOK)
 }

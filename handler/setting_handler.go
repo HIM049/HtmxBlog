@@ -10,6 +10,21 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// ManageSettingsView renders the settings management page skeleton.
+func ManageSettingsView(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	state.AdminTmpl.ExecuteTemplate(w, "setting_manage", nil)
+}
+
+// SettingListComponent renders the settings list fragment.
+func SettingListComponent(w http.ResponseWriter, r *http.Request) {
+	settings, _ := services.ReadAllSettings()
+	w.Header().Set("Content-Type", "text/html")
+	state.AdminTmpl.ExecuteTemplate(w, "setting_list", map[string]interface{}{
+		"Settings": settings,
+	})
+}
+
 func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -35,7 +50,7 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	w.Header().Set("HX-Trigger", "newSetting")
+	w.Header().Set("HX-Trigger", "settingChanged")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`<div class="text-green-600 font-bold p-4 bg-green-50 rounded shadow-md border border-green-200">Setting created successfully!</div>`))
 }
@@ -58,9 +73,8 @@ func HandleSettingDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("HX-Trigger", "settingChanged")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(""))
 }
 
 func HandleSettingUpdate(w http.ResponseWriter, r *http.Request) {
@@ -95,6 +109,6 @@ func HandleSettingUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html")
-	state.AdminTmpl.ExecuteTemplate(w, "setting_item", setting)
+	w.Header().Set("HX-Trigger", "settingChanged")
+	w.WriteHeader(http.StatusOK)
 }

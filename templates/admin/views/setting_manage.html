@@ -1,4 +1,4 @@
-{{ define "comment_manage" }}
+{{ define "setting_manage" }}
 {{ template "header" . }}
 
 <body class="bg-gray-100 dark:bg-zinc-900 dark:text-gray-100">
@@ -12,16 +12,16 @@
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </a>
-                <h1 class="text-3xl font-bold">Manage Comments</h1>
+                <h1 class="text-3xl font-bold">Manage Settings</h1>
             </div>
         </div>
 
-        <div class="mt-8">
-            <div hx-get="/admin/fragment/comment-list"
-                 hx-trigger="load, commentChanged from:body"
+        <div>
+            {{ template "create_setting" . }}
+            <div hx-get="/admin/fragment/setting-list"
+                 hx-trigger="load, settingChanged from:body"
                  hx-swap="innerHTML"></div>
         </div>
     </div>
 </body>
-
 {{ end }}

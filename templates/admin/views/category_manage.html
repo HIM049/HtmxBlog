@@ -18,7 +18,9 @@
 
         <div>
             {{ template "create_category" . }}
-            {{ template "manage_categories" . }}
+            <div hx-get="/admin/fragment/category-list"
+                 hx-trigger="load, categoryChanged from:body"
+                 hx-swap="innerHTML"></div>
         </div>
     </div>
 </body>

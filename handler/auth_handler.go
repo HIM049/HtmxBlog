@@ -9,6 +9,11 @@ import (
 	"github.com/google/uuid"
 )
 
+func AuthView(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	state.AdminTmpl.ExecuteTemplate(w, "auth", nil)
+}
+
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {

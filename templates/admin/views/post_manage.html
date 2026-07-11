@@ -21,8 +21,9 @@
             </button>
         </div>
 
-
-        {{ template "manage_posts" . }}
+        <div hx-get="/admin/fragment/post-list"
+             hx-trigger="load, postChanged from:body"
+             hx-swap="innerHTML"></div>
     </div>
 </body>
 

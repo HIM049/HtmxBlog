@@ -36,7 +36,7 @@ func UpdatePage(item *model.Page) error {
 
 // DeletePage deletes a page.
 func DeletePage(name string) error {
-	err := config.DB.Where("name = ?", name).Delete(model.Page{}).Error
+	err := config.DB.Where("name = ?", name).Delete(&model.Page{}).Error
 	if err != nil {
 		return err
 	}

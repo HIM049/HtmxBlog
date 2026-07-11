@@ -58,6 +58,15 @@ func loadRoutes() *chi.Mux {
 				r.Get("/redirects", handler.ManageRedirectsView)
 				r.Get("/statistics", handler.StatisticsView)
 				r.Get("/post/{id}/edit", handler.EditView)
+
+				r.Route("/fragment", func(r chi.Router) {
+					r.Get("/category-list", handler.CategoryListComponent)
+					r.Get("/setting-list", handler.SettingListComponent)
+					r.Get("/redirect-list", handler.RedirectListComponent)
+					r.Get("/comment-list", handler.CommentListComponent)
+					r.Get("/post-list", handler.PostListComponent)
+					r.Get("/page-list", handler.PageListComponent)
+				})
 			})
 		})
 	})

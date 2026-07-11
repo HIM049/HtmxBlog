@@ -1,74 +1,29 @@
-{{ define "manage_settings" }}
-{{ template "header" . }}
-
-<body class="bg-gray-100 dark:bg-zinc-900 dark:text-gray-100">
-    <div class="max-w-[1000px] mx-auto">
-        <div class="flex justify-between items-center p-6">
-            <div class="flex items-center gap-4">
-                <a href="/admin" class="text-gray-500 hover:text-gray-900 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                </a>
-                <h1 class="text-3xl font-bold">Manage Settings</h1>
-            </div>
-        </div>
-
-        <div>
-            <!-- Create Setting -->
-            <div class="mb-8 bg-white dark:bg-zinc-800 shadow-md rounded px-8 pt-6 pb-8">
-                <h2 class="text-xl font-bold mb-4 border-b dark:border-zinc-700 pb-2">Add New Setting</h2>
-                <form hx-post="/api/admin/setting" hx-swap="none" hx-on::after-request="this.reset()"
-                    class="flex gap-4 items-end">
-                    <div class="flex-1">
-                        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Key</label>
-                        <input type="text" name="key" required placeholder="e.g. site_title"
-                            class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700">
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Value</label>
-                        <input type="text" name="value" placeholder="e.g. My Awesome Blog"
-                            class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700">
-                    </div>
-                    <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 h-[42px]">
-                        Add
-                    </button>
-                </form>
-            </div>
-
-            <!-- Settings List -->
-            <div class="bg-white dark:bg-zinc-800 shadow-md rounded px-8 pt-6 pb-8 mb-4" hx-get="/admin/settings"
-                hx-select="#settings-list" hx-target="#settings-list" hx-trigger="newSetting from:body">
-                <h2 class="text-xl font-bold mb-4 border-b dark:border-zinc-700 pb-2">Existing Settings</h2>
-                <ul id="settings-list" class="space-y-4">
-                    {{ range .Settings }}
-                    {{ template "setting_item" . }}
-                    {{ else }}
-                    <li class="text-gray-500 dark:text-gray-400 italic text-center py-4">No settings found.</li>
-                    {{ end }}
-                </ul>
-            </div>
-        </div>
-    </div>
-</body>
+{{ define "setting_list" }}
+<div class="bg-white dark:bg-zinc-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-xl font-bold mb-4 border-b dark:border-zinc-700 pb-2">Existing Settings</h2>
+    <ul id="settings-list" class="space-y-4">
+        {{ range .Settings }}
+        {{ template "setting_item" . }}
+        {{ else }}
+        <li class="text-gray-500 dark:text-gray-400 italic text-center py-4">No settings found.</li>
+        {{ end }}
+    </ul>
+</div>
 {{ end }}
 
 {{ define "setting_item" }}
-<li id="setting-{{ .ID }}" hx-disinherit="hx-select" class="flex justify-between items-center p-3 hover:bg-gray-50 dark:hover:bg-zinc-700/50 rounded border border-gray-100 dark:border-zinc-700 transition-colors">
+<li id="setting-{{ .ID }}" class="flex justify-between items-center p-3 hover:bg-gray-50 dark:hover:bg-zinc-700/50 rounded border border-gray-100 dark:border-zinc-700 transition-colors">
     <div class="flex-1 grid grid-cols-2 gap-4">
         <div>
             <span class="text-sm text-gray-400 dark:text-gray-500 block mb-1">Key</span>
             <input type="text" name="key" value="{{ .Key }}" hx-patch="/api/admin/setting/{{ .ID }}" hx-trigger="change"
-                hx-target="#setting-{{ .ID }}" hx-swap="outerHTML"
+                hx-swap="none"
                 class="font-mono text-sm bg-gray-50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-600 dark:text-gray-300 rounded px-2 py-1 w-full focus:bg-white dark:focus:bg-zinc-800 transition-all">
         </div>
         <div>
             <span class="text-sm text-gray-400 dark:text-gray-500 block mb-1">Value</span>
             <input type="text" name="value" value="{{ .Value }}" hx-patch="/api/admin/setting/{{ .ID }}"
-                hx-trigger="change" hx-target="#setting-{{ .ID }}" hx-swap="outerHTML"
+                hx-trigger="change" hx-swap="none"
                 class="text-sm bg-transparent border-transparent hover:border-gray-300 dark:hover:border-zinc-600 dark:text-gray-200 focus:border-blue-300 dark:focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded px-2 py-1 w-full transition-all">
         </div>
     </div>

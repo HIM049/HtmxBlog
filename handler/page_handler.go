@@ -3,10 +3,44 @@ package handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/state"
 	"net/http"
+	"sort"
 
 	"github.com/go-chi/chi/v5"
 )
+
+// ManagePagesView renders the pages management page skeleton.
+func ManagePagesView(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	state.AdminTmpl.ExecuteTemplate(w, "page_manage", nil)
+}
+
+// PageListComponent renders the pages list fragment (with sorting logic).
+func PageListComponent(w http.ResponseWriter, r *http.Request) {
+	pages, _ := services.ReadAllPages()
+
+	var sortedPages []model.Page
+	var hiddenPages []model.Page
+
+	for _, page := range pages {
+		if page.Sort > 0 {
+			sortedPages = append(sortedPages, page)
+		} else {
+			hiddenPages = append(hiddenPages, page)
+		}
+	}
+
+	sort.Slice(sortedPages, func(i, j int) bool {
+		return sortedPages[i].Sort < sortedPages[j].Sort
+	})
+
+	w.Header().Set("Content-Type", "text/html")
+	state.AdminTmpl.ExecuteTemplate(w, "manage_pages", map[string]interface{}{
+		"SortedPages": sortedPages,
+		"HiddenPages": hiddenPages,
+	})
+}
 
 func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
@@ -35,7 +69,7 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	w.Header().Set("HX-Trigger", "newPage")
+	w.Header().Set("HX-Trigger", "pageChanged")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("<div>Page created successfully!</div>"))
 }
@@ -52,10 +86,8 @@ func HandlePageDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html")
-	w.Header().Set("HX-Trigger", "newPage")
+	w.Header().Set("HX-Trigger", "pageChanged")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(""))
 }
 
 func HandlePageReorder(w http.ResponseWriter, r *http.Request) {
@@ -67,10 +99,6 @@ func HandlePageReorder(w http.ResponseWriter, r *http.Request) {
 
 	names := r.Form["pages"]
 	if len(names) == 0 {
-		// Try to parse as JSON if form data is empty
-		// This is just a fallback, usually not needed if frontend is updated correctly
-		// But let's keep it simple and just rely on form data first.
-		// Actually, let's just stick to form data as requested by HTMX approach.
 		http.Error(w, "No pages provided", http.StatusBadRequest)
 		return
 	}
@@ -81,6 +109,7 @@ func HandlePageReorder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("HX-Trigger", "pageChanged")
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -103,5 +132,6 @@ func HandlePageUnsort(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("HX-Trigger", "pageChanged")
 	w.WriteHeader(http.StatusOK)
 }

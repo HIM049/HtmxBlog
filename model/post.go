@@ -1,14 +1,13 @@
 package model
 
 import (
+	"HtmxBlog/config"
 	"path/filepath"
 
 	"strings"
 
 	"gorm.io/gorm"
 )
-
-const POSTS_DIR = "./app_data/posts"
 
 type Post struct {
 	gorm.Model
@@ -26,7 +25,7 @@ type Post struct {
 }
 
 func (p *Post) ContentPath() string {
-	return filepath.Join(POSTS_DIR, p.Uid)
+	return filepath.Join(config.POSTS_DIR, p.Uid)
 }
 
 func (p *Post) TagsToString() string {

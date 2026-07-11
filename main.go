@@ -3,6 +3,7 @@ package main
 import (
 	"HtmxBlog/config"
 	"HtmxBlog/maintain"
+	"HtmxBlog/model"
 	"HtmxBlog/router"
 	"HtmxBlog/services"
 	"HtmxBlog/template"
@@ -27,6 +28,7 @@ func main() {
 	// initialize modules
 	config.Init()
 	config.InitDB()
+	config.DB.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{}, &model.Setting{}, &model.Comment{}, &model.Redirect{}, &model.AccessRecord{})
 	services.UpdateConfig()
 	template.Init()
 	template.InitBaseApp()

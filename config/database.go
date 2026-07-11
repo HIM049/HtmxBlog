@@ -1,7 +1,6 @@
 package config
 
 import (
-	"HtmxBlog/model"
 	"path/filepath"
 
 	"github.com/glebarez/sqlite"
@@ -23,8 +22,6 @@ func ReadDatabase() Database {
 }
 
 var DB *gorm.DB
-
-const DB_PATH = "./app_data"
 
 // InitDB initializes the database connection.
 // It panics when some error occurs.
@@ -48,13 +45,4 @@ func InitDB() {
 	}
 
 	DB = db
-
-	err = Migrate()
-	if err != nil {
-		panic("failed to migrate database")
-	}
-}
-
-func Migrate() error {
-	return DB.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{}, &model.Setting{}, &model.Comment{}, &model.Redirect{}, &model.AccessRecord{})
 }

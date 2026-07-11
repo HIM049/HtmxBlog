@@ -15,8 +15,6 @@ import (
 	"gorm.io/gorm"
 )
 
-const ATTACHES_DIR = "./app_data/attaches"
-
 // CreateAttach handle uploads an attach file to the server.
 func CreateAttach(file *multipart.File, name, mime string, postId uint) (*model.Attach, error) {
 	isSuccess := false
@@ -29,7 +27,7 @@ func CreateAttach(file *multipart.File, name, mime string, postId uint) (*model.
 
 	// Generate unique ID (UID)
 	uuid := uuid.New().String()
-	dstPath := filepath.Join(ATTACHES_DIR, uuid)
+	dstPath := filepath.Join(config.ATTACHES_DIR, uuid)
 
 	// create local file
 	dst, err := os.Create(dstPath)
@@ -119,7 +117,7 @@ func UpdateAttach(attach *model.Attach) error {
 
 // DeleteAttach deletes an attach.
 func DeleteAttach(uid string) error {
-	dstPath := filepath.Join(ATTACHES_DIR, uid)
+	dstPath := filepath.Join(config.ATTACHES_DIR, uid)
 
 	err := os.Remove(dstPath)
 	if err != nil {

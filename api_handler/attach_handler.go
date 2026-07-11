@@ -1,6 +1,7 @@
 package api_handler
 
 import (
+	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
 	"HtmxBlog/template"
@@ -31,7 +32,7 @@ func LoadAttachHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Disposition", fmt.Sprintf("inline; filename=%s", attach.Name))
 
-	filePath := filepath.Join(services.ATTACHES_DIR, attach.Uid)
+	filePath := filepath.Join(config.ATTACHES_DIR, attach.Uid)
 	http.ServeFile(w, r, filePath)
 }
 

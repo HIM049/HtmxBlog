@@ -1,11 +1,7 @@
 package model
 
-import (
-	"gorm.io/gorm"
-)
-
 type Comment struct {
-	gorm.Model
+	BaseModel
 	PostID    uint   `json:"post_id" gorm:"not null"`
 	Parent    uint   `json:"parent" gorm:"default:0"`
 	Name      string `json:"name" gorm:"not null"`

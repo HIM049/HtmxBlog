@@ -2,14 +2,11 @@ package model
 
 import (
 	"path/filepath"
-
 	"strings"
-
-	"gorm.io/gorm"
 )
 
 type Post struct {
-	gorm.Model
+	BaseModel
 	Uid        string `json:"uid" gorm:"unique"`
 	Visibility string `json:"visibility" gorm:"default:'private'"`
 	Protect    string `json:"protected" gorm:"default:'none'"`

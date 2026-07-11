@@ -38,7 +38,7 @@ func ReadViewCategories() ([]model.ViewCategory, error) {
 	err := config.DB.Model(&model.Category{}).
 		Select("categories.*, count(posts.id) as count").
 		Joins(
-			"left join posts on posts.category_id = categories.id AND posts.deleted_at IS NULL AND posts.visibility = ? AND posts.state = ?",
+			"left join posts on posts.category_id = categories.id AND posts.visibility = ? AND posts.state = ?",
 			model.VisibilityPublic,
 			model.StateRelease,
 		).

@@ -89,10 +89,24 @@ func ImportAll(filePath string) error {
 			return fmt.Errorf("failed to import settings: %w", err)
 		}
 
-		// Insert redirects
-		log.Infof("  importing redirects: %d records", len(snapshot.Tables.Redirects))
-		if err := insertAll(tx, snapshot.Tables.Redirects); err != nil {
-			return fmt.Errorf("failed to import redirects: %w", err)
+		// Reset PostgreSQL sequence counters to avoid primary key conflicts
+		if config.Cfg.Database.Driver == "postgres" {
+			log.Info("Resetting PostgreSQL sequences...")
+			tables := []string{"categories", "tags", "attaches", "posts", "pages", "comments", "settings", "redirects"}
+			for _, table := range tables {
+				var maxID *uint
+				if err := tx.Raw(fmt.Sprintf("SELECT MAX(id) FROM %s", table)).Scan(&maxID).Error; err != nil {
+					continue
+				}
+				if maxID != nil {
+					query := fmt.Sprintf("SELECT setval(pg_get_serial_sequence('%s', 'id'), %d)", table, *maxID)
+					if err := tx.Exec(query).Error; err != nil {
+						// Fallback to table_id_seq if pg_get_serial_sequence fails
+						fallbackQuery := fmt.Sprintf("SELECT setval('%s_id_seq', %d)", table, *maxID)
+						_ = tx.Exec(fallbackQuery)
+					}
+				}
+			}
 		}
 
 		return nil

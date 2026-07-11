@@ -35,13 +35,14 @@ func loadRoutes() *chi.Mux {
 	r.Group(func(r chi.Router) {
 		r.Use(app_middleware.NotFoundInterceptor)
 
-		err := RegisterPagesRouter(r)
-		if err != nil {
-			panic("failed to register router: " + err.Error())
-		}
-
 		r.Group(func(r chi.Router) {
 			r.Use(app_middleware.AccessRecordMiddleware)
+
+			err := RegisterPagesRouter(r)
+			if err != nil {
+				panic("failed to register router: " + err.Error())
+			}
+
 			r.Get("/post/{id}", view_handler.PostView)
 		})
 
@@ -57,6 +58,7 @@ func loadRoutes() *chi.Mux {
 				r.Get("/settings", view_handler.ManageSettingsView)
 				r.Get("/comments", view_handler.ManageCommentsView)
 				r.Get("/redirects", view_handler.ManageRedirectsView)
+				r.Get("/statistics", view_handler.StatisticsView)
 				r.Get("/post/{id}/edit", view_handler.EditView)
 			})
 		})

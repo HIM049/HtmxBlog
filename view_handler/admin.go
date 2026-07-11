@@ -118,3 +118,17 @@ func EditView(w http.ResponseWriter, r *http.Request) {
 		"HasDraft":   hasDraft,
 	})
 }
+
+func StatisticsView(w http.ResponseWriter, r *http.Request) {
+	stats, err := services.GetStats()
+	if err != nil {
+		http.Error(w, "Failed to get statistics: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	template.AdminTmpl.ExecuteTemplate(w, "statistics", map[string]interface{}{
+		"PageTitle": "Visit Statistics - Admin Dashboard",
+		"Stats":     stats,
+	})
+}

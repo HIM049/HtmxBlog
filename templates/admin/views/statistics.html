@@ -1,0 +1,102 @@
+{{ define "statistics" }}
+{{ template "header" . }}
+
+<body class="bg-gray-100 dark:bg-zinc-900 dark:text-gray-100">
+    <div class="max-w-[1000px] mx-auto px-4 sm:px-6">
+        <!-- Header -->
+        <div class="flex items-center gap-4 py-6 border-b border-gray-200 dark:border-zinc-800 mb-8">
+            <a href="/admin" class="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Visit Statistics</h1>
+        </div>
+
+        <!-- Overview Stats Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+            <!-- Total PV -->
+            <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 border border-gray-200 dark:border-zinc-700/50 shadow-sm">
+                <h3 class="text-xs font-semibold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-1">Total Page Views (PV)</h3>
+                <p class="text-4xl font-bold text-gray-950 dark:text-gray-50">{{ .Stats.TotalPV }}</p>
+                <div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                    Total accumulated page and article views across the site.
+                </div>
+            </div>
+
+            <!-- Total UV -->
+            <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 border border-gray-200 dark:border-zinc-700/50 shadow-sm">
+                <h3 class="text-xs font-semibold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-1">Unique Visitors (UV)</h3>
+                <p class="text-4xl font-bold text-gray-950 dark:text-gray-50">{{ .Stats.TotalUV }}</p>
+                <div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                    Total visitors based on unique IP addresses.
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Article Popularity -->
+            <div class="bg-white dark:bg-zinc-800 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-zinc-700/50">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+                        Article Visit Statistics
+                    </h2>
+                </div>
+                <div class="divide-y divide-gray-100 dark:divide-zinc-700/50">
+                    {{ if .Stats.PopularPosts }}
+                        {{ range $post := .Stats.PopularPosts }}
+                        <div class="py-3 flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-md text-xs font-medium bg-gray-100 text-gray-600 dark:bg-zinc-700 dark:text-gray-400">
+                                    {{ $post.Rank }}
+                                </span>
+                                <a href="/post/{{ $post.PostID }}" target="_blank" class="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate">
+                                    {{ $post.Title }}
+                                </a>
+                            </div>
+                            <span class="flex-shrink-0 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-zinc-700/30 px-2 py-0.5 rounded">
+                                {{ $post.Views }}
+                            </span>
+                        </div>
+                        {{ end }}
+                    {{ else }}
+                        <div class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">No article visit data available.</div>
+                    {{ end }}
+                </div>
+            </div>
+
+            <!-- Traffic Sources -->
+            <div class="bg-white dark:bg-zinc-800 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-zinc-700/50">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+                        Visit Source Statistics
+                    </h2>
+                </div>
+                <div class="divide-y divide-gray-100 dark:divide-zinc-700/50">
+                    {{ if .Stats.TopReferers }}
+                        {{ range $ref := .Stats.TopReferers }}
+                        <div class="py-3 flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-md text-xs font-medium bg-gray-100 text-gray-600 dark:bg-zinc-700 dark:text-gray-400">
+                                    {{ $ref.Rank }}
+                                </span>
+                                <span class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
+                                    {{ $ref.Referer }}
+                                </span>
+                            </div>
+                            <span class="flex-shrink-0 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-zinc-700/30 px-2 py-0.5 rounded">
+                                {{ $ref.Count }}
+                            </span>
+                        </div>
+                        {{ end }}
+                    {{ else }}
+                        <div class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">No source visit data available.</div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{{ end }}

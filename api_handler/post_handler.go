@@ -23,7 +23,7 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Content-Type", "text/html")
 		w.WriteHeader(http.StatusCreated)
-		w.Write([]byte(fmt.Sprintf(`<div class="text-red-600 font-bold p-4 bg-red-50 rounded shadow-md border border-red-200">Failed to create post: %s</div>`, err.Error())))
+		fmt.Fprintf(w, `<div class="text-red-600 font-bold p-4 bg-red-50 rounded shadow-md border border-red-200">Failed to create post: %s</div>`, err.Error())
 
 		return
 	}

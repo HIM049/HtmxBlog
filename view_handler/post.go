@@ -3,7 +3,7 @@ package view_handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/template"
+	"HtmxBlog/state"
 	"net/http"
 	"strconv"
 
@@ -29,7 +29,7 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	base := template.GetBaseApp()
+	base := state.GetBaseApp()
 	base.Posts = []model.ViewPost{vp}
 
 	comments, err := services.ReadCommentsByPostID(uint(id))
@@ -37,6 +37,6 @@ func PostView(w http.ResponseWriter, r *http.Request) {
 		base.Comments = services.BuildCommentTree(comments)
 	}
 
-	template.Tmpl.ExecuteTemplate(w, "post", base)
+	state.Tmpl.ExecuteTemplate(w, "post", base)
 
 }

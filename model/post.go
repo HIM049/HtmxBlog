@@ -1,7 +1,6 @@
 package model
 
 import (
-	"HtmxBlog/config"
 	"path/filepath"
 
 	"strings"
@@ -24,8 +23,8 @@ type Post struct {
 	CustomVars map[string]any `json:"custom_vars" gorm:"serializer:json"`
 }
 
-func (p *Post) ContentPath() string {
-	return filepath.Join(config.POSTS_DIR, p.Uid)
+func (p *Post) ContentPath(base string) string {
+	return filepath.Join(base, p.Uid)
 }
 
 func (p *Post) TagsToString() string {

@@ -91,7 +91,7 @@ func updatePost(post *model.Post) error {
 }
 
 func updateContent(p *model.ViewPost) error {
-	if err := os.WriteFile(p.ContentPath(), []byte(p.Content), 0644); err != nil {
+	if err := os.WriteFile(p.ContentPath(config.POSTS_DIR), []byte(p.Content), 0644); err != nil {
 		return err
 	}
 	return nil
@@ -183,7 +183,7 @@ func DestroyPost(id uint) error {
 	if err := config.DB.Unscoped().First(&post, id).Error; err != nil {
 		return err
 	}
-	if err := os.Remove(post.ContentPath()); err != nil {
+	if err := os.Remove(post.ContentPath(config.POSTS_DIR)); err != nil {
 		return err
 	}
 	if err := config.DB.Unscoped().Delete(&post).Error; err != nil {

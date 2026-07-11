@@ -1,6 +1,7 @@
 package model
 
 import (
+	"HtmxBlog/config"
 	"HtmxBlog/utils"
 	"fmt"
 	"html/template"
@@ -16,7 +17,7 @@ type ViewPost struct {
 
 // LoadContent loads the content of the post
 func (vp *ViewPost) LoadContent() error {
-	content, err := os.ReadFile(vp.ContentPath())
+	content, err := os.ReadFile(vp.ContentPath(config.POSTS_DIR))
 	if err != nil {
 		return err
 	}

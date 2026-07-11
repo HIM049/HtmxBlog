@@ -1,25 +1,23 @@
-package template
+package services
 
 import (
+	"HtmxBlog/state"
 	"html/template"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-var Tmpl *template.Template
-var AdminTmpl *template.Template
-
 // Init initializes the template.
 // It panics when some error occurs.
 func Init() {
-	AdminTmpl = InitAdminTemplate()
+	state.AdminTmpl = InitAdminTemplate()
 
 	tmpl, err := TemplateLoader("templates/user")
 	if err != nil {
 		panic("failed to load tmpl: " + err.Error())
 	}
-	Tmpl = tmpl
+	state.Tmpl = tmpl
 }
 
 func InitAdminTemplate() *template.Template {

@@ -6,7 +6,6 @@ import (
 	"HtmxBlog/model"
 	"HtmxBlog/router"
 	"HtmxBlog/services"
-	"HtmxBlog/template"
 	"net/http"
 	"os"
 
@@ -30,33 +29,33 @@ func main() {
 	config.InitDB()
 	config.DB.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{}, &model.Setting{}, &model.Comment{}, &model.Redirect{}, &model.AccessRecord{})
 	services.UpdateConfig()
-	template.Init()
-	template.InitBaseApp()
+	services.Init()
+	services.InitBaseApp()
 	router.Init()
 
 	// handle page change
 	services.RegisterOnPageChange(func() {
 		go func() {
 			router.RefreshRoutes()
-			template.UpdateNavigation()
+			services.UpdateNavigation()
 		}()
 	})
 	// handle category change
 	services.RegisterOnCategoryChange(func() {
 		go func() {
-			template.UpdateCategories()
+			services.UpdateCategories()
 		}()
 	})
 	services.RegisterOnPostChange(func() {
 		go func() {
-			template.UpdateCategories()
-			template.UpdateTags()
+			services.UpdateCategories()
+			services.UpdateTags()
 		}()
 	})
 	services.RegisterOnSettingChange(func() {
 		go func() {
 			services.UpdateConfig()
-			template.UpdateSettings()
+			services.UpdateSettings()
 		}()
 	})
 

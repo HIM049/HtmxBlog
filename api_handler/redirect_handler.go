@@ -3,7 +3,7 @@ package api_handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/template"
+	"HtmxBlog/state"
 	"net/http"
 	"strconv"
 
@@ -124,5 +124,5 @@ func HandleRedirectUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	template.AdminTmpl.ExecuteTemplate(w, "redirect_item", target)
+	state.AdminTmpl.ExecuteTemplate(w, "redirect_item", target)
 }

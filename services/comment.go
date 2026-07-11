@@ -17,12 +17,6 @@ func ReadCommentsByPostID(postID uint) ([]model.Comment, error) {
 	return comments, err
 }
 
-// CommentNode represents a comment in a tree structure.
-type CommentNode struct {
-	model.Comment
-	Children []*CommentNode
-}
-
 // ReadAllComments returns all comments in the database.
 func ReadAllComments() ([]model.Comment, error) {
 	var comments []model.Comment
@@ -53,15 +47,15 @@ func ApproveComment(id uint) error {
 }
 
 // BuildCommentTree organizes a flat list of comments into a tree structure.
-func BuildCommentTree(comments []model.Comment) []*CommentNode {
-	commentMap := make(map[uint]*CommentNode)
-	var rootNodes []*CommentNode
+func BuildCommentTree(comments []model.Comment) []*model.CommentNode {
+	commentMap := make(map[uint]*model.CommentNode)
+	var rootNodes []*model.CommentNode
 
 	// Create nodes and map them by ID
 	for _, c := range comments {
-		node := &CommentNode{
+		node := &model.CommentNode{
 			Comment:  c,
-			Children: []*CommentNode{},
+			Children: []*model.CommentNode{},
 		}
 		commentMap[c.ID] = node
 	}

@@ -2,7 +2,7 @@ package api_handler
 
 import (
 	"HtmxBlog/services"
-	"HtmxBlog/template"
+	"HtmxBlog/state"
 	"net/http"
 	"strconv"
 
@@ -95,5 +95,5 @@ func HandleCategoryUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	template.AdminTmpl.ExecuteTemplate(w, "category_item", category)
+	state.AdminTmpl.ExecuteTemplate(w, "category_item", category)
 }

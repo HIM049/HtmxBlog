@@ -4,7 +4,7 @@ import (
 	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/template"
+	"HtmxBlog/state"
 	"fmt"
 	"net/http"
 	"path/filepath"
@@ -61,7 +61,7 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusCreated)
-	template.AdminTmpl.ExecuteTemplate(w, "attach_item", attach)
+	state.AdminTmpl.ExecuteTemplate(w, "attach_item", attach)
 }
 
 func RemoveAttachHandler(w http.ResponseWriter, r *http.Request) {

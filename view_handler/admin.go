@@ -3,7 +3,7 @@ package view_handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/template"
+	"HtmxBlog/state"
 	"net/http"
 	"sort"
 	"strconv"
@@ -13,12 +13,12 @@ import (
 
 func AdminView(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "admin", nil)
+	state.AdminTmpl.ExecuteTemplate(w, "admin", nil)
 }
 
 func AuthView(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "auth", nil)
+	state.AdminTmpl.ExecuteTemplate(w, "auth", nil)
 }
 
 func ManagePagesView(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func ManagePagesView(w http.ResponseWriter, r *http.Request) {
 	})
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "page_manage", map[string]interface{}{
+	state.AdminTmpl.ExecuteTemplate(w, "page_manage", map[string]interface{}{
 		"SortedPages": sortedPages,
 		"HiddenPages": hiddenPages,
 	})
@@ -49,7 +49,7 @@ func ManagePagesView(w http.ResponseWriter, r *http.Request) {
 func ManageCategoriesView(w http.ResponseWriter, r *http.Request) {
 	categories, _ := services.ReadCategories()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "category_manage", map[string]interface{}{
+	state.AdminTmpl.ExecuteTemplate(w, "category_manage", map[string]interface{}{
 		"Categories": categories,
 	})
 }
@@ -57,7 +57,7 @@ func ManageCategoriesView(w http.ResponseWriter, r *http.Request) {
 func ManagePostsView(w http.ResponseWriter, r *http.Request) {
 	posts, _ := services.ReadPosts(100, 0)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "post_manage", map[string]interface{}{
+	state.AdminTmpl.ExecuteTemplate(w, "post_manage", map[string]interface{}{
 		"Posts": posts,
 	})
 }
@@ -65,7 +65,7 @@ func ManagePostsView(w http.ResponseWriter, r *http.Request) {
 func ManageCommentsView(w http.ResponseWriter, r *http.Request) {
 	comments, _ := services.ReadAllComments()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "comment_manage", map[string]interface{}{
+	state.AdminTmpl.ExecuteTemplate(w, "comment_manage", map[string]interface{}{
 		"Comments": comments,
 	})
 }
@@ -73,7 +73,7 @@ func ManageCommentsView(w http.ResponseWriter, r *http.Request) {
 func ManageSettingsView(w http.ResponseWriter, r *http.Request) {
 	settings, _ := services.ReadAllSettings()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "manage_settings", map[string]interface{}{
+	state.AdminTmpl.ExecuteTemplate(w, "manage_settings", map[string]interface{}{
 		"Settings": settings,
 	})
 }
@@ -81,7 +81,7 @@ func ManageSettingsView(w http.ResponseWriter, r *http.Request) {
 func ManageRedirectsView(w http.ResponseWriter, r *http.Request) {
 	redirects, _ := services.ReadAllRedirects()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "manage_redirects", map[string]interface{}{
+	state.AdminTmpl.ExecuteTemplate(w, "manage_redirects", map[string]interface{}{
 		"Redirects": redirects,
 	})
 }
@@ -112,7 +112,7 @@ func EditView(w http.ResponseWriter, r *http.Request) {
 	categories, _ := services.ReadCategories()
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "update_post", map[string]interface{}{
+	state.AdminTmpl.ExecuteTemplate(w, "update_post", map[string]interface{}{
 		"Post":       vp,
 		"Categories": categories,
 		"HasDraft":   hasDraft,
@@ -127,7 +127,7 @@ func StatisticsView(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.AdminTmpl.ExecuteTemplate(w, "statistics", map[string]interface{}{
+	state.AdminTmpl.ExecuteTemplate(w, "statistics", map[string]interface{}{
 		"PageTitle": "Visit Statistics - Admin Dashboard",
 		"Stats":     stats,
 	})

@@ -1,6 +1,8 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Comment struct {
 	gorm.Model
@@ -13,6 +15,12 @@ type Comment struct {
 	IP        string `json:"ip"`
 	State     string `json:"state" gorm:"default:'pending'"`
 	Content   string `json:"content" gorm:"not null"`
+}
+
+// CommentNode represents a comment in a tree structure.
+type CommentNode struct {
+	Comment
+	Children []*CommentNode
 }
 
 const (

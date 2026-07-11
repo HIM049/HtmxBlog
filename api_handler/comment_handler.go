@@ -3,7 +3,7 @@ package api_handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/template"
+	"HtmxBlog/state"
 	"HtmxBlog/utils"
 	"net/http"
 	"strconv"
@@ -94,7 +94,7 @@ func HandleCommentApprove(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	template.AdminTmpl.ExecuteTemplate(w, "comment_item", comment)
+	state.AdminTmpl.ExecuteTemplate(w, "comment_item", comment)
 }
 
 // HandleCommentDelete handles comment deletion for admin.

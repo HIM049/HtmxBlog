@@ -4,7 +4,7 @@ import (
 	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/template"
+	"HtmxBlog/state"
 	"net/http"
 	"strconv"
 )
@@ -20,8 +20,8 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 			page = 1
 		}
 
-		offset := (page - 1) * template.PageSize
-		posts, err := services.ReadPostsWithConditions(template.PageSize, offset, model.VisibilityPublic, "", model.StateRelease, categoryID, tag)
+		offset := (page - 1) * state.PageSize
+		posts, err := services.ReadPostsWithConditions(state.PageSize, offset, model.VisibilityPublic, "", model.StateRelease, categoryID, tag)
 		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -33,9 +33,9 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		totalPages := int((totalPosts + int64(template.PageSize) - 1) / int64(template.PageSize))
+		totalPages := int((totalPosts + int64(state.PageSize) - 1) / int64(state.PageSize))
 
-		base := template.GetBaseApp()
+		base := state.GetBaseApp()
 		base.PageTitle = config.Cfg.Settings["site_name"]
 		for _, post := range posts {
 			base.Posts = append(base.Posts, model.ViewPost{
@@ -44,7 +44,7 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 		}
 
 		// Pagination logic
-		base.Pagination = template.Pagination{
+		base.Pagination = state.Pagination{
 			CurrentPage: page,
 			TotalPages:  totalPages,
 			TotalPosts:  totalPosts,
@@ -81,6 +81,6 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 		}
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		template.Tmpl.ExecuteTemplate(w, tmpl, base)
+		state.Tmpl.ExecuteTemplate(w, tmpl, base)
 	}
 }

@@ -2,14 +2,12 @@ package api_handler
 
 import (
 	"HtmxBlog/config"
+	"HtmxBlog/state"
 	"net/http"
 	"time"
 
 	"github.com/google/uuid"
 )
-
-var CurrentToken string
-var CreateTime time.Time
 
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
@@ -36,8 +34,8 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 			MaxAge:   3600 * config.Cfg.Service.ValidTime,
 		})
 
-		CurrentToken = newToken
-		CreateTime = time.Now()
+		state.CurrentToken = newToken
+		state.CreateTime = time.Now()
 
 		w.Header().Set("HX-Redirect", "/admin")
 		return

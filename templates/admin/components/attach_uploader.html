@@ -19,7 +19,7 @@
             </button>
         </div>
     </form>
-    <div id="attach-list" class="mt-4 mb-8">
+    <div id="attach-list" data-post-id="{{ .Post.ID }}" class="mt-4 mb-8">
         {{ range .Post.Attachs }}
         {{ template "attach_item" . }}
         {{ end }}
@@ -28,16 +28,25 @@
 {{ end }}
 
 {{ define "attach_item" }}
-<div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
+<div class="attach-entry flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
     <div class="overflow-hidden mr-4">
         <div class="font-bold text-gray-700 dark:text-gray-300 truncate" title="{{ .Name }}">{{ .Name }}</div>
         <div class="text-xs text-gray-500 dark:text-gray-400">{{ .Mime }}</div>
     </div>
-    <div class="shrink-0">
+    <div class="shrink-0 flex gap-2">
         <button
             onclick="navigator.clipboard.writeText('/attach/{{ .Uid }}'); this.innerText = 'Copied!'; this.classList.remove('bg-blue-600', 'hover:bg-blue-700'); this.classList.add('bg-green-600', 'hover:bg-green-700'); setTimeout(() => { this.innerText = 'Copy Link'; this.classList.remove('bg-green-600', 'hover:bg-green-700'); this.classList.add('bg-blue-600', 'hover:bg-blue-700'); }, 2000)"
             class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
             Copy Link
+        </button>
+        <button
+            hx-delete=""
+            hx-confirm="Remove this attachment?"
+            hx-target="closest .attach-entry"
+            hx-swap="outerHTML"
+            onclick="this.setAttribute('hx-delete', '/api/admin/post/' + document.getElementById('attach-list').dataset.postId + '/attach/{{ .Uid }}'); htmx.process(this)"
+            class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
+            Remove
         </button>
     </div>
 </div>

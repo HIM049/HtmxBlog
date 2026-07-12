@@ -63,13 +63,23 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RemoveAttachHandler(w http.ResponseWriter, r *http.Request) {
-	uid := chi.URLParam(r, "id")
-
-	err := services.DeleteAttach(uid)
+	postId, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
-		http.Error(w, "Failed to delete attach", http.StatusInternalServerError)
+		http.Error(w, "Invalid Post ID", http.StatusBadRequest)
+		return
+	}
+
+	attachUid := chi.URLParam(r, "uid")
+	if attachUid == "" {
+		http.Error(w, "Attach UID is required", http.StatusBadRequest)
+		return
+	}
+
+	if err := services.UnlinkAttach(uint(postId), attachUid); err != nil {
+		http.Error(w, "Failed to unlink attach", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 }
+

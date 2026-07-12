@@ -126,3 +126,18 @@ func DeleteAttach(uid string) error {
 
 	return config.DB.Where("uid = ?", uid).Delete(&model.Attach{}).Error
 }
+
+// UnlinkAttach removes the association between a post and an attachment.
+func UnlinkAttach(postID uint, attachUID string) error {
+	attach, err := ReadAttachByUid(attachUID)
+	if err != nil {
+		return err
+	}
+
+	post, err := ReadPost(postID)
+	if err != nil {
+		return err
+	}
+
+	return config.DB.Model(attach).Association("Refers").Delete(post)
+}

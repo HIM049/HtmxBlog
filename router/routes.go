@@ -95,6 +95,7 @@ func loadRoutes() *chi.Mux {
 					r.Delete("/{id}", handler.HandlePostDelete)
 
 					r.Post("/{id}/attach", handler.UploadAttachHandler)
+					r.Delete("/{id}/attach/{uid}", handler.RemoveAttachHandler)
 				})
 
 				r.Route("/page", func(r chi.Router) {

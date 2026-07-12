@@ -5,16 +5,9 @@ import (
 	"HtmxBlog/model"
 )
 
-var onPageChange = func() {}
-
 // CreatePage creates a page.
 func CreatePage(item *model.Page) error {
-	err := config.DB.Create(item).Error
-	if err != nil {
-		return err
-	}
-	onPageChange()
-	return nil
+	return config.DB.Create(item).Error
 }
 
 // ReadPage reads a page by its name.
@@ -26,22 +19,12 @@ func ReadPage(name string) (*model.Page, error) {
 
 // UpdatePage updates a page.
 func UpdatePage(item *model.Page) error {
-	err := config.DB.Save(item).Error
-	if err != nil {
-		return err
-	}
-	onPageChange()
-	return nil
+	return config.DB.Save(item).Error
 }
 
 // DeletePage deletes a page.
 func DeletePage(name string) error {
-	err := config.DB.Where("name = ?", name).Delete(&model.Page{}).Error
-	if err != nil {
-		return err
-	}
-	onPageChange()
-	return nil
+	return config.DB.Where("name = ?", name).Delete(&model.Page{}).Error
 }
 
 // ReadAllPages reads all pages.
@@ -69,24 +52,10 @@ func ReorderPages(names []string) error {
 			return err
 		}
 	}
-	if err := tx.Commit().Error; err != nil {
-		return err
-	}
-	onPageChange()
-	return nil
+	return tx.Commit().Error
 }
 
 // UnsortPage sets the sort value of a page to 0.
 func UnsortPage(name string) error {
-	err := config.DB.Model(&model.Page{}).Where("name = ?", name).Update("sort", 0).Error
-	if err != nil {
-		return err
-	}
-	onPageChange()
-	return nil
-}
-
-// RegisterOnPageChange registers a callback that called when page changed.
-func RegisterOnPageChange(f func()) {
-	onPageChange = f
+	return config.DB.Model(&model.Page{}).Where("name = ?", name).Update("sort", 0).Error
 }

@@ -49,6 +49,11 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		services.UpdateConfig()
+		services.UpdateSettings()
+	}()
+
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("HX-Trigger", "settingChanged")
 	w.WriteHeader(http.StatusCreated)
@@ -72,6 +77,11 @@ func HandleSettingDelete(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to delete setting", http.StatusInternalServerError)
 		return
 	}
+
+	go func() {
+		services.UpdateConfig()
+		services.UpdateSettings()
+	}()
 
 	w.Header().Set("HX-Trigger", "settingChanged")
 	w.WriteHeader(http.StatusOK)
@@ -108,6 +118,11 @@ func HandleSettingUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to update setting", http.StatusInternalServerError)
 		return
 	}
+
+	go func() {
+		services.UpdateConfig()
+		services.UpdateSettings()
+	}()
 
 	w.Header().Set("HX-Trigger", "settingChanged")
 	w.WriteHeader(http.StatusOK)

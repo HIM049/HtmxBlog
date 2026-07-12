@@ -5,8 +5,6 @@ import (
 	"HtmxBlog/model"
 )
 
-var onCategoryChange = func() {}
-
 func CreateCategory(name, color string) (*model.Category, error) {
 	category := &model.Category{
 		Name:       name,
@@ -17,7 +15,6 @@ func CreateCategory(name, color string) (*model.Category, error) {
 	if err != nil {
 		return nil, err
 	}
-	onCategoryChange()
 	return category, nil
 }
 
@@ -52,21 +49,11 @@ func ReadViewCategories() ([]model.ViewCategory, error) {
 }
 
 func UpdateCategory(category *model.Category) error {
-	err := config.DB.Save(category).Error
-	if err != nil {
-		return err
-	}
-	onCategoryChange()
-	return nil
+	return config.DB.Save(category).Error
 }
 
 func DeleteCategory(id uint) error {
-	err := config.DB.Delete(&model.Category{}, id).Error
-	if err != nil {
-		return err
-	}
-	onCategoryChange()
-	return nil
+	return config.DB.Delete(&model.Category{}, id).Error
 }
 
 // SetCategoryVisibility sets the visibility of a category
@@ -83,9 +70,4 @@ func SetCategoryVisibility(id uint, visibility string) (*model.Category, error) 
 		return nil, err
 	}
 	return category, nil
-}
-
-// RegisterOnCategoryChange registers a callback that called when category changed.
-func RegisterOnCategoryChange(f func()) {
-	onCategoryChange = f
 }

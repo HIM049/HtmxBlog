@@ -2,6 +2,7 @@ package main
 
 import (
 	"HtmxBlog/config"
+	"HtmxBlog/handler"
 	"HtmxBlog/maintain"
 	"HtmxBlog/model"
 	"HtmxBlog/router"
@@ -20,9 +21,9 @@ func main() {
 
 	// Normal server startup
 	os.MkdirAll("./app_data", 0755)
-	os.MkdirAll("./app_data/posts", 0755)
-	os.MkdirAll("./app_data/attaches", 0755)
-	os.MkdirAll("./app_data/drafts", 0755)
+	os.MkdirAll(config.POSTS_DIR, 0755)
+	os.MkdirAll(config.ATTACHES_DIR, 0755)
+	os.MkdirAll(config.DRAFTS_DIR, 0755)
 
 	// initialize modules
 	config.Init()
@@ -33,31 +34,7 @@ func main() {
 	services.InitBaseApp()
 	router.Init()
 
-	// handle page change
-	services.RegisterOnPageChange(func() {
-		go func() {
-			router.RefreshRoutes()
-			services.UpdateNavigation()
-		}()
-	})
-	// handle category change
-	services.RegisterOnCategoryChange(func() {
-		go func() {
-			services.UpdateCategories()
-		}()
-	})
-	services.RegisterOnPostChange(func() {
-		go func() {
-			services.UpdateCategories()
-			services.UpdateTags()
-		}()
-	})
-	services.RegisterOnSettingChange(func() {
-		go func() {
-			services.UpdateConfig()
-			services.UpdateSettings()
-		}()
-	})
+	handler.RefreshRoutes = router.RefreshRoutes
 
 	log.Infof("Server is running on %s", config.Cfg.Service.Addr())
 	http.ListenAndServe(config.Cfg.Service.Addr(), router.HRouter)

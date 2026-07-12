@@ -5,15 +5,8 @@ import (
 	"HtmxBlog/model"
 )
 
-var onSettingChange = func() {}
-
 func CreateSetting(item *model.Setting) error {
-	err := config.DB.Create(item).Error
-	if err != nil {
-		return err
-	}
-	onSettingChange()
-	return nil
+	return config.DB.Create(item).Error
 }
 
 func ReadSetting(id uint) (*model.Setting, error) {
@@ -23,21 +16,11 @@ func ReadSetting(id uint) (*model.Setting, error) {
 }
 
 func UpdateSetting(item *model.Setting) error {
-	err := config.DB.Save(item).Error
-	if err != nil {
-		return err
-	}
-	onSettingChange()
-	return nil
+	return config.DB.Save(item).Error
 }
 
 func DeleteSetting(id uint) error {
-	err := config.DB.Delete(&model.Setting{}, id).Error
-	if err != nil {
-		return err
-	}
-	onSettingChange()
-	return nil
+	return config.DB.Delete(&model.Setting{}, id).Error
 }
 
 func ReadAllSettings() ([]model.Setting, error) {
@@ -46,9 +29,7 @@ func ReadAllSettings() ([]model.Setting, error) {
 	return items, err
 }
 
-func RegisterOnSettingChange(f func()) {
-	onSettingChange = f
-}
+
 
 func UpdateConfig() {
 	settings, err := ReadAllSettings()

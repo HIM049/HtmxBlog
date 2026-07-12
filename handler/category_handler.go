@@ -45,6 +45,8 @@ func HandleCategoryCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go services.UpdateCategories()
+
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("HX-Trigger", "categoryChanged")
 	w.WriteHeader(http.StatusCreated)
@@ -68,6 +70,8 @@ func HandleCategoryDelete(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to delete category", http.StatusInternalServerError)
 		return
 	}
+
+	go services.UpdateCategories()
 
 	w.Header().Set("HX-Trigger", "categoryChanged")
 	w.WriteHeader(http.StatusOK)
@@ -107,6 +111,8 @@ func HandleCategoryUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to update category", http.StatusInternalServerError)
 		return
 	}
+
+	go services.UpdateCategories()
 
 	w.Header().Set("HX-Trigger", "categoryChanged")
 	w.WriteHeader(http.StatusOK)

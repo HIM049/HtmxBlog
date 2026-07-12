@@ -77,6 +77,11 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		services.UpdateCategories()
+		services.UpdateTags()
+	}()
+
 	w.Header().Set("HX-Redirect", fmt.Sprintf("/admin/post/%d/edit", post.ID))
 }
 
@@ -97,6 +102,11 @@ func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to save update", http.StatusInternalServerError)
 		return
 	}
+
+	go func() {
+		services.UpdateCategories()
+		services.UpdateTags()
+	}()
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
@@ -129,6 +139,11 @@ func HandlePostPublish(w http.ResponseWriter, r *http.Request) {
 		services.DeleteDraft(vp.Post.Uid)
 	}
 
+	go func() {
+		services.UpdateCategories()
+		services.UpdateTags()
+	}()
+
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Published"))
@@ -151,6 +166,11 @@ func HandlePostDelete(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to delete post", http.StatusInternalServerError)
 		return
 	}
+
+	go func() {
+		services.UpdateCategories()
+		services.UpdateTags()
+	}()
 
 	w.Header().Set("HX-Trigger", "postChanged")
 	w.WriteHeader(http.StatusOK)

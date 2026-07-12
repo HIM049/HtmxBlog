@@ -10,6 +10,8 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+var RefreshRoutes = func() {}
+
 // ManagePagesView renders the pages management page skeleton.
 func ManagePagesView(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -68,6 +70,11 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		RefreshRoutes()
+		services.UpdateNavigation()
+	}()
+
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("HX-Trigger", "pageChanged")
 	w.WriteHeader(http.StatusCreated)
@@ -85,6 +92,11 @@ func HandlePageDelete(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to delete page", http.StatusInternalServerError)
 		return
 	}
+
+	go func() {
+		RefreshRoutes()
+		services.UpdateNavigation()
+	}()
 
 	w.Header().Set("HX-Trigger", "pageChanged")
 	w.WriteHeader(http.StatusOK)
@@ -109,6 +121,11 @@ func HandlePageReorder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		RefreshRoutes()
+		services.UpdateNavigation()
+	}()
+
 	w.Header().Set("HX-Trigger", "pageChanged")
 	w.WriteHeader(http.StatusOK)
 }
@@ -131,6 +148,11 @@ func HandlePageUnsort(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to unsort page", http.StatusInternalServerError)
 		return
 	}
+
+	go func() {
+		RefreshRoutes()
+		services.UpdateNavigation()
+	}()
 
 	w.Header().Set("HX-Trigger", "pageChanged")
 	w.WriteHeader(http.StatusOK)

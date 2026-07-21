@@ -100,8 +100,9 @@ func loadRoutes() *chi.Mux {
 
 				r.Route("/page", func(r chi.Router) {
 					r.Post("/create", handler.HandlePageCreate)
-					r.Post("/reorder", handler.HandlePageReorder)
-					r.Post("/unsort", handler.HandlePageUnsort)
+					r.Post("/moveup", handler.HandlePageMoveUp)
+					r.Post("/movedown", handler.HandlePageMoveDown)
+					r.Post("/toggle", handler.HandlePageToggle)
 					r.Delete("/{id}", handler.HandlePageDelete)
 				})
 

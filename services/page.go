@@ -55,7 +55,81 @@ func ReorderPages(names []string) error {
 	return tx.Commit().Error
 }
 
-// UnsortPage sets the sort value of a page to 0.
-func UnsortPage(name string) error {
-	return config.DB.Model(&model.Page{}).Where("name = ?", name).Update("sort", 0).Error
+// TogglePageVisibility sets the visibility (sort value) of a page.
+func TogglePageVisibility(name string, visible bool) error {
+	if !visible {
+		return config.DB.Model(&model.Page{}).Where("name = ?", name).Update("sort", 0).Error
+	}
+
+	var maxSort struct {
+		Max uint
+	}
+	config.DB.Model(&model.Page{}).Select("max(sort) as max").Scan(&maxSort)
+	return config.DB.Model(&model.Page{}).Where("name = ?", name).Update("sort", maxSort.Max+1).Error
+}
+
+// MovePageUp swaps the page with the previous visible page and reassigns contiguous sort values.
+func MovePageUp(name string) error {
+	var pages []model.Page
+	if err := config.DB.Where("sort > 0").Order("sort asc, id asc").Find(&pages).Error; err != nil {
+		return err
+	}
+
+	targetIdx := -1
+	for i, p := range pages {
+		if p.Name == name {
+			targetIdx = i
+			break
+		}
+	}
+
+	if targetIdx <= 0 {
+		return nil // Not found or already at the top
+	}
+
+	// Swap in memory
+	pages[targetIdx], pages[targetIdx-1] = pages[targetIdx-1], pages[targetIdx]
+
+	// Reassign all sort values
+	tx := config.DB.Begin()
+	for i, p := range pages {
+		if err := tx.Model(&model.Page{}).Where("id = ?", p.ID).Update("sort", i+1).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+	return tx.Commit().Error
+}
+
+// MovePageDown swaps the page with the next visible page and reassigns contiguous sort values.
+func MovePageDown(name string) error {
+	var pages []model.Page
+	if err := config.DB.Where("sort > 0").Order("sort asc, id asc").Find(&pages).Error; err != nil {
+		return err
+	}
+
+	targetIdx := -1
+	for i, p := range pages {
+		if p.Name == name {
+			targetIdx = i
+			break
+		}
+	}
+
+	if targetIdx == -1 || targetIdx == len(pages)-1 {
+		return nil // Not found or already at the bottom
+	}
+
+	// Swap in memory
+	pages[targetIdx], pages[targetIdx+1] = pages[targetIdx+1], pages[targetIdx]
+
+	// Reassign all sort values
+	tx := config.DB.Begin()
+	for i, p := range pages {
+		if err := tx.Model(&model.Page{}).Where("id = ?", p.ID).Update("sort", i+1).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+	return tx.Commit().Error
 }

@@ -102,22 +102,16 @@ func HandlePageDelete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func HandlePageReorder(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
+func HandlePageMoveUp(w http.ResponseWriter, r *http.Request) {
+	page := r.URL.Query().Get("page")
+	if page == "" {
+		http.Error(w, "Page name is required", http.StatusBadRequest)
 		return
 	}
 
-	names := r.Form["pages"]
-	if len(names) == 0 {
-		http.Error(w, "No pages provided", http.StatusBadRequest)
-		return
-	}
-
-	err = services.ReorderPages(names)
+	err := services.MovePageUp(page)
 	if err != nil {
-		http.Error(w, "Failed to reorder pages", http.StatusInternalServerError)
+		http.Error(w, "Failed to move page up", http.StatusInternalServerError)
 		return
 	}
 
@@ -130,22 +124,40 @@ func HandlePageReorder(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func HandlePageUnsort(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
-		return
-	}
-
-	page := r.FormValue("page")
+func HandlePageMoveDown(w http.ResponseWriter, r *http.Request) {
+	page := r.URL.Query().Get("page")
 	if page == "" {
 		http.Error(w, "Page name is required", http.StatusBadRequest)
 		return
 	}
 
-	err = services.UnsortPage(page)
+	err := services.MovePageDown(page)
 	if err != nil {
-		http.Error(w, "Failed to unsort page", http.StatusInternalServerError)
+		http.Error(w, "Failed to move page down", http.StatusInternalServerError)
+		return
+	}
+
+	go func() {
+		RefreshRoutes()
+		services.UpdateNavigation()
+	}()
+
+	w.Header().Set("HX-Trigger", "pageChanged")
+	w.WriteHeader(http.StatusOK)
+}
+
+func HandlePageToggle(w http.ResponseWriter, r *http.Request) {
+	page := r.URL.Query().Get("page")
+	visibleStr := r.URL.Query().Get("visible")
+	if page == "" || visibleStr == "" {
+		http.Error(w, "Page name and visibility are required", http.StatusBadRequest)
+		return
+	}
+
+	visible := visibleStr == "true"
+	err := services.TogglePageVisibility(page, visible)
+	if err != nil {
+		http.Error(w, "Failed to toggle page visibility", http.StatusInternalServerError)
 		return
 	}
 

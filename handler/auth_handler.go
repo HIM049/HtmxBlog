@@ -17,13 +17,13 @@ func AuthView(w http.ResponseWriter, r *http.Request) {
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		HtmxError(w, "Invalid form data")
 		return
 	}
 
 	passwd := r.FormValue("password")
 	if passwd == "" {
-		w.Write([]byte(`<div class="text-red-500">密码不能为空</div>`))
+		HtmxError(w, "密码不能为空")
 		return
 	}
 
@@ -45,5 +45,5 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(`<div class="text-red-500">密码错误</div>`))
+	HtmxError(w, "密码错误")
 }

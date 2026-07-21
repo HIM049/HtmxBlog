@@ -47,7 +47,7 @@ func PageListComponent(w http.ResponseWriter, r *http.Request) {
 func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		HtmxError(w, "Invalid form data")
 		return
 	}
 
@@ -56,7 +56,7 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 	template := r.FormValue("template")
 
 	if name == "" || route == "" || template == "" {
-		http.Error(w, "Name and route are required", http.StatusBadRequest)
+		HtmxError(w, "Name and route are required")
 		return
 	}
 
@@ -66,7 +66,7 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 		Template: template,
 	})
 	if err != nil {
-		http.Error(w, "Failed to create page", http.StatusInternalServerError)
+		HtmxError(w, "Failed to create page")
 		return
 	}
 
@@ -77,8 +77,7 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("HX-Trigger", "pageChanged")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("<div>Page created successfully!</div>"))
+	HtmxSuccess(w, "Page created successfully!")
 }
 
 func HandlePageDelete(w http.ResponseWriter, r *http.Request) {

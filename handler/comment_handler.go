@@ -29,14 +29,14 @@ func CommentListComponent(w http.ResponseWriter, r *http.Request) {
 // HandleCommentCreate is a handler for creating a new comment.
 func HandleCommentCreate(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		HtmxError(w, "Invalid form data")
 		return
 	}
 
 	postIDStr := r.FormValue("post_id")
 	postID, err := strconv.ParseUint(postIDStr, 10, 64)
 	if err != nil {
-		http.Error(w, "Invalid post ID", http.StatusBadRequest)
+		HtmxError(w, "Invalid post ID")
 		return
 	}
 
@@ -55,7 +55,7 @@ func HandleCommentCreate(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("content")
 
 	if name == "" || email == "" || content == "" {
-		http.Error(w, "Name, Email, and Content are required", http.StatusBadRequest)
+		HtmxError(w, "Name, Email, and Content are required")
 		return
 	}
 
@@ -72,15 +72,14 @@ func HandleCommentCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := services.CreateComment(comment); err != nil {
-		http.Error(w, "Failed to create comment", http.StatusInternalServerError)
+		HtmxError(w, "Failed to create comment")
 		return
 	}
 
 	// For HTMX, we can return a success message or the new comment partial.
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("HX-Trigger", "commentAdded")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(`<div class="text-green-600 font-bold p-2 bg-green-50 rounded border border-green-200">Comment submitted successfully!</div>`))
+	HtmxSuccess(w, "Comment submitted successfully!")
 }
 
 // HandleCommentApprove handles comment approval for admin.

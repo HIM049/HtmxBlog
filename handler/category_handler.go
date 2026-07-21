@@ -27,7 +27,7 @@ func CategoryListComponent(w http.ResponseWriter, r *http.Request) {
 func HandleCategoryCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		HtmxError(w, "Invalid form data")
 		return
 	}
 
@@ -35,13 +35,13 @@ func HandleCategoryCreate(w http.ResponseWriter, r *http.Request) {
 	color := r.FormValue("color")
 
 	if name == "" || color == "" {
-		http.Error(w, "Name and color are required", http.StatusBadRequest)
+		HtmxError(w, "Name and color are required")
 		return
 	}
 
 	_, err = services.CreateCategory(name, color)
 	if err != nil {
-		http.Error(w, "Failed to create category", http.StatusInternalServerError)
+		HtmxError(w, "Failed to create category")
 		return
 	}
 
@@ -49,8 +49,7 @@ func HandleCategoryCreate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("HX-Trigger", "categoryChanged")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(`<div class="text-green-600 font-bold p-4 bg-green-50 rounded shadow-md border border-green-200">Category created successfully!</div>`))
+	HtmxSuccess(w, "Category created successfully!")
 }
 
 func HandleCategoryDelete(w http.ResponseWriter, r *http.Request) {

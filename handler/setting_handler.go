@@ -28,7 +28,7 @@ func SettingListComponent(w http.ResponseWriter, r *http.Request) {
 func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		HtmxError(w, "Invalid form data")
 		return
 	}
 
@@ -36,7 +36,7 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 	value := r.FormValue("value")
 
 	if key == "" {
-		http.Error(w, "Key is required", http.StatusBadRequest)
+		HtmxError(w, "Key is required")
 		return
 	}
 
@@ -45,7 +45,7 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 		Value: value,
 	})
 	if err != nil {
-		http.Error(w, "Failed to create setting", http.StatusInternalServerError)
+		HtmxError(w, "Failed to create setting")
 		return
 	}
 
@@ -56,8 +56,7 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("HX-Trigger", "settingChanged")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(`<div class="text-green-600 font-bold p-4 bg-green-50 rounded shadow-md border border-green-200">Setting created successfully!</div>`))
+	HtmxSuccess(w, "Setting created successfully!")
 }
 
 func HandleSettingDelete(w http.ResponseWriter, r *http.Request) {

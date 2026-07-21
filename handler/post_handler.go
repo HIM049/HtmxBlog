@@ -68,12 +68,7 @@ func EditView(w http.ResponseWriter, r *http.Request) {
 func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 	post, err := services.CreateDefaultPost()
 	if err != nil {
-		http.Error(w, "Failed to create post", http.StatusInternalServerError)
-
-		w.Header().Set("Content-Type", "text/html")
-		w.WriteHeader(http.StatusCreated)
-		fmt.Fprintf(w, `<div class="text-red-600 font-bold p-4 bg-red-50 rounded shadow-md border border-red-200">Failed to create post: %s</div>`, err.Error())
-
+		HtmxError(w, "Failed to create post: "+err.Error())
 		return
 	}
 

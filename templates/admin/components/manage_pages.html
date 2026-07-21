@@ -42,34 +42,38 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    (function () {
         var sortedEl = document.getElementById('sorted-list');
         var hiddenEl = document.getElementById('hidden-list');
 
-        new Sortable(sortedEl, {
-            group: 'pages',
-            animation: 150,
-            ghostClass: 'bg-blue-100 dark:bg-blue-900/30',
-            onSort: function (evt) {
-                // Trigger reorder when list changes
-                htmx.trigger(document.getElementById('sort-pages-form'), 'reorder');
-            }
-        });
+        if (sortedEl && !sortedEl.sortable) {
+            sortedEl.sortable = new Sortable(sortedEl, {
+                group: 'pages',
+                animation: 150,
+                ghostClass: 'bg-blue-100', // removed dark: classes since they need special handling or just keep them
+                onSort: function (evt) {
+                    // Trigger reorder when list changes
+                    htmx.trigger(document.getElementById('sort-pages-form'), 'reorder');
+                }
+            });
+        }
 
-        new Sortable(hiddenEl, {
-            group: 'pages',
-            animation: 150,
-            ghostClass: 'bg-gray-100 dark:bg-zinc-700',
-            onAdd: function (evt) {
-                // Trigger unsort (hide) when item is added to hidden list
-                var pageName = evt.item.getAttribute('data-id');
-                document.getElementById('hide-page-input').value = pageName;
-                htmx.trigger(document.getElementById('hide-page-form'), 'submit');
-            }
-        });
-    });
+        if (hiddenEl && !hiddenEl.sortable) {
+            hiddenEl.sortable = new Sortable(hiddenEl, {
+                group: 'pages',
+                animation: 150,
+                ghostClass: 'bg-gray-100', // removed dark: classes since they need special handling or just keep them
+                onAdd: function (evt) {
+                    // Trigger unsort (hide) when item is added to hidden list
+                    var pageName = evt.item.getAttribute('data-id');
+                    document.getElementById('hide-page-input').value = pageName;
+                    htmx.trigger(document.getElementById('hide-page-form'), 'submit');
+                }
+            });
+        }
+    })();
 </script>
 
 <div class="bg-white dark:bg-zinc-800 shadow-md rounded px-8 pt-6 pb-8">

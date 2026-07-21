@@ -23,7 +23,6 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 
 	passwd := r.FormValue("password")
 	if passwd == "" {
-		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(`<div class="text-red-500">密码不能为空</div>`))
 		return
 	}
@@ -46,6 +45,5 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusUnauthorized)
 	w.Write([]byte(`<div class="text-red-500">密码错误</div>`))
 }

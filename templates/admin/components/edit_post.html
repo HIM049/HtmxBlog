@@ -113,11 +113,44 @@
 
         <!-- Custom Vars -->
         <div class="bg-white dark:bg-zinc-800 shadow-md rounded p-4">
-            <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2 mb-2">Custom Vars</h3>
-            <textarea form="post-form"
-                class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline h-32 bg-white dark:bg-zinc-700"
-                id="custom_vars" name="custom_vars" placeholder="key: value">{{ .Post.CustomVarsToString }}</textarea>
+            <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2 mb-2 flex justify-between items-center">
+                <span>Custom Vars</span>
+                <button type="button" onclick="addCustomVar()" class="text-blue-500 hover:text-blue-700 font-bold px-2 py-1 text-xs border border-blue-500 rounded transition-colors">
+                    + Add
+                </button>
+            </h3>
+            <div id="custom-vars-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {{ range $k, $v := .Post.CustomVars }}
+                <div class="flex gap-2 items-center custom-var-row">
+                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded w-1/3 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_keys" type="text" value="{{ $k }}" placeholder="Key">
+                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded flex-1 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_values" type="text" value="{{ $v }}" placeholder="Value">
+                    <button type="button" onclick="this.closest('.custom-var-row').remove()" class="text-red-400 hover:text-red-600 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                {{ end }}
+            </div>
         </div>
+
+        <script>
+            function addCustomVar() {
+                const container = document.getElementById('custom-vars-container');
+                const row = document.createElement('div');
+                row.className = 'flex gap-2 items-center custom-var-row mt-2';
+                row.innerHTML = `
+                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded w-1/3 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_keys" type="text" placeholder="Key">
+                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded flex-1 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_values" type="text" placeholder="Value">
+                    <button type="button" onclick="this.closest('.custom-var-row').remove()" class="text-red-400 hover:text-red-600 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                `;
+                container.appendChild(row);
+            }
+        </script>
 
         <!-- Attachments -->
         {{ template "attach_uploader" . }}

@@ -220,20 +220,17 @@ func parsePostForm(post *model.Post, r *http.Request) error {
 		post.Tags = postTags
 	}
 
-	if customVars := r.FormValue("custom_vars"); customVars != "" {
-		vars := make(map[string]any)
-		for line := range strings.SplitSeq(customVars, "\n") {
-			parts := strings.SplitN(line, ":", 2)
-			if len(parts) == 2 {
-				key := strings.TrimSpace(parts[0])
-				value := strings.TrimSpace(parts[1])
-				if key != "" {
-					vars[key] = value
-				}
+	vars := make(map[string]any)
+	if keys, ok := r.Form["custom_var_keys"]; ok {
+		values := r.Form["custom_var_values"]
+		for i, key := range keys {
+			key = strings.TrimSpace(key)
+			if key != "" && i < len(values) {
+				vars[key] = strings.TrimSpace(values[i])
 			}
 		}
-		post.CustomVars = vars
 	}
+	post.CustomVars = vars
 
 	if createdAt := r.FormValue("created_at"); createdAt != "" {
 		t, err := utils.ParseDateTimeLocal(createdAt)

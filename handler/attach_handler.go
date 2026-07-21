@@ -4,6 +4,7 @@ import (
 	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/state"
 	"fmt"
 	"net/http"
 	"path/filepath"
@@ -52,14 +53,16 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	_, err = services.CreateAttach(&file, header.Filename, header.Header.Get("Content-Type"), uint(postId))
+	attach, err := services.CreateAttach(&file, header.Filename, header.Header.Get("Content-Type"), uint(postId))
 	if err != nil {
 		http.Error(w, "Failed to upload attach", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("HX-Trigger", "attachChanged")
+	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusCreated)
+	state.AdminTmpl.ExecuteTemplate(w, "attach_item", attach)
 }
 
 func RemoveAttachHandler(w http.ResponseWriter, r *http.Request) {
@@ -82,4 +85,3 @@ func RemoveAttachHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
-

@@ -1,6 +1,6 @@
 package config
 
-const APP_VERSION = "0.5.0"
+const APP_VERSION = "0.5.1"
 
 const DB_PATH = "./app_data"
 const POSTS_DIR = "./app_data/posts"

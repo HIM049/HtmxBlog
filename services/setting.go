@@ -29,8 +29,6 @@ func ReadAllSettings() ([]model.Setting, error) {
 	return items, err
 }
 
-
-
 func UpdateConfig() {
 	settings, err := ReadAllSettings()
 	if err != nil {

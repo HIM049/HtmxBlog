@@ -62,7 +62,6 @@ func loadRoutes() *chi.Mux {
 
 				r.Get("/", handler.GenericAdminView)
 				r.Get("/{name}", handler.GenericAdminView)
-				r.Get("/post/{id}/edit", handler.EditView)
 			})
 		})
 	})

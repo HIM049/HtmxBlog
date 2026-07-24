@@ -3,7 +3,6 @@ package handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/state"
 	"HtmxBlog/utils"
 	"fmt"
 	"net/http"
@@ -13,42 +12,6 @@ import (
 	"github.com/charmbracelet/log"
 	"github.com/go-chi/chi/v5"
 )
-
-// EditView renders the post editor page.
-func EditView(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-	if err != nil {
-		http.Error(w, "Invalid post ID", http.StatusBadRequest)
-		return
-	}
-
-	// Try loading draft first
-	vp, err := services.GetDraft(uint(id))
-	var hasDraft bool
-	if err == nil && vp != nil {
-		hasDraft = true
-	} else {
-		// Load from DB
-		post, err := services.ReadPost(uint(id))
-		if err != nil {
-			http.Error(w, "Post not found", http.StatusNotFound)
-			return
-		}
-		vp = &model.ViewPost{Post: *post}
-		vp.LoadContent()
-	}
-
-	categories, _ := services.ReadCategories()
-
-	app := NewAdminApp(r, "Edit Post")
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "update_post", map[string]interface{}{
-		"Post":       vp,
-		"Categories": categories,
-		"HasDraft":   hasDraft,
-		"I18n":       app.I18n,
-	})
-}
 
 // HandlePostCreate is a handler for creating a new post.
 // It creates a default post and redirects to the editor page.
@@ -64,7 +27,7 @@ func HandlePostCreate(w http.ResponseWriter, r *http.Request) {
 		services.UpdateTags()
 	}()
 
-	w.Header().Set("HX-Redirect", fmt.Sprintf("/admin/post/%d/edit", post.ID))
+	w.Header().Set("HX-Redirect", fmt.Sprintf("/admin/editor?id=%d", post.ID))
 }
 
 func HandlePostUpdate(w http.ResponseWriter, r *http.Request) {

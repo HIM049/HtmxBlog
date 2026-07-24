@@ -145,12 +145,15 @@ func (a *AdminApp) Redirects() ([]model.Redirect, error) {
 
 func (a *AdminApp) GetEditPost() (*model.ViewPost, error) {
 	if a.Req == nil {
-		return nil, nil
+		return &model.ViewPost{}, nil
 	}
 	idStr := a.Req.URL.Query().Get("id")
+	if idStr == "" {
+		return &model.ViewPost{}, nil
+	}
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		return nil, err
+		return &model.ViewPost{}, nil
 	}
 	vp, err := services.GetDraft(uint(id))
 	if err == nil && vp != nil {
@@ -158,11 +161,24 @@ func (a *AdminApp) GetEditPost() (*model.ViewPost, error) {
 	}
 	post, err := services.ReadPost(uint(id))
 	if err != nil {
-		return nil, err
+		return &model.ViewPost{}, nil
 	}
 	vp = &model.ViewPost{Post: *post}
 	vp.LoadContent()
 	return vp, nil
+}
+
+func (a *AdminApp) HasDraft() bool {
+	if a.Req == nil {
+		return false
+	}
+	idStr := a.Req.URL.Query().Get("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return false
+	}
+	vp, err := services.GetDraft(uint(id))
+	return err == nil && vp != nil
 }
 
 func (a *AdminApp) EditPost() (*model.ViewPost, error) {

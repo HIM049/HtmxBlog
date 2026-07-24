@@ -1,26 +1,30 @@
 package handler
 
 import (
-	"HtmxBlog/services"
 	"HtmxBlog/state"
+	"bytes"
 	"net/http"
+
+	"github.com/charmbracelet/log"
+	"github.com/go-chi/chi/v5"
 )
 
-func AdminView(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "admin", nil)
-}
+func GenericAdminView(w http.ResponseWriter, r *http.Request) {
+	pageName := chi.URLParam(r, "name")
+	if pageName == "" {
+		pageName = "admin"
+	}
 
-func StatisticsView(w http.ResponseWriter, r *http.Request) {
-	stats, err := services.GetStats()
+	app := NewAdminApp(r, pageName)
+
+	var buf bytes.Buffer
+	err := state.AdminTmpl.ExecuteTemplate(&buf, pageName, app)
 	if err != nil {
-		http.Error(w, "Failed to get statistics: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Page not found or error loading data", http.StatusNotFound)
+		log.Errorf("[AdminTmpl] Page (%s) error: %v", pageName, err)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "statistics", map[string]interface{}{
-		"PageTitle": "Visit Statistics - Admin Dashboard",
-		"Stats":     stats,
-	})
+	buf.WriteTo(w)
 }

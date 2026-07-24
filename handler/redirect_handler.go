@@ -3,27 +3,11 @@ package handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/state"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
-
-// ManageRedirectsView renders the redirects management page skeleton.
-func ManageRedirectsView(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "redirect_manage", nil)
-}
-
-// RedirectListComponent renders the redirects list fragment.
-func RedirectListComponent(w http.ResponseWriter, r *http.Request) {
-	redirects, _ := services.ReadAllRedirects()
-	w.Header().Set("Content-Type", "text/html")
-	state.AdminTmpl.ExecuteTemplate(w, "redirect_list", map[string]interface{}{
-		"Redirects": redirects,
-	})
-}
 
 func HandleRedirectCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()

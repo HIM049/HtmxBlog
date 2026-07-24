@@ -1,5 +1,5 @@
-{{ define "post_manage"}}
-{{ template "header"}}
+{{ define "comments" }}
+{{ template "header" . }}
 
 <body class="bg-gray-100 dark:bg-zinc-900 dark:text-gray-100">
     <div class="max-w-[1000px] mx-auto">
@@ -12,20 +12,16 @@
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </a>
-                <h1 class="text-3xl font-bold">Manage Posts</h1>
+                <h1 class="text-3xl font-bold">Manage Comments</h1>
             </div>
-
-            <button hx-post="/api/admin/post/create"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
-                Create New Post
-            </button>
         </div>
 
-        <div hx-get="/admin/fragment/post-list"
-             hx-trigger="load, postChanged from:body"
-             hx-swap="innerHTML"></div>
+        <div class="mt-8">
+            <div hx-get="/admin/manage_comments"
+                 hx-trigger="load, commentChanged from:body"
+                 hx-swap="innerHTML"></div>
+        </div>
     </div>
 </body>
 
-</html>
 {{ end }}

@@ -4,8 +4,6 @@ import (
 	"HtmxBlog/model"
 )
 
-var CurrentState App
-
 type Pagination struct {
 	CurrentPage int
 	TotalPages  int

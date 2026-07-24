@@ -3,27 +3,11 @@ package handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/state"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
-
-// ManageSettingsView renders the settings management page skeleton.
-func ManageSettingsView(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "setting_manage", nil)
-}
-
-// SettingListComponent renders the settings list fragment.
-func SettingListComponent(w http.ResponseWriter, r *http.Request) {
-	settings, _ := services.ReadAllSettings()
-	w.Header().Set("Content-Type", "text/html")
-	state.AdminTmpl.ExecuteTemplate(w, "setting_list", map[string]interface{}{
-		"Settings": settings,
-	})
-}
 
 func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()

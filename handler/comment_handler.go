@@ -3,28 +3,12 @@ package handler
 import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
-	"HtmxBlog/state"
 	"HtmxBlog/utils"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
-
-// ManageCommentsView renders the comments management page skeleton.
-func ManageCommentsView(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "comment_manage", nil)
-}
-
-// CommentListComponent renders the comments list fragment.
-func CommentListComponent(w http.ResponseWriter, r *http.Request) {
-	comments, _ := services.ReadAllComments()
-	w.Header().Set("Content-Type", "text/html")
-	state.AdminTmpl.ExecuteTemplate(w, "manage_comments", map[string]interface{}{
-		"Comments": comments,
-	})
-}
 
 // HandleCommentCreate is a handler for creating a new comment.
 func HandleCommentCreate(w http.ResponseWriter, r *http.Request) {

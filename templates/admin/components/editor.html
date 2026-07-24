@@ -1,4 +1,4 @@
-{{ define "edit_post" }}
+{{ define "editor" }}
 
 <!-- Main form for post data -->
 <form id="post-form" hx-patch="/api/admin/post/{{ .Post.ID }}" hx-swap="none" hx-indicator="#save-indicator"></form>

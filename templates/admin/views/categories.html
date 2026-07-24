@@ -1,4 +1,4 @@
-{{ define "category_manage" }}
+{{ define "categories" }}
 {{ template "header" . }}
 
 <body class="bg-gray-100 dark:bg-zinc-900 dark:text-gray-100">
@@ -18,7 +18,7 @@
 
         <div>
             {{ template "create_category" . }}
-            <div hx-get="/admin/fragment/category-list"
+            <div hx-get="/admin/manage_categories"
                  hx-trigger="load, categoryChanged from:body"
                  hx-swap="innerHTML"></div>
         </div>

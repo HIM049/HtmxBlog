@@ -2,28 +2,13 @@ package handler
 
 import (
 	"HtmxBlog/services"
-	"HtmxBlog/state"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
 
-// ManageCategoriesView renders the category management page skeleton.
-func ManageCategoriesView(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "category_manage", nil)
-}
-
-// CategoryListComponent renders the category list fragment.
-func CategoryListComponent(w http.ResponseWriter, r *http.Request) {
-	categories, _ := services.ReadCategories()
-	w.Header().Set("Content-Type", "text/html")
-	state.AdminTmpl.ExecuteTemplate(w, "manage_categories", map[string]interface{}{
-		"Categories": categories,
-	})
-}
-
+// // ManageCategoriesView renders the category management page skeleton.
 func HandleCategoryCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {

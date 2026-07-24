@@ -31,9 +31,9 @@ func loadRoutes() *chi.Mux {
 	r.Get("/attach/{id}", handler.LoadAttachHandler)
 
 	r.Group(func(r chi.Router) {
-		r.Use(app_middleware.NotFoundInterceptor)
 
 		r.Group(func(r chi.Router) {
+			r.Use(app_middleware.NotFoundInterceptor)
 			r.Use(app_middleware.AccessRecordMiddleware)
 
 			err := RegisterPagesRouter(r)
@@ -42,36 +42,33 @@ func loadRoutes() *chi.Mux {
 			}
 
 			r.Get("/post/{id}", handler.PostView)
+
+			// Fallback: check redirect rules first, otherwise redirect to home
+			r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+				redirect, err := services.FindRedirectBySource(r.URL.Path)
+				if err == nil {
+					http.Redirect(w, r, redirect.TargetPath, redirect.StatusCode)
+					return
+				}
+				http.Redirect(w, r, "/", http.StatusFound)
+			})
 		})
 
 		r.Route("/admin", func(r chi.Router) {
+
 			r.Get("/auth", handler.AuthView)
 			r.Group(func(r chi.Router) {
 				r.Use(app_middleware.AccessControlMiddleware)
 
-				r.Get("/", handler.AdminView)
-				r.Get("/pages", handler.ManagePagesView)
-				r.Get("/posts", handler.ManagePostsView)
-				r.Get("/categories", handler.ManageCategoriesView)
-				r.Get("/settings", handler.ManageSettingsView)
-				r.Get("/comments", handler.ManageCommentsView)
-				r.Get("/redirects", handler.ManageRedirectsView)
-				r.Get("/statistics", handler.StatisticsView)
+				r.Get("/", handler.GenericAdminView)
+				r.Get("/{name}", handler.GenericAdminView)
 				r.Get("/post/{id}/edit", handler.EditView)
-
-				r.Route("/fragment", func(r chi.Router) {
-					r.Get("/category-list", handler.CategoryListComponent)
-					r.Get("/setting-list", handler.SettingListComponent)
-					r.Get("/redirect-list", handler.RedirectListComponent)
-					r.Get("/comment-list", handler.CommentListComponent)
-					r.Get("/post-list", handler.PostListComponent)
-					r.Get("/page-list", handler.PageListComponent)
-				})
 			})
 		})
 	})
 
 	r.Route("/api", func(r chi.Router) {
+
 		r.Get("/version", func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte(config.APP_VERSION))
@@ -128,16 +125,6 @@ func loadRoutes() *chi.Mux {
 	})
 
 	// TODO share link system. use static url to route share link
-
-	// Fallback: check redirect rules first, otherwise redirect to home
-	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		redirect, err := services.FindRedirectBySource(r.URL.Path)
-		if err == nil {
-			http.Redirect(w, r, redirect.TargetPath, redirect.StatusCode)
-			return
-		}
-		http.Redirect(w, r, "/", http.StatusFound)
-	})
 
 	return r
 }

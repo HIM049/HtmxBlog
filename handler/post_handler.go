@@ -14,21 +14,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-// ManagePostsView renders the posts management page skeleton.
-func ManagePostsView(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "post_manage", nil)
-}
-
-// PostListComponent renders the posts list fragment.
-func PostListComponent(w http.ResponseWriter, r *http.Request) {
-	posts, _ := services.ReadPosts(100, 0)
-	w.Header().Set("Content-Type", "text/html")
-	state.AdminTmpl.ExecuteTemplate(w, "manage_posts", map[string]interface{}{
-		"Posts": posts,
-	})
-}
-
 // EditView renders the post editor page.
 func EditView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))

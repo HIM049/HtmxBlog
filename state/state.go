@@ -1,6 +1,7 @@
 package state
 
 import (
+	"HtmxBlog/model"
 	"html/template"
 	"time"
 )
@@ -12,3 +13,5 @@ var CurrentState App
 
 var Tmpl *template.Template
 var AdminTmpl *template.Template
+
+var I18n *model.I18n

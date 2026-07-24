@@ -36,6 +36,7 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 	go func() {
 		services.UpdateConfig()
 		services.UpdateSettings()
+		TryUpdateI18n()
 	}()
 
 	w.Header().Set("Content-Type", "text/html")
@@ -64,6 +65,7 @@ func HandleSettingDelete(w http.ResponseWriter, r *http.Request) {
 	go func() {
 		services.UpdateConfig()
 		services.UpdateSettings()
+		TryUpdateI18n()
 	}()
 
 	w.Header().Set("HX-Trigger", "settingChanged")
@@ -105,6 +107,7 @@ func HandleSettingUpdate(w http.ResponseWriter, r *http.Request) {
 	go func() {
 		services.UpdateConfig()
 		services.UpdateSettings()
+		TryUpdateI18n()
 	}()
 
 	w.Header().Set("HX-Trigger", "settingChanged")

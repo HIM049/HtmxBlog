@@ -4,14 +4,14 @@
 <body class="bg-gray-100 dark:bg-zinc-900 dark:text-gray-100">
     <div class="max-w-[1000px] mx-auto">
         <div class="flex justify-between items-center p-6">
-            <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+            <h1 class="text-3xl font-bold">{{ .I18n.Dashboard.Title }}</h1>
 
             <button
                 id="theme-toggle"
                 class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
                 onclick="toggleTheme()"
             >
-                Switch Theme
+                {{ .I18n.Common.SwitchTheme }}
             </button>
         </div>
 
@@ -24,10 +24,10 @@
                 <h5
                     class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
                 >
-                    Manage Posts
+                    {{ .I18n.Dashboard.ManagePostsTitle }}
                 </h5>
                 <p class="font-normal text-gray-700 dark:text-gray-300">
-                    Create, edit, and delete blog posts.
+                    {{ .I18n.Dashboard.ManagePostsDesc }}
                 </p>
             </a>
 
@@ -39,10 +39,10 @@
                 <h5
                     class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
                 >
-                    Manage Pages
+                    {{ .I18n.Dashboard.ManagePagesTitle }}
                 </h5>
                 <p class="font-normal text-gray-700 dark:text-gray-300">
-                    Static page management.
+                    {{ .I18n.Dashboard.ManagePagesDesc }}
                 </p>
             </a>
 
@@ -54,10 +54,10 @@
                 <h5
                     class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
                 >
-                    Manage Categories
+                    {{ .I18n.Dashboard.ManageCategoriesTitle }}
                 </h5>
                 <p class="font-normal text-gray-700 dark:text-gray-300">
-                    Category management.
+                    {{ .I18n.Dashboard.ManageCategoriesDesc }}
                 </p>
             </a>
 
@@ -69,10 +69,10 @@
                 <h5
                     class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
                 >
-                    Manage Settings
+                    {{ .I18n.Dashboard.ManageSettingsTitle }}
                 </h5>
                 <p class="font-normal text-gray-700 dark:text-gray-300">
-                    Application global settings.
+                    {{ .I18n.Dashboard.ManageSettingsDesc }}
                 </p>
             </a>
 
@@ -84,10 +84,10 @@
                 <h5
                     class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
                 >
-                    Manage Redirects
+                    {{ .I18n.Dashboard.ManageRedirectsTitle }}
                 </h5>
                 <p class="font-normal text-gray-700 dark:text-gray-300">
-                    URL redirect rule management.
+                    {{ .I18n.Dashboard.ManageRedirectsDesc }}
                 </p>
             </a>
 
@@ -99,10 +99,10 @@
                 <h5
                     class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
                 >
-                    Manage Comments
+                    {{ .I18n.Dashboard.ManageCommentsTitle }}
                 </h5>
                 <p class="font-normal text-gray-700 dark:text-gray-300">
-                    Review and delete user comments.
+                    {{ .I18n.Dashboard.ManageCommentsDesc }}
                 </p>
             </a>
 
@@ -114,10 +114,10 @@
                 <h5
                     class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
                 >
-                    Visit Statistics
+                    {{ .I18n.Dashboard.VisitStatisticsTitle }}
                 </h5>
                 <p class="font-normal text-gray-700 dark:text-gray-300">
-                    View popular posts, traffic sources, and total visits.
+                    {{ .I18n.Dashboard.VisitStatisticsDesc }}
                 </p>
             </a>
         </div>

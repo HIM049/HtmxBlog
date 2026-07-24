@@ -40,11 +40,13 @@ func EditView(w http.ResponseWriter, r *http.Request) {
 
 	categories, _ := services.ReadCategories()
 
+	app := NewAdminApp(r, "Edit Post")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	state.AdminTmpl.ExecuteTemplate(w, "update_post", map[string]interface{}{
 		"Post":       vp,
 		"Categories": categories,
 		"HasDraft":   hasDraft,
+		"I18n":       app.I18n,
 	})
 }
 

@@ -12,12 +12,12 @@
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </a>
-                <h1 class="text-3xl font-bold">Manage Posts</h1>
+                <h1 class="text-3xl font-bold">{{ .I18n.Posts.Title }}</h1>
             </div>
 
             <button hx-post="/api/admin/post/create"
                 class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
-                Create New Post
+                {{ .I18n.Posts.CreateNewPost }}
             </button>
         </div>
 

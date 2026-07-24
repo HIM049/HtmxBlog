@@ -2,26 +2,26 @@
 <form hx-post="/api/admin/category" hx-target="#category-result" hx-swap="innerHTML"
     hx-on::after-request="if(event.detail.successful) this.reset()"
     class="bg-white dark:bg-zinc-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <h2 class="text-xl font-bold mb-4 border-b dark:border-zinc-700 pb-2">Create New Category</h2>
+    <h2 class="text-xl font-bold mb-4 border-b dark:border-zinc-700 pb-2">{{ .I18n.Categories.CreateTitle }}</h2>
     <div class="mb-4">
-        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="category-name">Category Name</label>
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="category-name">{{ .I18n.Categories.NameLabel }}</label>
         <input
             class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
-            id="category-name" name="name" type="text" placeholder="Category Name" required>
+            id="category-name" name="name" type="text" placeholder="{{ .I18n.Categories.NamePlaceholder }}" required>
     </div>
     <div class="mb-6">
-        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="category-color">Color</label>
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="category-color">{{ .I18n.Categories.ColorLabel }}</label>
         <div class="flex items-center gap-2">
             <input class="shadow appearance-none border dark:border-zinc-600 rounded h-10 w-20 p-1 cursor-pointer bg-white dark:bg-zinc-700" id="category-color"
                 name="color" type="color" value="#3b82f6" required>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Pick a color</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">{{ .I18n.Categories.PickColorHint }}</span>
         </div>
     </div>
     <div class="flex items-center justify-between">
         <button
             class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit">
-            Create Category
+            {{ .I18n.Categories.CreateButton }}
         </button>
     </div>
 </form>

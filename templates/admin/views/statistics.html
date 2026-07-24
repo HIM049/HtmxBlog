@@ -10,26 +10,26 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
             </a>
-            <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Visit Statistics</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">{{ .I18n.Statistics.Title }}</h1>
         </div>
 
         <!-- Overview Stats Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
             <!-- Total PV -->
             <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 border border-gray-200 dark:border-zinc-700/50 shadow-sm">
-                <h3 class="text-xs font-semibold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-1">Total Page Views (PV)</h3>
+                <h3 class="text-xs font-semibold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-1">{{ .I18n.Statistics.TotalPVTitle }}</h3>
                 <p class="text-4xl font-bold text-gray-950 dark:text-gray-50">{{ .Stats.TotalPV }}</p>
                 <div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
-                    Total accumulated page and article views across the site.
+                    {{ .I18n.Statistics.TotalPVDesc }}
                 </div>
             </div>
 
             <!-- Total UV -->
             <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 border border-gray-200 dark:border-zinc-700/50 shadow-sm">
-                <h3 class="text-xs font-semibold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-1">Unique Visitors (UV)</h3>
+                <h3 class="text-xs font-semibold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-1">{{ .I18n.Statistics.TotalUVTitle }}</h3>
                 <p class="text-4xl font-bold text-gray-950 dark:text-gray-50">{{ .Stats.TotalUV }}</p>
                 <div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
-                    Total visitors based on unique IP addresses.
+                    {{ .I18n.Statistics.TotalUVDesc }}
                 </div>
             </div>
         </div>
@@ -40,7 +40,7 @@
             <div class="bg-white dark:bg-zinc-800 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-zinc-700/50">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
-                        Article Visit Statistics
+                        {{ .I18n.Statistics.ArticleStatsTitle }}
                     </h2>
                 </div>
                 <div class="divide-y divide-gray-100 dark:divide-zinc-700/50">
@@ -61,7 +61,7 @@
                         </div>
                         {{ end }}
                     {{ else }}
-                        <div class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">No article visit data available.</div>
+                        <div class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">{{ $.I18n.Statistics.NoArticleData }}</div>
                     {{ end }}
                 </div>
             </div>
@@ -70,7 +70,7 @@
             <div class="bg-white dark:bg-zinc-800 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-zinc-700/50">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
-                        Visit Source Statistics
+                        {{ .I18n.Statistics.SourceStatsTitle }}
                     </h2>
                 </div>
                 <div class="divide-y divide-gray-100 dark:divide-zinc-700/50">
@@ -91,7 +91,7 @@
                         </div>
                         {{ end }}
                     {{ else }}
-                        <div class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">No source visit data available.</div>
+                        <div class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">{{ $.I18n.Statistics.NoSourceData }}</div>
                     {{ end }}
                 </div>
             </div>

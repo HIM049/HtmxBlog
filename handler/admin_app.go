@@ -1,16 +1,78 @@
 package handler
 
 import (
+	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/state"
+	"encoding/json"
+	"io"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
+
+	"github.com/charmbracelet/log"
 )
 
 type AdminApp struct {
 	Req       *http.Request
+	I18n      *model.I18n
 	PageTitle string
+}
+
+// InitI18n initializes the i18n model, should run after the config is initialized.
+func InitI18n() {
+	i18n, err := loadI18n(nil)
+	if err != nil {
+		log.Errorf("failed to load i18n: %v, trying fallback to en_us", err)
+		lang := "en_us"
+		i18n, err = loadI18n(&lang)
+		if err != nil {
+			log.Fatalf("failed to load i18n: %v", err)
+		}
+	}
+	state.I18n = i18n
+}
+
+func TryUpdateI18n() bool {
+	i18n, err := loadI18n(nil)
+	if err != nil {
+		return false
+	}
+	state.I18n = i18n
+	return true
+}
+
+func loadI18n(forceLang *string) (*model.I18n, error) {
+	var lang string
+	if forceLang == nil {
+		lang = config.Cfg.Settings["language"]
+		if lang == "" {
+			log.Warnf("language not set, using default: en_us")
+			lang = "en_us"
+		}
+	} else {
+		lang = *forceLang
+	}
+
+	file, err := os.Open("templates/admin/i18n/" + lang + ".json")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+
+	var i18n model.I18n
+	err = json.Unmarshal(data, &i18n)
+	if err != nil {
+		return nil, err
+	}
+	return &i18n, nil
 }
 
 func NewAdminApp(r *http.Request, name string) *AdminApp {
@@ -20,6 +82,7 @@ func NewAdminApp(r *http.Request, name string) *AdminApp {
 	}
 	return &AdminApp{
 		Req:       r,
+		I18n:      state.I18n,
 		PageTitle: title,
 	}
 }

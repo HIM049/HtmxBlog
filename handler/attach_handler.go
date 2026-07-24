@@ -62,7 +62,10 @@ func UploadAttachHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("HX-Trigger", "attachChanged")
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusCreated)
-	state.AdminTmpl.ExecuteTemplate(w, "attach_item", attach)
+	state.AdminTmpl.ExecuteTemplate(w, "attach_item", map[string]interface{}{
+		"Attach": attach,
+		"I18n":   state.I18n,
+	})
 }
 
 func RemoveAttachHandler(w http.ResponseWriter, r *http.Request) {

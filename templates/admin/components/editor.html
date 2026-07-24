@@ -9,37 +9,37 @@
         <div class="p-4 border-b dark:border-zinc-700 flex justify-between items-center">
             <input form="post-form"
                 class="text-2xl font-bold w-full outline-none border-b-2 border-transparent focus:border-blue-500 bg-transparent dark:text-gray-100 transition-colors py-2"
-                id="title" name="title" type="text" value="{{ .Post.Title }}" placeholder="Post Title">
+                id="title" name="title" type="text" value="{{ .Post.Title }}" placeholder="{{ .I18n.Editor.TitlePlaceholder }}">
             {{ if eq .Post.State "draft" }}
             <span class="ml-4 px-2 py-1 bg-zinc-100 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-300 text-xs font-bold rounded border border-zinc-200 dark:border-zinc-600 whitespace-nowrap">
-                Draft
+                {{ .I18n.Editor.DraftBadge }}
             </span>
             {{ else if .HasDraft }}
             <span class="ml-4 px-2 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 text-xs font-bold rounded border border-yellow-200 dark:border-yellow-700/50 whitespace-nowrap">
-                Unpublished Draft
+                {{ .I18n.Editor.UnpublishedDraftBadge }}
             </span>
             {{ end }}
         </div>
         <div class="flex-1 p-4 overflow-y-auto">
             <textarea form="post-form" class="w-full h-full resize-none outline-none font-mono text-gray-700 dark:text-gray-300 bg-transparent"
                 id="content" name="content"
-                placeholder="Type your markdown content here...">{{ .Post.Content }}</textarea>
+                placeholder="{{ .I18n.Editor.ContentPlaceholder }}">{{ .Post.Content }}</textarea>
         </div>
         <!-- Save Actions -->
         <div class="p-4 border-t dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900/50 flex justify-between items-center">
             <div id="save-indicator"
                 class="text-sm font-semibold text-blue-600 dark:text-blue-400 opacity-0 transition-opacity duration-300 htmx-request:opacity-100">
-                Saving to draft...
+                {{ .I18n.Editor.SavingIndicator }}
             </div>
             <div class="flex gap-3">
                 <button form="post-form" type="submit"
                     class="bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-zinc-800 dark:text-zinc-200 font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline transition-colors">
-                    Save Draft
+                    {{ .I18n.Editor.SaveDraft }}
                 </button>
                 <button hx-post="/api/admin/post/{{ .Post.ID }}/publish" hx-include="#post-form" hx-swap="none"
-                    hx-confirm="Are you sure you want to publish these changes?"
+                    hx-confirm="{{ .I18n.Editor.ConfirmPublish }}"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline transition-colors">
-                    Publish
+                    {{ .I18n.Editor.Publish }}
                 </button>
             </div>
         </div>
@@ -50,42 +50,41 @@
 
         <!-- Meta Info -->
         <div class="bg-white dark:bg-zinc-800 shadow-md rounded p-4 space-y-4">
-            <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2">Meta Info</h3>
+            <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2">{{ .I18n.Editor.MetaInfo }}</h3>
 
             <div>
-                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="visibility">Visibility</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="visibility">{{ .I18n.Editor.Visibility }}</label>
                 <div class="relative">
                     <select form="post-form"
                         class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                         id="visibility" name="visibility">
-                        <option value="public" {{ if eq .Post.Visibility "public" }}selected{{ end }}>Public</option>
-                        <option value="hide" {{ if eq .Post.Visibility "hide" }}selected{{ end }}>Hide</option>
-                        <option value="private" {{ if eq .Post.Visibility "private" }}selected{{ end }}>Private</option>
+                        <option value="public" {{ if eq .Post.Visibility "public" }}selected{{ end }}>{{ .I18n.Common.Public }}</option>
+                        <option value="hide" {{ if eq .Post.Visibility "hide" }}selected{{ end }}>{{ .I18n.Common.Hide }}</option>
+                        <option value="private" {{ if eq .Post.Visibility "private" }}selected{{ end }}>{{ .I18n.Common.Private }}</option>
                     </select>
                 </div>
             </div>
 
             <div>
-                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="protect">Protect</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="protect">{{ .I18n.Editor.Protect }}</label>
                 <div class="relative">
                     <select form="post-form"
                         class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                         id="protect" name="protect">
-                        <option value="none" {{ if eq .Post.Protect "none" }}selected{{ end }}>None</option>
-                        <option value="login" {{ if eq .Post.Protect "login" }}selected{{ end }}>Login Required</option>
-                        <option value="password" {{ if eq .Post.Protect "password" }}selected{{ end }}>Password
-                            Protected</option>
+                        <option value="none" {{ if eq .Post.Protect "none" }}selected{{ end }}>{{ .I18n.Editor.ProtectNone }}</option>
+                        <option value="login" {{ if eq .Post.Protect "login" }}selected{{ end }}>{{ .I18n.Editor.ProtectLogin }}</option>
+                        <option value="password" {{ if eq .Post.Protect "password" }}selected{{ end }}>{{ .I18n.Editor.ProtectPassword }}</option>
                     </select>
                 </div>
             </div>
 
             <div>
-                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="category_id">Category</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="category_id">{{ .I18n.Editor.Category }}</label>
                 <div class="relative">
                     <select form="post-form"
                         class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                         id="category_id" name="category_id">
-                        <option value="0" {{ if eq .Post.GetCategoryID 0 }}selected{{ end }}>None</option>
+                        <option value="0" {{ if eq .Post.GetCategoryID 0 }}selected{{ end }}>{{ .I18n.Common.None }}</option>
                         {{ range .Categories }}
                         <option value="{{ .ID }}" {{ if eq $.Post.GetCategoryID .ID }}selected{{ end }}>{{ .Name }}
                         </option>
@@ -95,15 +94,15 @@
             </div>
 
             <div>
-                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="tags">Tags</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="tags">{{ .I18n.Editor.Tags }}</label>
                 <input form="post-form"
                     class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                     id="tags" name="tags" type="text" value="{{ .Post.TagsToString }}"
-                    placeholder="Tags (comma separated)">
+                    placeholder="{{ .I18n.Editor.TagsPlaceholder }}">
             </div>
 
             <div>
-                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="created_at">Created At</label>
+                <label class="block text-gray-600 dark:text-gray-400 text-xs font-bold mb-1" for="created_at">{{ .I18n.Editor.CreatedAt }}</label>
                 <input form="post-form"
                     class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 text-sm leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
                     id="created_at" name="created_at" type="datetime-local"
@@ -114,16 +113,16 @@
         <!-- Custom Vars -->
         <div class="bg-white dark:bg-zinc-800 shadow-md rounded p-4">
             <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2 mb-2 flex justify-between items-center">
-                <span>Custom Vars</span>
+                <span>{{ .I18n.Editor.CustomVars }}</span>
                 <button type="button" onclick="addCustomVar()" class="text-blue-500 hover:text-blue-700 font-bold px-2 py-1 text-xs border border-blue-500 rounded transition-colors">
-                    + Add
+                    {{ .I18n.Editor.AddCustomVar }}
                 </button>
             </h3>
             <div id="custom-vars-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
                 {{ range $k, $v := .Post.CustomVars }}
                 <div class="flex gap-2 items-center custom-var-row">
-                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded w-1/3 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_keys" type="text" value="{{ $k }}" placeholder="Key">
-                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded flex-1 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_values" type="text" value="{{ $v }}" placeholder="Value">
+                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded w-1/3 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_keys" type="text" value="{{ $k }}" placeholder="{{ $.I18n.Editor.CustomVarKeyPlaceholder }}">
+                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded flex-1 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_values" type="text" value="{{ $v }}" placeholder="{{ $.I18n.Editor.CustomVarValuePlaceholder }}">
                     <button type="button" onclick="this.closest('.custom-var-row').remove()" class="text-red-400 hover:text-red-600 focus:outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -140,8 +139,8 @@
                 const row = document.createElement('div');
                 row.className = 'flex gap-2 items-center custom-var-row mt-2';
                 row.innerHTML = `
-                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded w-1/3 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_keys" type="text" placeholder="Key">
-                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded flex-1 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_values" type="text" placeholder="Value">
+                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded w-1/3 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_keys" type="text" placeholder="{{ .I18n.Editor.CustomVarKeyPlaceholder }}">
+                    <input form="post-form" class="shadow appearance-none border dark:border-zinc-600 rounded flex-1 py-1 px-2 text-gray-700 dark:text-gray-200 text-xs font-mono leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700" name="custom_var_values" type="text" placeholder="{{ .I18n.Editor.CustomVarValuePlaceholder }}">
                     <button type="button" onclick="this.closest('.custom-var-row').remove()" class="text-red-400 hover:text-red-600 focus:outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

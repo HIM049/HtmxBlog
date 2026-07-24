@@ -11,7 +11,8 @@ import (
 
 func AuthView(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	state.AdminTmpl.ExecuteTemplate(w, "auth", nil)
+	app := NewAdminApp(r, "Auth")
+	state.AdminTmpl.ExecuteTemplate(w, "auth", app)
 }
 
 func AuthHandler(w http.ResponseWriter, r *http.Request) {

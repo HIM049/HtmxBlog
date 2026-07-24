@@ -1,11 +1,11 @@
 {{ define "attach_uploader"}}
 <div class="bg-white dark:bg-zinc-800 shadow-md rounded p-4">
-    <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2 mb-4">Attachments</h3>
+    <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2 mb-4">{{ .I18n.Attachments.Title }}</h3>
     <form hx-post="/api/admin/post/{{ .Post.ID }}/attach" hx-encoding="multipart/form-data" hx-target="#attach-list"
         hx-swap="afterbegin" class="p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-6">
         <div class="mb-4">
             <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="file">
-                Select File
+                {{ .I18n.Attachments.SelectFile }}
             </label>
             <input
                 class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
@@ -15,13 +15,34 @@
             <button
                 class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors"
                 type="submit" onclick="setTimeout(() => document.getElementById('file').value = '', 100)">
-                Upload
+                {{ .I18n.Attachments.Upload }}
             </button>
         </div>
     </form>
     <div id="attach-list" data-post-id="{{ .Post.ID }}" class="mt-4 mb-8">
         {{ range .Post.Attachs }}
-        {{ template "attach_item" . }}
+        <div class="attach-entry flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
+            <div class="overflow-hidden mr-4">
+                <div class="font-bold text-gray-700 dark:text-gray-300 truncate" title="{{ .Name }}">{{ .Name }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">{{ .Mime }}</div>
+            </div>
+            <div class="shrink-0 flex gap-2">
+                <button
+                    onclick="navigator.clipboard.writeText('/attach/{{ .Uid }}'); this.innerText = '{{ $.I18n.Attachments.Copied }}'; this.classList.remove('bg-blue-600', 'hover:bg-blue-700'); this.classList.add('bg-green-600', 'hover:bg-green-700'); setTimeout(() => { this.innerText = '{{ $.I18n.Attachments.CopyLink }}'; this.classList.remove('bg-green-600', 'hover:bg-green-700'); this.classList.add('bg-blue-600', 'hover:bg-blue-700'); }, 2000)"
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
+                    {{ $.I18n.Attachments.CopyLink }}
+                </button>
+                <button
+                    hx-delete=""
+                    hx-confirm="{{ $.I18n.Attachments.ConfirmRemove }}"
+                    hx-target="closest .attach-entry"
+                    hx-swap="outerHTML"
+                    onclick="this.setAttribute('hx-delete', '/api/admin/post/' + document.getElementById('attach-list').dataset.postId + '/attach/{{ .Uid }}'); htmx.process(this)"
+                    class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
+                    {{ $.I18n.Attachments.Remove }}
+                </button>
+            </div>
+        </div>
         {{ end }}
     </div>
 </div>
@@ -30,23 +51,23 @@
 {{ define "attach_item" }}
 <div class="attach-entry flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
     <div class="overflow-hidden mr-4">
-        <div class="font-bold text-gray-700 dark:text-gray-300 truncate" title="{{ .Name }}">{{ .Name }}</div>
-        <div class="text-xs text-gray-500 dark:text-gray-400">{{ .Mime }}</div>
+        <div class="font-bold text-gray-700 dark:text-gray-300 truncate" title="{{ .Attach.Name }}">{{ .Attach.Name }}</div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">{{ .Attach.Mime }}</div>
     </div>
     <div class="shrink-0 flex gap-2">
         <button
-            onclick="navigator.clipboard.writeText('/attach/{{ .Uid }}'); this.innerText = 'Copied!'; this.classList.remove('bg-blue-600', 'hover:bg-blue-700'); this.classList.add('bg-green-600', 'hover:bg-green-700'); setTimeout(() => { this.innerText = 'Copy Link'; this.classList.remove('bg-green-600', 'hover:bg-green-700'); this.classList.add('bg-blue-600', 'hover:bg-blue-700'); }, 2000)"
+            onclick="navigator.clipboard.writeText('/attach/{{ .Attach.Uid }}'); this.innerText = '{{ .I18n.Attachments.Copied }}'; this.classList.remove('bg-blue-600', 'hover:bg-blue-700'); this.classList.add('bg-green-600', 'hover:bg-green-700'); setTimeout(() => { this.innerText = '{{ .I18n.Attachments.CopyLink }}'; this.classList.remove('bg-green-600', 'hover:bg-green-700'); this.classList.add('bg-blue-600', 'hover:bg-blue-700'); }, 2000)"
             class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
-            Copy Link
+            {{ .I18n.Attachments.CopyLink }}
         </button>
         <button
             hx-delete=""
-            hx-confirm="Remove this attachment?"
+            hx-confirm="{{ .I18n.Attachments.ConfirmRemove }}"
             hx-target="closest .attach-entry"
             hx-swap="outerHTML"
-            onclick="this.setAttribute('hx-delete', '/api/admin/post/' + document.getElementById('attach-list').dataset.postId + '/attach/{{ .Uid }}'); htmx.process(this)"
+            onclick="this.setAttribute('hx-delete', '/api/admin/post/' + document.getElementById('attach-list').dataset.postId + '/attach/{{ .Attach.Uid }}'); htmx.process(this)"
             class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
-            Remove
+            {{ .I18n.Attachments.Remove }}
         </button>
     </div>
 </div>

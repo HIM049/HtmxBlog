@@ -30,6 +30,7 @@ func main() {
 	config.InitDB()
 	config.DB.AutoMigrate(&model.Post{}, &model.Page{}, &model.Attach{}, &model.Setting{}, &model.Comment{}, &model.Redirect{}, &model.AccessRecord{})
 	services.UpdateConfig()
+	handler.InitI18n()
 	services.Init()
 	services.InitBaseApp()
 	router.Init()

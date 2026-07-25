@@ -1,5 +1,6 @@
 {
   "metadata": 1,
+  "id": "default",
   "name": {"en_us": "Default", "zh_cn": "默认主题"},
   "version": "1.0.0",
   "description": {"en_us": "The default theme for this project", "zh_cn": "默认主题"},

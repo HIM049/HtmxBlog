@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/charmbracelet/log"
 )
 
 type ThemeVar struct {
@@ -23,6 +25,7 @@ type ThemeVarTranslated struct {
 
 type ThemeMeta struct {
 	Path     string `json:"-"`
+	ID       string `json:"id"`
 	Metadata int    `json:"metadata"`
 	Version  string `json:"version"`
 	Author   string `json:"author"`
@@ -53,8 +56,24 @@ func InitTheme() {
 		panic("failed to find themes (len=0)")
 	}
 
-	// TODO
-	targetTheme := themes[0]
+	targetID := Cfg.Settings["theme"]
+	if targetID == "" {
+		log.Warnf("theme not set, use default")
+		targetID = "default"
+	}
+
+	var targetTheme *ThemeMetaFile
+	for _, theme := range themes {
+		if theme.ID == targetID {
+			targetTheme = &theme
+			break
+		}
+	}
+
+	if targetTheme == nil {
+		log.Errorf("Cannot found theme: %s, use first one", targetID)
+		targetTheme = &themes[0]
+	}
 
 	lang := Cfg.Settings["language"]
 	var theme ThemeMetaTranslated

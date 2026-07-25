@@ -22,6 +22,7 @@ type ThemeVarTranslated struct {
 }
 
 type ThemeMeta struct {
+	Path     string `json:"-"`
 	Metadata int    `json:"metadata"`
 	Version  string `json:"version"`
 	Author   string `json:"author"`
@@ -57,6 +58,7 @@ func InitTheme() {
 
 	lang := Cfg.Settings["language"]
 	var theme ThemeMetaTranslated
+	theme.Path = targetTheme.Path
 	theme.ThemeMeta = targetTheme.ThemeMeta
 
 	theme.Name = langFallback(lang, targetTheme.Name)
@@ -103,7 +105,7 @@ func langFallback(lang string, translate map[string]string) string {
 
 func findTheme() ([]ThemeMetaFile, error) {
 	var themes []ThemeMetaFile
-	err := filepath.WalkDir("./templates/", func(path string, d os.DirEntry, err error) error {
+	err := filepath.WalkDir(THEME_DIR, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -118,6 +120,7 @@ func findTheme() ([]ThemeMetaFile, error) {
 			if err := json.Unmarshal(content, &theme); err != nil {
 				return err
 			}
+			theme.Path = filepath.Dir(path)
 			themes = append(themes, theme)
 		}
 		return nil

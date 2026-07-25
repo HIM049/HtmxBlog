@@ -6,6 +6,7 @@ import (
 	app_middleware "HtmxBlog/middleware"
 	"HtmxBlog/services"
 	"net/http"
+	"path/filepath"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -27,6 +28,7 @@ func loadRoutes() *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	r.Handle("/assets/theme/*", http.StripPrefix("/assets/theme/", http.FileServer(http.Dir(filepath.Join(config.Cfg.Theme.Path, config.THEME_STATIC)))))
 	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 	r.Get("/attach/{id}", handler.LoadAttachHandler)
 
@@ -98,7 +100,6 @@ func loadRoutes() *chi.Mux {
 					r.Get("/custom-var-row", handler.HandleCustomVarRow)
 					r.Post("/custom-var-change", handler.HandleCustomVarChange)
 				})
-
 
 				r.Route("/page", func(r chi.Router) {
 					r.Post("/create", handler.HandlePageCreate)

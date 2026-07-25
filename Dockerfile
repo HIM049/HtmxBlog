@@ -5,8 +5,10 @@ RUN apk add --no-cache ca-certificates tzdata
 WORKDIR /app
 COPY release/ .
 
-RUN chmod +x ./HtmxBlog
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x ./HtmxBlog /entrypoint.sh
 
 EXPOSE 9590
 
-ENTRYPOINT ["./HtmxBlog"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["./HtmxBlog"]

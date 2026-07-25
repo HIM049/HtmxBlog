@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies and Build Assets
         run: |
           pnpm install
-          pnpm exec tailwindcss -i ./themes/default/style.css -o ./themes/default/static/style.css --minify
+          pnpm exec tailwindcss -i ./templates/user/style.css -o ./templates/user/static/style.css --minify
           pnpm exec tailwindcss -i ./templates/admin/style.css -o ./assets/admin_style.css --minify
           pnpm exec shx cp node_modules/htmx.org/dist/htmx.min.js assets/htmx.js
 
@@ -47,7 +47,7 @@ jobs:
           cp .env.example release/
           cp -r assets release/
           cp -r templates release/
-          cp -r themes release/
+
 
 
       - name: Upload Artifact

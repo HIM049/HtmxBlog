@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
 	"net/http"
@@ -37,6 +38,7 @@ func HandleSettingCreate(w http.ResponseWriter, r *http.Request) {
 		services.UpdateConfig()
 		services.UpdateSettings()
 		TryUpdateI18n()
+		config.InitTheme()
 	}()
 
 	w.Header().Set("Content-Type", "text/html")
@@ -66,6 +68,7 @@ func HandleSettingDelete(w http.ResponseWriter, r *http.Request) {
 		services.UpdateConfig()
 		services.UpdateSettings()
 		TryUpdateI18n()
+		config.InitTheme()
 	}()
 
 	w.Header().Set("HX-Trigger", "settingChanged")
@@ -108,6 +111,7 @@ func HandleSettingUpdate(w http.ResponseWriter, r *http.Request) {
 		services.UpdateConfig()
 		services.UpdateSettings()
 		TryUpdateI18n()
+		config.InitTheme()
 	}()
 
 	w.Header().Set("HX-Trigger", "settingChanged")

@@ -94,6 +94,12 @@ func loadRoutes() *chi.Mux {
 					r.Delete("/{id}/attach/{uid}", handler.RemoveAttachHandler)
 				})
 
+				r.Route("/editor", func(r chi.Router) {
+					r.Get("/custom-var-row", handler.HandleCustomVarRow)
+					r.Post("/custom-var-change", handler.HandleCustomVarChange)
+				})
+
+
 				r.Route("/page", func(r chi.Router) {
 					r.Post("/create", handler.HandlePageCreate)
 					r.Post("/moveup", handler.HandlePageMoveUp)
@@ -122,8 +128,6 @@ func loadRoutes() *chi.Mux {
 			})
 		})
 	})
-
-	// TODO share link system. use static url to route share link
 
 	return r
 }

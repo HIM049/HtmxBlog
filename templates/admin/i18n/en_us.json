@@ -72,8 +72,11 @@
     "custom_vars": "Custom Vars",
     "add_custom_var": "+ Add",
     "custom_var_key_placeholder": "Key",
-    "custom_var_value_placeholder": "Value"
+    "custom_var_value_placeholder": "Value",
+    "custom_var_preset_custom": "Custom",
+    "custom_var_preset_select": "Select Preset"
   },
+
   "attachments": {
     "title": "Attachments",
     "select_file": "Select File",

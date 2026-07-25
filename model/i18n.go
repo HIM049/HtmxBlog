@@ -79,7 +79,10 @@ type I18n struct {
 		AddCustomVar              string `json:"add_custom_var"`
 		CustomVarKeyPlaceholder   string `json:"custom_var_key_placeholder"`
 		CustomVarValuePlaceholder string `json:"custom_var_value_placeholder"`
+		CustomVarPresetCustom     string `json:"custom_var_preset_custom"`
+		CustomVarPresetSelect     string `json:"custom_var_preset_select"`
 	} `json:"editor"`
+
 
 	Attachments struct {
 		Title         string `json:"title"`

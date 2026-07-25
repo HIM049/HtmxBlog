@@ -87,6 +87,57 @@ func NewAdminApp(r *http.Request, name string) *AdminApp {
 	}
 }
 
+func (a *AdminApp) ThemePostVars() []config.ThemeVarTranslated {
+	if config.Cfg == nil {
+		return nil
+	}
+	return config.Cfg.Theme.PostVars
+}
+
+type CustomVarRowItem struct {
+	Key           string
+	Value         string
+	IsPreset      bool
+	Description   string
+	ThemePostVars []config.ThemeVarTranslated
+	I18n          *model.I18n
+}
+
+func (a *AdminApp) CustomVarRows() []CustomVarRowItem {
+	post, err := a.GetEditPost()
+	if err != nil || post == nil {
+		return nil
+	}
+
+	var themeVars []config.ThemeVarTranslated
+	if config.Cfg != nil {
+		themeVars = config.Cfg.Theme.PostVars
+	}
+
+	var rows []CustomVarRowItem
+	for k, v := range post.CustomVars {
+		valStr, _ := v.(string)
+		item := CustomVarRowItem{
+			Key:           k,
+			Value:         valStr,
+			ThemePostVars: themeVars,
+			I18n:          a.I18n,
+		}
+
+		for _, tv := range themeVars {
+			if tv.Key == k {
+				item.IsPreset = true
+				item.Description = tv.Description
+				break
+			}
+		}
+
+		rows = append(rows, item)
+	}
+
+	return rows
+}
+
 func (a *AdminApp) GetStats() (*services.StatsSummary, error) {
 	return services.GetStats()
 }

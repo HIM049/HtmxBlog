@@ -11,6 +11,7 @@ var Cfg *Config
 type Config struct {
 	Database Database
 	Service  Service
+	Theme    ThemeMetaTranslated
 	Settings map[string]string
 }
 

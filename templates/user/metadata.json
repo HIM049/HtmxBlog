@@ -1,0 +1,35 @@
+{
+  "metadata": 1,
+  "name": {"en_us": "Default", "zh_cn": "默认主题"},
+  "version": "1.0.0",
+  "description": {"en_us": "The default theme for this project", "zh_cn": "默认主题"},
+  "author": "HIM049",
+  "global_vars": [
+    {
+      "key": "site_name",
+      "name": {"en_us": "Site Name", "zh_cn": "网站名称"},
+      "description": {"en_us": "The main sitename", "zh_cn": "网站主名称"},
+      "type": "string"
+    },
+    {
+      "key": "site_slogan",
+      "name": {"en_us": "Site Slogan", "zh_cn": "网站标语"},
+      "description": {"en_us": "The solgan show at the bottom of page", "zh_cn": "网站底部显示的标语"},
+      "type": "string"
+    }
+  ],
+  "post_vars": [
+    {
+      "key": "cover",
+      "name": {"en_us": "Cover", "zh_cn": "封面"},
+      "description": {"en_us": "The cover image for the post", "zh_cn": "文章封面URL"},
+      "type": "string"
+    },
+    {
+      "key": "intro",
+      "name": {"en_us": "Introduction", "zh_cn": "简介"},
+      "description": {"en_us": "The introduction for the post", "zh_cn": "文章简介"},
+      "type": "string"
+    }
+  ]
+}

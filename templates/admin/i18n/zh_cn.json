@@ -72,8 +72,11 @@
     "custom_vars": "自定义变量",
     "add_custom_var": "+ 添加",
     "custom_var_key_placeholder": "键",
-    "custom_var_value_placeholder": "值"
+    "custom_var_value_placeholder": "值",
+    "custom_var_preset_custom": "自定义",
+    "custom_var_preset_select": "选择预设"
   },
+
   "attachments": {
     "title": "附件管理",
     "select_file": "选择文件",

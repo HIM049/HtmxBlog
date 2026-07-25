@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"HtmxBlog/config"
 	"HtmxBlog/model"
 	"HtmxBlog/services"
+	"HtmxBlog/state"
 	"HtmxBlog/utils"
 	"fmt"
 	"net/http"
@@ -228,4 +230,69 @@ func parseRequest(r *http.Request) (*model.ViewPost, error) {
 	}
 
 	return vp, nil
+}
+
+// HandleCustomVarRow returns a new empty custom var row HTML fragment for HTMX.
+func HandleCustomVarRow(w http.ResponseWriter, r *http.Request) {
+	var themeVars []config.ThemeVarTranslated
+	if config.Cfg != nil {
+		themeVars = config.Cfg.Theme.PostVars
+	}
+
+	item := CustomVarRowItem{
+		Key:           "",
+		Value:         "",
+		IsPreset:      false,
+		Description:   "",
+		ThemePostVars: themeVars,
+		I18n:          state.I18n,
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := state.AdminTmpl.ExecuteTemplate(w, "custom_var_row", item); err != nil {
+		log.Errorf("Failed to render custom_var_row: %v", err)
+		http.Error(w, "Template Error", http.StatusInternalServerError)
+	}
+}
+
+// HandleCustomVarChange handles preset select changes for HTMX and returns updated row HTML.
+func HandleCustomVarChange(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Invalid Form Data", http.StatusBadRequest)
+		return
+	}
+
+	selectedPreset := r.FormValue("preset_select")
+	val := r.FormValue("custom_var_values")
+
+	var themeVars []config.ThemeVarTranslated
+	if config.Cfg != nil {
+		themeVars = config.Cfg.Theme.PostVars
+	}
+
+	item := CustomVarRowItem{
+		Key:           selectedPreset,
+		Value:         val,
+		ThemePostVars: themeVars,
+		I18n:          state.I18n,
+	}
+
+	if selectedPreset != "" {
+		for _, tv := range themeVars {
+			if tv.Key == selectedPreset {
+				item.IsPreset = true
+				item.Description = tv.Description
+				break
+			}
+		}
+	} else {
+		item.Key = r.FormValue("custom_var_keys")
+		item.IsPreset = false
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := state.AdminTmpl.ExecuteTemplate(w, "custom_var_row", item); err != nil {
+		log.Errorf("Failed to render custom_var_row: %v", err)
+		http.Error(w, "Template Error", http.StatusInternalServerError)
+	}
 }

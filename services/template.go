@@ -1,6 +1,7 @@
 package services
 
 import (
+	"HtmxBlog/config"
 	"HtmxBlog/state"
 	"html/template"
 	"os"
@@ -8,12 +9,12 @@ import (
 	"strings"
 )
 
-// Init initializes the template.
+// InitTmpl initializes the template.
 // It panics when some error occurs.
-func Init() {
+func InitTmpl() {
 	state.AdminTmpl = InitAdminTemplate()
 
-	tmpl, err := TemplateLoader("templates/user")
+	tmpl, err := TemplateLoader(config.Cfg.Theme.Path)
 	if err != nil {
 		panic("failed to load tmpl: " + err.Error())
 	}

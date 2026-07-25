@@ -9,4 +9,4 @@
 .env
 .gocache
 .gomodcache
-/templates/user/static/
+/themes/default/static/

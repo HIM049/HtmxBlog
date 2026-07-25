@@ -32,7 +32,7 @@ func main() {
 	services.UpdateConfig()
 	handler.InitI18n()
 	config.InitTheme()
-	services.Init()
+	services.InitTmpl()
 	services.InitBaseApp()
 	router.Init()
 

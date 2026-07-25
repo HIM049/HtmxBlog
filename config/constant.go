@@ -7,5 +7,5 @@ const POSTS_DIR = "./app_data/posts"
 const ATTACHES_DIR = "./app_data/attaches"
 const DRAFTS_DIR = "./app_data/drafts"
 
-const THEME_DIR = "./templates"
+const THEME_DIR = "./themes"
 const THEME_STATIC = "/static"

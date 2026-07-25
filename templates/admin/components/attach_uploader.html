@@ -1,35 +1,55 @@
 {{ define "attach_uploader"}}
-<div class="bg-white dark:bg-zinc-800 shadow-md rounded p-4">
-    <h3 class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-zinc-700 pb-2 mb-4">{{ .I18n.Attachments.Title }}</h3>
-    <form hx-post="/api/admin/post/{{ .Post.ID }}/attach" hx-encoding="multipart/form-data" hx-target="#attach-list"
-        hx-swap="afterbegin" class="p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-6">
-        <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="file">
-                {{ .I18n.Attachments.SelectFile }}
-            </label>
-            <input
-                class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
-                id="file" type="file" name="file" required>
-        </div>
-        <div class="flex items-center justify-between">
-            <button
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors"
-                type="submit" onclick="setTimeout(() => document.getElementById('file').value = '', 100)">
-                {{ .I18n.Attachments.Upload }}
-            </button>
-        </div>
-    </form>
-    <div id="attach-list" data-post-id="{{ .Post.ID }}" class="mt-4 mb-8">
-        {{ range .Post.Attachs }}
-        <div class="attach-entry flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
-            <div class="overflow-hidden mr-4">
-                <div class="font-bold text-gray-700 dark:text-gray-300 truncate" title="{{ .Name }}">{{ .Name }}</div>
-                <div class="text-xs text-gray-500 dark:text-gray-400">{{ .Mime }}</div>
+<div id="attach-card" class="relative bg-white dark:bg-zinc-800 shadow-md rounded p-4 overflow-hidden">
+    <!-- Drag and Drop Overlay Mask -->
+    <div id="attach-drop-overlay" class="hidden absolute inset-0 bg-blue-50/95 dark:bg-zinc-800/95 border-2 border-dashed border-blue-500 rounded z-30 flex items-center justify-center pointer-events-none transition-all">
+        <span class="text-xs font-bold text-blue-600 dark:text-blue-400">释放文件以自动上传</span>
+    </div>
+
+    <!-- Header Title with Native HTML5 Collapsible Form -->
+    <details class="group border-b dark:border-zinc-700 pb-2 mb-3">
+        <summary class="flex justify-between items-center cursor-pointer list-none select-none">
+            <h3 class="font-bold text-gray-700 dark:text-gray-300 text-sm flex items-center gap-1">
+                <span>{{ .I18n.Attachments.Title }}</span>
+                <span id="attach-count" class="text-xs font-normal text-gray-500 dark:text-gray-400">({{ len .Post.Attachs }})</span>
+            </h3>
+            <span class="text-blue-500 hover:text-blue-700 font-bold px-2 py-0.5 text-xs border border-blue-500 rounded transition-colors">
+                + {{ .I18n.Attachments.Upload }}
+            </span>
+        </summary>
+
+        <form id="attach-form" hx-post="/api/admin/post/{{ .Post.ID }}/attach" hx-encoding="multipart/form-data" hx-target="#attach-list"
+            hx-swap="afterbegin" class="mt-3 p-3 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 transition-all">
+            <div class="mb-3">
+                <label class="block text-gray-700 dark:text-gray-300 text-xs font-bold mb-1" for="file">
+                    {{ .I18n.Attachments.SelectFile }}
+                </label>
+                <input
+                    class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-1.5 px-2 text-xs text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
+                    id="file" type="file" name="file" required>
             </div>
-            <div class="shrink-0 flex gap-2">
+            <div class="flex items-center justify-end">
+                <button
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 text-xs rounded focus:outline-none focus:shadow-outline transition-colors"
+                    type="submit" onclick="setTimeout(() => document.getElementById('file').value = '', 100)">
+                    {{ .I18n.Attachments.Upload }}
+                </button>
+            </div>
+        </form>
+    </details>
+
+    <div id="attach-list" data-post-id="{{ .Post.ID }}" class="mt-2 mb-2 max-h-64 overflow-y-auto pr-1">
+        {{ range .Post.Attachs }}
+        <div class="attach-entry p-3 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
+            <!-- Line 1: Name and Mime type in full line -->
+            <div class="flex items-center justify-between gap-2 mb-2">
+                <div class="font-bold text-gray-700 dark:text-gray-300 text-sm truncate flex-1" title="{{ .Name }}">{{ .Name }}</div>
+                <span class="text-xs font-mono text-gray-500 dark:text-gray-400 bg-gray-200/70 dark:bg-zinc-700/70 px-1.5 py-0.5 rounded shrink-0">{{ .Mime }}</span>
+            </div>
+            <!-- Line 2: Action buttons -->
+            <div class="flex justify-end gap-2 pt-2 border-t border-gray-200/60 dark:border-zinc-700/60">
                 <button
                     onclick="navigator.clipboard.writeText('/attach/{{ .Uid }}'); this.innerText = '{{ $.I18n.Attachments.Copied }}'; this.classList.remove('bg-blue-600', 'hover:bg-blue-700'); this.classList.add('bg-green-600', 'hover:bg-green-700'); setTimeout(() => { this.innerText = '{{ $.I18n.Attachments.CopyLink }}'; this.classList.remove('bg-green-600', 'hover:bg-green-700'); this.classList.add('bg-blue-600', 'hover:bg-blue-700'); }, 2000)"
-                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
                     {{ $.I18n.Attachments.CopyLink }}
                 </button>
                 <button
@@ -38,7 +58,7 @@
                     hx-target="closest .attach-entry"
                     hx-swap="outerHTML"
                     onclick="this.setAttribute('hx-delete', '/api/admin/post/' + document.getElementById('attach-list').dataset.postId + '/attach/{{ .Uid }}'); htmx.process(this)"
-                    class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
+                    class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
                     {{ $.I18n.Attachments.Remove }}
                 </button>
             </div>
@@ -46,18 +66,67 @@
         {{ end }}
     </div>
 </div>
+
+<script>
+    (function() {
+        const card = document.getElementById('attach-card');
+        const overlay = document.getElementById('attach-drop-overlay');
+        const fileInput = document.getElementById('file');
+        const form = document.getElementById('attach-form');
+
+        if (!card || !overlay || !fileInput || !form) return;
+
+
+        let dragCounter = 0;
+
+        card.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+            dragCounter++;
+            overlay.classList.remove('hidden');
+        });
+
+        card.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+
+        card.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            dragCounter--;
+            if (dragCounter <= 0) {
+                dragCounter = 0;
+                overlay.classList.add('hidden');
+            }
+        });
+
+        card.addEventListener('drop', function(e) {
+            e.preventDefault();
+            dragCounter = 0;
+            overlay.classList.add('hidden');
+
+            const dt = e.dataTransfer;
+            if (dt && dt.files && dt.files.length > 0) {
+                fileInput.files = dt.files;
+                htmx.trigger(form, 'submit');
+            }
+        });
+    })();
+</script>
+
+
 {{ end }}
 
 {{ define "attach_item" }}
-<div class="attach-entry flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
-    <div class="overflow-hidden mr-4">
-        <div class="font-bold text-gray-700 dark:text-gray-300 truncate" title="{{ .Attach.Name }}">{{ .Attach.Name }}</div>
-        <div class="text-xs text-gray-500 dark:text-gray-400">{{ .Attach.Mime }}</div>
+<div class="attach-entry p-3 bg-gray-50 dark:bg-zinc-900/50 rounded border border-gray-200 dark:border-zinc-700 mb-2">
+    <!-- Line 1: Name and Mime type in full line -->
+    <div class="flex items-center justify-between gap-2 mb-2">
+        <div class="font-bold text-gray-700 dark:text-gray-300 text-sm truncate flex-1" title="{{ .Attach.Name }}">{{ .Attach.Name }}</div>
+        <span class="text-xs font-mono text-gray-500 dark:text-gray-400 bg-gray-200/70 dark:bg-zinc-700/70 px-1.5 py-0.5 rounded shrink-0">{{ .Attach.Mime }}</span>
     </div>
-    <div class="shrink-0 flex gap-2">
+    <!-- Line 2: Action buttons -->
+    <div class="flex justify-end gap-2 pt-2 border-t border-gray-200/60 dark:border-zinc-700/60">
         <button
             onclick="navigator.clipboard.writeText('/attach/{{ .Attach.Uid }}'); this.innerText = '{{ .I18n.Attachments.Copied }}'; this.classList.remove('bg-blue-600', 'hover:bg-blue-700'); this.classList.add('bg-green-600', 'hover:bg-green-700'); setTimeout(() => { this.innerText = '{{ .I18n.Attachments.CopyLink }}'; this.classList.remove('bg-green-600', 'hover:bg-green-700'); this.classList.add('bg-blue-600', 'hover:bg-blue-700'); }, 2000)"
-            class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
+            class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
             {{ .I18n.Attachments.CopyLink }}
         </button>
         <button
@@ -66,7 +135,7 @@
             hx-target="closest .attach-entry"
             hx-swap="outerHTML"
             onclick="this.setAttribute('hx-delete', '/api/admin/post/' + document.getElementById('attach-list').dataset.postId + '/attach/{{ .Attach.Uid }}'); htmx.process(this)"
-            class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
+            class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors">
             {{ .I18n.Attachments.Remove }}
         </button>
     </div>

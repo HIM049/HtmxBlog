@@ -32,3 +32,12 @@ func getEnv(key string) string {
 	}
 	panic("environment variable not found: " + key)
 }
+
+// getEnv reads an environment variable, panics if not set.
+func getEnvOrDefault(key string, def string) string {
+	if val, ok := os.LookupEnv(key); ok {
+		return val
+	}
+
+	return def
+}

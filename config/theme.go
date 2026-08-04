@@ -124,7 +124,7 @@ func langFallback(lang string, translate map[string]string) string {
 
 func findTheme() ([]ThemeMetaFile, error) {
 	var themes []ThemeMetaFile
-	err := filepath.WalkDir(THEME_DIR, func(path string, d os.DirEntry, err error) error {
+	err := filepath.WalkDir(Cfg.Service.ThemeDir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}

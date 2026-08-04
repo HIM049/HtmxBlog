@@ -9,6 +9,7 @@ type Service struct {
 	Port        string
 	AdminPasswd string
 	ValidTime   int
+	ThemeDir    string
 }
 
 func ReadService() Service {
@@ -17,6 +18,7 @@ func ReadService() Service {
 		Port:        getEnv("PORT"),
 		AdminPasswd: getEnv("ADMIN_PASSWORD"),
 		ValidTime:   validTime,
+		ThemeDir:    getEnvOrDefault("THEME_DIR", "./themes"),
 	}
 }
 

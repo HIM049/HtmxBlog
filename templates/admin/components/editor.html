@@ -41,7 +41,7 @@
 
 <div class="flex gap-6 justify-center w-full max-w-5xl mx-auto">
     <!-- Left Column: Title, Content, and Custom Vars -->
-    <div class="flex-1 flex flex-col bg-white dark:bg-zinc-800 shadow-md rounded overflow-hidden max-w-[648px]">
+    <div class="flex-1 flex flex-col min-h-[75vh] bg-white dark:bg-zinc-800 shadow-md rounded overflow-hidden max-w-[648px]">
         <!-- Title and Top Action Buttons -->
         <div class="p-4 border-b dark:border-zinc-700 flex justify-between items-center gap-4">
             <div class="flex-1 flex items-center gap-2">
@@ -76,7 +76,7 @@
         </div>
 
         <!-- Content Area -->
-        <div class="flex-1 p-4 overflow-y-auto min-h-[300px]">
+        <div class="flex-1 p-4 overflow-y-auto">
             <textarea form="post-form" class="w-full h-full resize-none outline-none font-mono text-gray-700 dark:text-gray-300 bg-transparent"
                 id="content" name="content"
                 placeholder="{{ .I18n.Editor.ContentPlaceholder }}">{{ .Post.Content }}</textarea>

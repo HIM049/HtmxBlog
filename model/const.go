@@ -16,3 +16,9 @@ const (
 	StateDraft   = "draft"
 	StateRelease = "release"
 )
+
+const (
+	FilterNone    = "none"
+	FilterInclude = "include"
+	FilterExclude = "exclude"
+)

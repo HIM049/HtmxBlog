@@ -4,6 +4,7 @@ import (
 	"HtmxBlog/model"
 	"HtmxBlog/services"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -20,6 +21,20 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	route := r.FormValue("route")
 	template := r.FormValue("template")
+	filterMode := r.FormValue("filter_mode")
+	if filterMode != model.FilterInclude && filterMode != model.FilterExclude {
+		filterMode = model.FilterNone
+	}
+
+	var categoryIDs []uint
+	if filterMode != model.FilterNone {
+		rawIDs := r.Form["filter_category_ids"]
+		for _, raw := range rawIDs {
+			if id, err := strconv.ParseUint(raw, 10, 32); err == nil {
+				categoryIDs = append(categoryIDs, uint(id))
+			}
+		}
+	}
 
 	if name == "" || route == "" || template == "" {
 		HtmxError(w, "Name and route are required")
@@ -27,9 +42,11 @@ func HandlePageCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = services.CreatePage(&model.Page{
-		Name:     name,
-		Route:    route,
-		Template: template,
+		Name:              name,
+		Route:             route,
+		Template:          template,
+		FilterMode:        filterMode,
+		FilterCategoryIDs: categoryIDs,
 	})
 	if err != nil {
 		HtmxError(w, "Failed to create page")

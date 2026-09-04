@@ -111,7 +111,18 @@
     "template_label": "Template",
     "template_placeholder": "Template (e.g. about)",
     "create_button": "Create Page",
-    "confirm_delete": "Are you sure you want to delete this page?"
+    "confirm_delete": "Are you sure you want to delete this page?",
+    "filter_label": "Article Filter Mode",
+    "filter_mode_all": "All (No Filter)",
+    "filter_mode_include": "Include (Whitelist)",
+    "filter_mode_exclude": "Exclude (Blacklist)",
+    "select_categories": "Select Categories",
+    "filter_hint_all": "This page will show all published articles.",
+    "filter_hint_include": "This page will only show articles from the selected categories.",
+    "filter_hint_exclude": "This page will show all articles except those from the selected categories.",
+    "badge_filter_all": "All",
+    "badge_filter_include": "Include",
+    "badge_filter_exclude": "Exclude"
   },
   "redirects": {
     "title": "Manage Redirects",

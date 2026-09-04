@@ -121,6 +121,17 @@ type I18n struct {
 		TemplatePlaceholder string `json:"template_placeholder"`
 		CreateButton        string `json:"create_button"`
 		ConfirmDelete       string `json:"confirm_delete"`
+		FilterLabel         string `json:"filter_label"`
+		FilterModeAll       string `json:"filter_mode_all"`
+		FilterModeInclude   string `json:"filter_mode_include"`
+		FilterModeExclude   string `json:"filter_mode_exclude"`
+		SelectCategories    string `json:"select_categories"`
+		FilterHintAll       string `json:"filter_hint_all"`
+		FilterHintInclude   string `json:"filter_hint_include"`
+		FilterHintExclude   string `json:"filter_hint_exclude"`
+		BadgeFilterAll      string `json:"badge_filter_all"`
+		BadgeFilterInclude  string `json:"badge_filter_include"`
+		BadgeFilterExclude  string `json:"badge_filter_exclude"`
 	} `json:"pages"`
 
 	Redirects struct {

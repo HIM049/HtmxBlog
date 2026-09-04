@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request) {
+func GenericViewLoader(pageModel model.Page) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		categoryID := r.URL.Query().Get("category")
 		pageStr := r.URL.Query().Get("page")
@@ -21,13 +21,13 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 		}
 
 		offset := (page - 1) * state.PageSize
-		posts, err := services.ReadPostsWithConditions(state.PageSize, offset, model.VisibilityPublic, "", model.StateRelease, categoryID, tag)
+		posts, err := services.ReadPostsWithConditions(state.PageSize, offset, model.VisibilityPublic, "", model.StateRelease, categoryID, tag, pageModel.FilterMode, pageModel.FilterCategoryIDs)
 		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
-		totalPosts, err := services.CountPostsWithConditions(model.VisibilityPublic, "", model.StateRelease, categoryID, tag)
+		totalPosts, err := services.CountPostsWithConditions(model.VisibilityPublic, "", model.StateRelease, categoryID, tag, pageModel.FilterMode, pageModel.FilterCategoryIDs)
 		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -36,7 +36,38 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 		totalPages := int((totalPosts + int64(state.PageSize) - 1) / int64(state.PageSize))
 
 		base := state.GetBaseApp()
-		base.PageTitle = config.Cfg.Settings["site_name"]
+		if pageModel.Name != "" && pageModel.Name != "Home" {
+			base.PageTitle = pageModel.Name + " - " + config.Cfg.Settings["site_name"]
+		} else {
+			base.PageTitle = config.Cfg.Settings["site_name"]
+		}
+
+		// Filter sidebar categories based on the page's filter configuration
+		if pageModel.FilterMode == model.FilterInclude && len(pageModel.FilterCategoryIDs) > 0 {
+			idSet := make(map[uint]bool, len(pageModel.FilterCategoryIDs))
+			for _, id := range pageModel.FilterCategoryIDs {
+				idSet[id] = true
+			}
+			var filteredCats []model.ViewCategory
+			for _, cat := range base.Categories {
+				if idSet[cat.ID] {
+					filteredCats = append(filteredCats, cat)
+				}
+			}
+			base.Categories = filteredCats
+		} else if pageModel.FilterMode == model.FilterExclude && len(pageModel.FilterCategoryIDs) > 0 {
+			idSet := make(map[uint]bool, len(pageModel.FilterCategoryIDs))
+			for _, id := range pageModel.FilterCategoryIDs {
+				idSet[id] = true
+			}
+			var filteredCats []model.ViewCategory
+			for _, cat := range base.Categories {
+				if !idSet[cat.ID] {
+					filteredCats = append(filteredCats, cat)
+				}
+			}
+			base.Categories = filteredCats
+		}
 		for _, post := range posts {
 			base.Posts = append(base.Posts, model.ViewPost{
 				Post: post,
@@ -81,6 +112,6 @@ func GenericViewLoader(tmpl string) func(w http.ResponseWriter, r *http.Request)
 		}
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		state.Tmpl.ExecuteTemplate(w, tmpl, base)
+		state.Tmpl.ExecuteTemplate(w, pageModel.Template, base)
 	}
 }

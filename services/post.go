@@ -39,13 +39,19 @@ func ReadPosts(num int, offset int) ([]model.Post, error) {
 	return posts, err
 }
 
-func ReadPostsWithConditions(num, offset int, visibility, protect, state, categoryID, tag string) ([]model.Post, error) {
+func ReadPostsWithConditions(num, offset int, visibility, protect, state, categoryID, tag string, filterMode string, filterCategoryIDs []uint) ([]model.Post, error) {
 	var posts []model.Post
 	query := config.DB.Model(&model.Post{})
 	query = query.Where(model.Post{Visibility: visibility, Protect: protect, State: state})
 
 	if categoryID != "" {
 		query = query.Where("category_id = ?", categoryID)
+	}
+
+	if filterMode == model.FilterInclude && len(filterCategoryIDs) > 0 {
+		query = query.Where("category_id IN ?", filterCategoryIDs)
+	} else if filterMode == model.FilterExclude && len(filterCategoryIDs) > 0 {
+		query = query.Where("(category_id NOT IN ? OR category_id IS NULL)", filterCategoryIDs)
 	}
 
 	if tag != "" {
@@ -58,13 +64,19 @@ func ReadPostsWithConditions(num, offset int, visibility, protect, state, catego
 	return posts, err
 }
 
-func CountPostsWithConditions(visibility, protect, state, categoryID, tag string) (int64, error) {
+func CountPostsWithConditions(visibility, protect, state, categoryID, tag string, filterMode string, filterCategoryIDs []uint) (int64, error) {
 	var count int64
 	query := config.DB.Model(&model.Post{})
 	query = query.Where(model.Post{Visibility: visibility, Protect: protect, State: state})
 
 	if categoryID != "" {
 		query = query.Where("category_id = ?", categoryID)
+	}
+
+	if filterMode == model.FilterInclude && len(filterCategoryIDs) > 0 {
+		query = query.Where("category_id IN ?", filterCategoryIDs)
+	} else if filterMode == model.FilterExclude && len(filterCategoryIDs) > 0 {
+		query = query.Where("(category_id NOT IN ? OR category_id IS NULL)", filterCategoryIDs)
 	}
 
 	if tag != "" {

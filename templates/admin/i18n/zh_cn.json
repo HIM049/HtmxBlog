@@ -111,7 +111,18 @@
     "template_label": "模板名称",
     "template_placeholder": "模板名称（例如：about）",
     "create_button": "创建页面",
-    "confirm_delete": "确定要删除此页面吗？"
+    "confirm_delete": "确定要删除此页面吗？",
+    "filter_label": "文章过滤模式",
+    "filter_mode_all": "全部显示（不过滤）",
+    "filter_mode_include": "包含（白名单）",
+    "filter_mode_exclude": "排除（黑名单）",
+    "select_categories": "选择关联分类",
+    "filter_hint_all": "页面将显示所有已发布的文章。",
+    "filter_hint_include": "页面将仅显示属于所勾选分类的文章。",
+    "filter_hint_exclude": "页面将显示除所勾选分类外的所有文章。",
+    "badge_filter_all": "全部",
+    "badge_filter_include": "包含",
+    "badge_filter_exclude": "排除"
   },
   "redirects": {
     "title": "重定向管理",

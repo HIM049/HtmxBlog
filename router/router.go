@@ -41,7 +41,7 @@ func RegisterPagesRouter(r chi.Router) error {
 	}
 
 	for _, page := range pages {
-		r.Get(page.Route, handler.GenericViewLoader(page.Template))
+		r.Get(page.Route, handler.GenericViewLoader(page))
 	}
 	return nil
 }

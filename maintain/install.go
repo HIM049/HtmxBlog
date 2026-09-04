@@ -37,10 +37,11 @@ func CheckAndInstall() error {
 func createDefaultPages(tx *gorm.DB) error {
 	// create home page (skip if already exists)
 	page := model.Page{
-		Name:     "Home",
-		Route:    "/",
-		Template: "index",
-		Sort:     1,
+		Name:       "Home",
+		Route:      "/",
+		Template:   "index",
+		Sort:       1,
+		FilterMode: model.FilterNone,
 	}
 	return tx.Where(model.Page{Name: "Home"}).FirstOrCreate(&page).Error
 }

@@ -1,5 +1,6 @@
 {{ define "create_page" }}
 <form hx-post="/api/admin/page/create" hx-target="#page-result" hx-swap="innerHTML"
+    hx-on::after-request="if(event.detail.successful) { this.reset(); toggleCategorySelect('none'); }"
     class="bg-white dark:bg-zinc-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
     <h2 class="text-xl font-bold mb-4 border-b dark:border-zinc-700 pb-2">{{ .I18n.Pages.CreateTitle }}</h2>
     <div class="mb-4">
@@ -8,17 +9,41 @@
             class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
             id="page-name" name="name" type="text" placeholder="{{ .I18n.Pages.NamePlaceholder }}" required>
     </div>
-    <div class="mb-6">
+    <div class="mb-4">
         <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="page-route">{{ .I18n.Pages.RouteLabel }}</label>
         <input
             class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
             id="page-route" name="route" type="text" placeholder="{{ .I18n.Pages.RoutePlaceholder }}" required>
     </div>
-    <div class="mb-6">
+    <div class="mb-4">
         <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="page-template">{{ .I18n.Pages.TemplateLabel }}</label>
         <input
             class="shadow appearance-none border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
             id="page-template" name="template" type="text" placeholder="{{ .I18n.Pages.TemplatePlaceholder }}" required>
+    </div>
+    <div class="mb-4">
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="page-filter-mode">{{ .I18n.Pages.FilterLabel }}</label>
+        <select
+            class="shadow border dark:border-zinc-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline bg-white dark:bg-zinc-700"
+            id="page-filter-mode" name="filter_mode" onchange="toggleCategorySelect(this.value)">
+            <option value="none">{{ .I18n.Pages.FilterModeAll }}</option>
+            <option value="include">{{ .I18n.Pages.FilterModeInclude }}</option>
+            <option value="exclude">{{ .I18n.Pages.FilterModeExclude }}</option>
+        </select>
+    </div>
+    <div id="category-selector" class="hidden mb-6">
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">{{ .I18n.Pages.SelectCategories }}</label>
+        <div class="flex flex-wrap gap-2 pt-1">
+            {{ range .Categories }}
+            <label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-600 bg-white dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600 cursor-pointer transition text-sm text-gray-700 dark:text-gray-200 shadow-sm">
+                <input type="checkbox" name="filter_category_ids" value="{{ .ID }}" class="rounded text-blue-600 focus:ring-0 cursor-pointer">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: {{ .Color }}"></span>
+                <span>{{ .Name }}</span>
+            </label>
+            {{ else }}
+            <span class="text-sm text-gray-400 italic">{{ .I18n.Categories.NoCategories }}</span>
+            {{ end }}
+        </div>
     </div>
     <div class="flex items-center justify-between">
         <button
@@ -28,5 +53,16 @@
         </button>
     </div>
 </form>
+
+<script>
+    function toggleCategorySelect(mode) {
+        const selector = document.getElementById('category-selector');
+        if (mode === 'include' || mode === 'exclude') {
+            selector.classList.remove('hidden');
+        } else {
+            selector.classList.add('hidden');
+        }
+    }
+</script>
 <div id="page-result" class="text-center mt-4"></div>
 {{ end }}

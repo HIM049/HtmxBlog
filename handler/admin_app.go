@@ -278,3 +278,24 @@ func (a *AdminApp) HiddenPages() ([]model.Page, error) {
 func (a *AdminApp) GetHiddenPages() ([]model.Page, error) {
 	return a.HiddenPages()
 }
+
+func (a *AdminApp) PageCategories(page model.Page) []model.Category {
+	if len(page.FilterCategoryIDs) == 0 {
+		return nil
+	}
+	all, err := services.ReadCategories()
+	if err != nil {
+		return nil
+	}
+	catMap := make(map[uint]model.Category, len(all))
+	for _, c := range all {
+		catMap[c.ID] = c
+	}
+	var res []model.Category
+	for _, id := range page.FilterCategoryIDs {
+		if cat, ok := catMap[id]; ok {
+			res = append(res, cat)
+		}
+	}
+	return res
+}

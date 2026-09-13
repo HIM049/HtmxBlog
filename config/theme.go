@@ -37,14 +37,16 @@ type ThemeMetaFile struct {
 	Description map[string]string `json:"description"`
 	GlobalVars  []ThemeVar        `json:"global_vars"`
 	PostVars    []ThemeVar        `json:"post_vars"`
+	Pages       []ThemeVar        `json:"pages"`
 }
 
 type ThemeMetaTranslated struct {
 	ThemeMeta
-	Name        string               `json:"name"`
-	Description string               `json:"description"`
-	GlobalVars  []ThemeVarTranslated `json:"global_vars"`
-	PostVars    []ThemeVarTranslated `json:"post_vars"`
+	Name        string                `json:"name"`
+	Description string                `json:"description"`
+	GlobalVars  []ThemeVarTranslated  `json:"global_vars"`
+	PostVars    []ThemeVarTranslated  `json:"post_vars"`
+	Pages       []ThemeVarTranslated  `json:"pages"`
 }
 
 func InitTheme() {
@@ -87,6 +89,9 @@ func InitTheme() {
 	}
 	for _, v := range targetTheme.PostVars {
 		theme.PostVars = append(theme.PostVars, v.TranslatedFallback(lang))
+	}
+	for _, v := range targetTheme.Pages {
+		theme.Pages = append(theme.Pages, v.TranslatedFallback(lang))
 	}
 
 	Cfg.Theme = theme

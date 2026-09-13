@@ -32,5 +32,13 @@
       "description": {"en_us": "The introduction for the post", "zh_cn": "文章简介"},
       "type": "string"
     }
+  ],
+  "pages": [
+    {
+      "key": "index",
+      "name": {"en_us": "Home", "zh_cn": "主页"},
+      "description": {"en_us": "Standard post listing page", "zh_cn": "标准文章列表页"},
+      "type": "string"
+    }
   ]
 }

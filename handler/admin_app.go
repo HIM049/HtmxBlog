@@ -94,6 +94,13 @@ func (a *AdminApp) ThemePostVars() []config.ThemeVarTranslated {
 	return config.Cfg.Theme.PostVars
 }
 
+func (a *AdminApp) ThemePages() []config.ThemeVarTranslated {
+	if config.Cfg == nil {
+		return nil
+	}
+	return config.Cfg.Theme.Pages
+}
+
 type CustomVarRowItem struct {
 	Key           string
 	Value         string
